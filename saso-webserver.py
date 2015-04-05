@@ -2,7 +2,9 @@
 """
 Cribbed off of python-openid's Simple example for an OpenID consumer.
 
-The HSWC signup page for 2014.
+The SASO signup page for 2015.
+Almost all the code here was written for HSWC 2014 by the lovely raxraxraxraxrax@github
+All SASO additions by dbonnen@github
 """
 
 from Cookie import SimpleCookie
@@ -10,7 +12,7 @@ import cgi
 import urlparse
 import cgitb
 import sys, re
-import hswcutil as hswc
+import sasoutil as saso
 
 #dbstuff
 import sqlite3, sys
@@ -71,13 +73,13 @@ it's set up in Apache2.
         if self.server_port != 80:
 #            self.base_url = ('http://%s:%s/' %
 #                             (self.server_name, self.server_port))
-             self.base_url = 'http://autumnfox.akrasiac.org/hswc'
+             self.base_url = 'localhost:8600'
         else:
             self.base_url = 'http://%s/' % (self.server_name,)
 
 class OpenIDRequestHandler(BaseHTTPRequestHandler):
     """Request handler that knows how to verify an OpenID identity."""
-    SESSION_COOKIE_NAME = 'hswcpage'
+    SESSION_COOKIE_NAME = 'sasopage'
 
     session = None
 
@@ -313,7 +315,7 @@ table {
         # DO NOIR LOGIC
         # THIS CODE SUCKS I AM TIRED
 
-        noirlist = hswc.get_noir_members_list(cursor)
+        noirlist = saso.get_noir_members_list(cursor)
 
         noirdict = {}
         for x in noirlist:
@@ -341,21 +343,21 @@ table {
 
     def doTeams(self):
 	"""Show the page with all of the teams on it."""
-	teamcount = str(hswc.get_teamcount(cursor))
-	playercount = str(hswc.get_playercount(cursor))
+	teamcount = str(saso.get_teamcount(cursor))
+	playercount = str(saso.get_playercount(cursor))
 
 	self.send_response(200)
-	self.wfile.write('''\
+	self.vwfile.write('''\
 Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	HSWC 2014 TEAM ROSTER
+	SASO 2015 TEAM ROSTER
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="300" />
-	<meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team" />
+	<meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
         <link rel="shortcut icon" href="http://autumnfox.akrasiac.org/permalinks/hswc.ico">
 
 	<style type="text/css" media="all">
@@ -472,9 +474,9 @@ table {
 
 <table>''' % (teamcount,playercount))
         
-	allteams = hswc.get_list_of_teams(cursor)
+	allteams = saso.get_list_of_teams(cursor)
 	for team in allteams:
-	    displayline = hswc.get_team_display_line(team, cursor)
+	    displayline = saso.get_team_display_line(team, cursor)
 	    if team != 'noir':
 	        self.wfile.write('''\
 <tr>
@@ -549,7 +551,7 @@ table {
                 self.render('Please do not use unicode characters in team names.', css_class='error',
 			    form_contents=(openid_url,email,team,contentnotes))
 		return
-	    team = hswc.scrub_team(team)
+	    team = saso.scrub_team(team)
 	if self.query.get('FL') == 'yes':
             flwilling = 1
 	else:
@@ -579,7 +581,7 @@ table {
 		self.render('Team formatted incorrectly, see <a href="http://hswc-announce.tumblr.com/post/49934185410/how-to-write-ship-names">How To Format Ship Names</a>.', css_class='error',
 			    form_contents=(openid_url,email,team,contentnotes))
 		return
-	team = hswc.scrub_team(team)
+	team = saso.scrub_team(team)
 	if not team:
 	    self.render('Please enter a valid team name.', css_class='error',
 			form_contents=(openid_url,email,team,contentnotes))
@@ -605,13 +607,13 @@ table {
 	#                    players on sailing ships can only drop,
 	#                    players on sinking ships can switch to sailing ones or drop
         if mode == "switch":
-	    if not hswc.player_exists(openid_url, cursor):
+	    if not saso.player_exists(openid_url, cursor):
                 if not team == 'noir':
 		    self.render('Sorry, new players can only join Team Noir at this point.',
 				css_class='error', form_contents=(openid_url,email,team,contentnotes))
 		    return
-	    currentteam = hswc.get_current_team(openid_url, cursor)
-	    if hswc.is_team_active(currentteam, cursor):
+	    currentteam = saso.get_current_team(openid_url, cursor)
+	    if saso.is_team_active(currentteam, cursor):
 		print team
 		if not team == 'remove':
 		    self.render('Sorry, players on sailing ships can only drop.',
@@ -633,14 +635,14 @@ table {
 	    
 
         # The team can't be full. 
-	if hswc.get_team_members_count(team, cursor) >=13 and team != 'noir' and team != 'abstrata' and team != 'abstrata2' and team != 'abstrata3' and team != 'abstrata4':
-	    if not hswc.player_is_on_team(openid_url, team, cursor):
+	if saso.get_team_members_count(team, cursor) >=13 and team != 'noir' and team != 'abstrata' and team != 'abstrata2' and team != 'abstrata3' and team != 'abstrata4':
+	    if not saso.player_is_on_team(openid_url, team, cursor):
 		self.render('That team is full, sorry. Try signing up for another one!',
 		            css_class='error', form_contents=(openid_url,email,team,contentnotes))
 		return
 
         # We want this to go through, so we make an entry in the pending table.
-        hswc.make_pending_entry(openid_url, email, team, flwilling, contentnotes, cursor)
+        saso.make_pending_entry(openid_url, email, team, flwilling, contentnotes, cursor)
 	dbconn.commit()
 
         # Now add the DW part of the string --- we don't want other OpenID
@@ -724,7 +726,7 @@ table {
 #        url = 'http://'+self.headers.get('Host')+self.path
 	# rax: hardcoding this for maximum bullshit
         # this makes me not just a bad programmer but a bad person
-        url = 'http://autumnfox.akrasiac.org/hswc/'+ self.path.strip('/')
+        url = 'http://autumnfox.akrasiac.org/saso/'+ self.path.strip('/')
         info = oidconsumer.complete(self.query, url)
 
         sreg_resp = None
@@ -739,7 +741,7 @@ table {
 	dwname = (display_identifier.split('.')[0]).split('//')[1]
 	openid_url = dwname
 
-	pending_entry = hswc.retrieve_pending_entry(dwname, cursor)
+	pending_entry = saso.retrieve_pending_entry(dwname, cursor)
 	if not pending_entry:
 	    self.render('The software choked and lost your preferences, sorry. Kick rax.',
 			css_class='error', form_contents=(dwname,'','',''))
@@ -748,7 +750,7 @@ table {
 	team = pending_entry[2]
 	flwilling = pending_entry[3]
 	contentnotes = pending_entry[4]
-        hswc.remove_pending_entry(dwname, cursor)
+        saso.remove_pending_entry(dwname, cursor)
 	dbconn.commit()
 
         if info.status == consumer.FAILURE and display_identifier:
@@ -779,8 +781,8 @@ table {
 	    # This way they're logged even if their team falls through for some reason
 	    # and we can track them down. Plus we can now depend on them existing
 	    # for the rest of this code block.
-	    if not hswc.player_exists(openid_url, cursor):
-		hswc.add_player_to_players(openid_url, email, contentnotes, cursor)
+	    if not saso.player_exists(openid_url, cursor):
+		saso.add_player_to_players(openid_url, email, contentnotes, cursor)
 		dbconn.commit()
             
 	    teamclean = re.sub('<', '&lt;', team)
@@ -789,56 +791,56 @@ table {
 		flwilling = 0
 
 	    if team == 'remove':
-		currentteam = hswc.get_current_team(openid_url, cursor)
+		currentteam = saso.get_current_team(openid_url, cursor)
 		if not currentteam:
 		    self.render('Cannot remove you from no team.', css_class='error',
 				form_contents=(openid_url, email, team, contentnotes))
 		    return
 	        currentteamclean = re.sub('<', '&lt;', currentteam)
 		currentteamclean = re.sub('>', '&gt;', currentteamclean)
-	        hswc.remove_player_from_team(openid_url, currentteam, cursor)
-		hswc.remove_player(openid_url, cursor)
+	        saso.remove_player_from_team(openid_url, currentteam, cursor)
+		saso.remove_player(openid_url, cursor)
 		dbconn.commit()
 		self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
 			    form_contents=(openid_url, email, team, contentnotes))
 		return
 
 	    #If the player is already on the team, just update 
-	    if hswc.player_is_on_team(openid_url, team, cursor):
+	    if saso.player_is_on_team(openid_url, team, cursor):
 		# this got stringified by putting it into the db and taking it out again
 		# THAT'S WHY NOTHING WAS WORKING
 		if not flwilling:
 		    # they don't want to be friendleader so nothing changes unless they already are
-                    if hswc.get_friendleader(team, cursor) == openid_url:
-			hswc.make_friendleader('', team, cursor)
+                    if saso.get_friendleader(team, cursor) == openid_url:
+			saso.make_friendleader('', team, cursor)
 			dbconn.commit()
 			self.render('You are no longer the %s friendleader.' % teamclean, css_class='alert',
 		                    form_contents=(openid_url, email, team, contentnotes))
 			return
-	            hswc.update_player(openid_url, email, contentnotes, team, cursor)
+	            saso.update_player(openid_url, email, contentnotes, team, cursor)
 		    dbconn.commit()
 		    self.render('No change to team, personal information updated.', css_class='alert',
 			        form_contents=(openid_url,email, team, contentnotes))
 		    return
 	        else:
 		    # they do want to be friendleader so if no one else is, they get the slot
-	            if not hswc.team_has_friendleader(team, cursor):
-                        hswc.make_friendleader(openid_url, team, cursor)
-			hswc.update_player(openid_url, email, contentnotes, team, cursor)
+	            if not saso.team_has_friendleader(team, cursor):
+                        saso.make_friendleader(openid_url, team, cursor)
+			saso.update_player(openid_url, email, contentnotes, team, cursor)
 			dbconn.commit()
 			self.render('Became friendleader of %s.' % teamclean, css_class='alert',
 			            form_contents=(openid_url, email, team, contentnotes))
 			return
 		    else:
-                        hswc.update_player(openid_url, email, contentnotes, team, cursor)
+                        saso.update_player(openid_url, email, contentnotes, team, cursor)
                         dbconn.commit()
                         self.render('No change to team, personal information updated.', css_class='alert',
                                     form_contents=(openid_url,email, team, contentnotes))
                         return
 
             # Try to add them to whatever team they want to be on.
-            oldteam = hswc.get_current_team(openid_url, cursor)
-	    errorstatus = hswc.add_player_to_team(openid_url, team, flwilling, email, contentnotes, cursor)
+            oldteam = saso.get_current_team(openid_url, cursor)
+	    errorstatus = saso.add_player_to_team(openid_url, team, flwilling, email, contentnotes, cursor)
 	    dbconn.commit()
 	    teamclean = re.sub('<', '&lt;', team)
 	    teamclean = re.sub('>', '&gt;', teamclean)
@@ -848,7 +850,7 @@ table {
 		return
 	    if oldteam:
 		if oldteam != team:
-		    hswc.remove_player_from_team(openid_url, oldteam, cursor)
+		    saso.remove_player_from_team(openid_url, oldteam, cursor)
 		    dbconn.commit()
 		    oldteamclean = re.sub('<', '&lt;', oldteam)
 		    oldteamclean = re.sub('>', '&gt;', oldteamclean)
@@ -918,12 +920,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	HSWC 2014 SIGNUPS
+	SASO 2014 SIGNUPS
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="50000" />
-	<meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team" />
+	<meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
 	<link rel="shortcut icon" href="http://autumnfox.akrasiac.org/permalinks/hswc.ico">
 
 	<style type="text/css" media="all">
@@ -1024,7 +1026,7 @@ input, textarea {
 <body>
 
 	<h1>
-	HSWC 2014 Sign Up Form
+	SASO 2015 Sign Up Form
 	</h1>
 
 <p class="navigation"> <a href="http://autumnfox.akrasiac.org/hswc/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%20Contact">Mod Contact</a> | <a href="http://hs_worldcup.dreamwidth.org">Dreamwidth</a> | <a href="http://autumnfox.akrasiac.org/hswcrules">Rules Wiki</a> | <a href="http://hswc-announce.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
@@ -1045,7 +1047,7 @@ switching teams).
 
 <p>
 	<span class="field">Dreamwidth Username:</span><br />
-	<span class="descrip">You need a <a href="https://www.dreamwidth.org/create">DW account</a>. Make sure it's <a href="http://hs-worldcup.dreamwidth.org/2803.html#join">verified</a>!</span><br />
+	<span class="descrip">You need a <a href="https://www.dreamwidth.org/create">DW account</a>. Make sure it's <a href="http://www.dreamwidth.org/register">verified</a>!</span><br />
 	<input name="username" type="text" />
 </p>
 
@@ -1055,27 +1057,27 @@ switching teams).
 </p>
 
 <p>
-	<span class="field">Joining HSWC Team:</span><br />
-	<span class="descrip">Format your team name <a href="http://hswc-announce.tumblr.com/post/49934185410/how-to-write-ship-names">like this</a>!</span><br />
+	<span class="field">Joining SASO Team:</span><br />
+	<span class="descrip">Format your team name <a href="http://sportsanime.dreamwidth.org/750.html#teams">like this</a>!</span><br />
 	<input name="team" type="text" />
 </p>
 
 <p>
-	<span class="field">Would you like to volunteer to be the team's <a href="http://autumnfox.akrasiac.org/hswcrules/Teams#Friendleaders">Friendleader?</a>:</span><br />
+	<span class="field">Would you like to volunteer to be the team's <a href="http://sportsanime.dreamwidth.org/750.html#teams">Captain</a>?:</span><br />
 	<input name="FL" value="yes" type="radio" />Yes &nbsp; <input name="FL" value="no" type="radio" checked/>No
 </p>
 
 <p>
-	<span class="field">Any noteworthy content tags that you would like to add and are not already listed on the <a href="http://autumnfox.akrasiac.org/hswcrules/Tags%%20List">content tags list?</a>:</span> <br />
+	<span class="field">Any noteworthy content tags that you would like to add and are not already listed on the <a href="http://sportsanime.dreamwidth.org/1609.html">content tags list?</a>:</span> <br />
 	<span class="descrip">The major content tags are used to warn for 
 content that may be potentially upsetting and is not a place for 
 sarcastic comments or jokes. Misusing the tag request form may result in
- your removal from the HSWC.</span><br />
+ your removal from the SASO.</span><br />
 	<textarea name="contentnotes" rows="5" cols="70">&nbsp;</textarea>
 </p>
 
 <p>
-	<span class="field"><a href="http://autumnfox.akrasiac.org/hswcrules/Participant%%20Agreement">Participant Agreement</a>'s rules check phrase:</span><br />
+	<span class="field"><a href="http://sportsanime.dreamwidth.org/2057.html">Participant Agreement</a>'s rules check phrase:</span><br />
 	<input name="rules-check" type="text" />
 </p>
 
@@ -1109,7 +1111,7 @@ def main(host, port, data_path, weak_ssl=False):
 
 if __name__ == '__main__':
     host = 'localhost'
-    port = 8001
+    port = 8600
     weak_ssl = False
 
     try:

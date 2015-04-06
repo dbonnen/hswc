@@ -73,7 +73,7 @@ it's set up in Apache2.
         if self.server_port != 80:
 #            self.base_url = ('http://%s:%s/' %
 #                             (self.server_name, self.server_port))
-             self.base_url = 'localhost:8600'
+             self.base_url = 'http://autumnfox.akrasiac.org:8600'
         else:
             self.base_url = 'http://%s/' % (self.server_name,)
 

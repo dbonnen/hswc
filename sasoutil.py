@@ -24,35 +24,33 @@ import sqlite3, sys, re
 
 def send_inactives_to_noir(cursor):
     """Take players on inactive teams and send them to noir."""
-    
     allteams = get_list_of_teams(cursor)
     
     for team in allteams:
-	if not is_team_active(team, cursor):
+        if not is_team_active(team, cursor):
             players = get_team_members_list(team, cursor)
-	    for player in players:
-		add_player_to_noir(player, cursor)
-		remove_player_from_team(player, team, cursor)
-
+            for player in players:
+                add_player_to_noir(player, cursor)
+                remove_player_from_team(player, team, cursor)
+    
     #dbconn.commit()
     return
 
 def make_fl_list(cursor):
     """Make a list of all teams, their FLs, and their email addresses."""
-
     cursor.execute('SELECT * from teams where active="yes"')
     allteams = cursor.fetchall()
     bakedteams = []
-
+    
     for team in allteams:
-	if not team[2]:
+        if not team[2]:
             teamtuple = (team[0], 'none', 'none')
-	else:
+        else:
             fl = team[2]
-	    email = get_player_email(fl, cursor)
-	    teamtuple = (team[0], fl, email)
-	bakedteams.append(teamtuple)
-
+            email = get_player_email(fl, cursor)
+            teamtuple = (team[0], fl, email)
+        bakedteams.append(teamtuple)
+    
     return bakedteams
 
 def get_player_email(player, cursor):
@@ -61,7 +59,7 @@ def get_player_email(player, cursor):
     cursor.execute('SELECT * from players where dwname=?', array)
     playerdata = cursor.fetchone()
     if not playerdata:
-	return "player does not exist"
+        return "player does not exist"
     return playerdata[1] 
 
 def make_team_active(team, cursor):
@@ -74,15 +72,15 @@ def make_team_active(team, cursor):
 def is_team_active(team, cursor):
     """Return the active bit on a team."""
     if team == 'noir':
-	return 'yes'
-
+        return 'yes'
+    
     array = (team,)
     cursor.execute('SELECT * from teams where name=?', array)
     thing = cursor.fetchone()
-    if thing: 
+    if thing:
         activebit = thing[1]
         return activebit
-    # team does not exist
+        # team does not exist
     return
 
 def activate_qualifying_teams(cursor):
@@ -92,8 +90,8 @@ def activate_qualifying_teams(cursor):
     teamlist = get_list_of_teams(cursor)
     for team in teamlist:
         count = get_team_members_count(team, cursor)
-	if count > 4:
-	    make_team_active(team, cursor)
+        if count > 4:
+            make_team_active(team, cursor)
     return
 
 def make_pending_entry(dwname, email, team, friendleader, notes, cursor):
@@ -121,7 +119,7 @@ def team_exists(teamname, cursor):
       if not return 0."""
     array = (teamname,) # for sanitizing
     if teamname == 'noir':
-	return 1
+        return 1
     cursor.execute('SELECT * from teams where name=?', array)
     if cursor.fetchone():
         return 1 
@@ -132,14 +130,14 @@ def team_has_friendleader(teamname, cursor):
     """If a team has a friendleader, return 0, otherwise return 1"""
     array = (teamname,)
     if not team_exists(teamname, cursor):
-	# there's not a friendleader if there's no team!
-	return 0
+        # there's not a friendleader if there's no team!
+        return 0
     cursor.execute('SELECT * from teams where name=?', array)
     teamlist = cursor.fetchone()
     if teamlist[2]:
-	return 1
+        return 1
     else:
-	return 0
+        return 0
 
 def player_exists(player, cursor):
     """See if a player exists in the database or not. If yes, return 1,
@@ -157,13 +155,13 @@ def get_current_team(player, cursor):
     cursor.execute('SELECT * from players where dwname=?', array)
     currentteam = cursor.fetchone()
     if currentteam:
-	return currentteam[3]
+        return currentteam[3]
     else:
-	cursor.execute('SELECT * from noir where dwname=?', array)
-	noirstatus = cursor.fetchone()
-	if noirstatus:
-	    return 'noir'
-	return 0
+        cursor.execute('SELECT * from noir where dwname=?', array)
+        noirstatus = cursor.fetchone()
+        if noirstatus:
+            return 'noir'
+        return 0
     
 def add_team(teamname, cursor):
     """Add a team to the database without information in it."""
@@ -176,8 +174,8 @@ def remove_team(teamname, cursor):
     """Delete a team."""
     array = (teamname,)
     if teamname == 'noir':
-	# don't delete noir
-	return
+        # don't delete noir
+        return
     cursor.execute('DELETE from teams where name=?', array)
     #dbconn.commit()
     return
@@ -208,16 +206,16 @@ def get_playercount(cursor):
     """Get a count of players."""
     playerlist = []
     for player in cursor.execute('SELECT * from players'):
-	playerlist.append(player[0])
+        playerlist.append(player[0])
     return len(playerlist)
 
 def get_friendleader(team, cursor):
     """Get the friendleader of a team, if one exists."""
     array = (team, )
     if not team_exists(team, cursor):
-	return 0
+        return 0
     if team == 'noir':
-	return 'worldcup-mods'
+        return 'worldcup-mods'
     cursor.execute('SELECT * from teams where name=?', array)
     teamrow = cursor.fetchone()
     return teamrow[2]
@@ -248,24 +246,24 @@ def remove_player_from_team(player, teamname, cursor):
     """Remove a player from a team, presumably because they joined another."""
     array = (teamname,)
     if teamname == 'noir':
-	remove_player_from_noir(player, cursor)
-	return
+        remove_player_from_noir(player, cursor)
+        return
     cursor.execute('SELECT * from teams where name=?', array)
     teamdatalist = cursor.fetchone()
     if teamdatalist[2] == player:
-	friendleader = ''
+        friendleader = ''
     else:
-	friendleader = teamdatalist[2]
-    newteamlist = []
+        friendleader = teamdatalist[2]
+        newteamlist = []
     for x in xrange(3,16):
         if teamdatalist[x] != player:
-	    if teamdatalist[x]:
+            if teamdatalist[x]:
                 newteamlist.append(teamdatalist[x])
     if newteamlist == []:
-	remove_team(teamname, cursor)
-	return
+        remove_team(teamname, cursor)
+        return
     if len(newteamlist) < 13:
-	for i in xrange(13 - len(newteamlist)):
+        for i in xrange(13 - len(newteamlist)):
             newteamlist.append('')
     arglist = [friendleader] + newteamlist + [teamname]
     array = tuple(arglist)
@@ -292,31 +290,31 @@ def get_team_members_count(team, cursor):
     """How many players on the team?"""
     array=(team,)
     if not team_exists(team, cursor):
-	return 0
+        return 0
     if team == 'noir':
-	return get_noir_members_count(cursor)
+        return get_noir_members_count(cursor)
     cursor.execute('SELECT * from teams where name=?',array)
     teamdatalist = cursor.fetchone()
     count = 0
     for x in xrange(3,16):
-	if teamdatalist[x]:
-	    count = count + 1
+        if teamdatalist[x]:
+            count = count + 1
     return count
 
 def get_team_members_list(team, cursor):
     """Who are the players on the team?"""
     array = (team,)
     if not team_exists(team, cursor):
-	return 0
+        return 0
     if team == 'noir':
-	return get_noir_members_list(cursor)
+        return get_noir_members_list(cursor)
     cursor.execute('SELECT * from teams where name=?', array)
     teamdatalist = cursor.fetchone()
     teamplayers = []
     for x in xrange(3,16):
-	if teamdatalist[x]:
-	    teamplayers.append(teamdatalist[x])
-
+        if teamdatalist[x]:
+            teamplayers.append(teamdatalist[x])
+    
     return teamplayers
 
 def get_noir_members_count(cursor):
@@ -330,10 +328,10 @@ def get_noir_members_list(cursor):
     cursor.execute('SELECT * from noir')
     noirlist = cursor.fetchall()
     if not noirlist:
-	return ['nobody']
+        return ['nobody']
     noirplayers = []
     for x in noirlist:
-	noirplayers.append(x[0])
+        noirplayers.append(x[0])
     noirplayers.sort()
     return noirplayers
 
@@ -342,17 +340,17 @@ def player_is_on_team(player, team, cursor):
     array=(team,)
     if team == 'noir':
         noir_members = get_noir_members_list(cursor)
-	for x in noir_members:
-	    if player == x:
-		return 1
-	return 0
+        for x in noir_members:
+            if player == x:
+                return 1
+        return 0
     if not team_exists(team, cursor):
-	return 0
+        return 0
     cursor.execute('SELECT * from teams where name=?',array)
     teamdatalist = cursor.fetchone()
     for x in xrange(3,16):
-	if player == teamdatalist[x]:
-	    return 1
+        if player == teamdatalist[x]:
+            return 1
     return 0
 
 def get_team_display_line(team, cursor):
@@ -362,30 +360,30 @@ def get_team_display_line(team, cursor):
     teamname = re.sub('<', '&lt;', team)
     teamname = re.sub('>', '&gt;', teamname)
     if teamname == 'noir':
-	stringofallplayers = 'Please see the noir page at <a href="http://autumnfox.akrasiac.org/hswc/noir">this link</a>.'
-	csstype= 'roster_teamslots'
-	count = get_noir_members_count(cursor)
-	friendleader = 'worldcup-mods'
-	return (csstype, count, teamname, friendleader, stringofallplayers)
+        stringofallplayers = 'Please see the noir page at <a href="http://autumnfox.akrasiac.org/hswc/noir">this link</a>.'
+        csstype= 'roster_teamslots'
+        count = get_noir_members_count(cursor)
+        friendleader = 'worldcup-mods'
+        return (csstype, count, teamname, friendleader, stringofallplayers)
     cursor.execute('SELECT * from teams where name=?', array)
     teamdatalist = cursor.fetchone()
     teamname = re.sub('<', '&lt;', teamdatalist[0])
     teamname = re.sub('>', '&gt;', teamname)
     if teamdatalist[2]:
-	friendleader = teamdatalist[2]
+        friendleader = teamdatalist[2]
     else: 
-	friendleader = "None! You should sign up :3"
+        friendleader = "None! You should sign up :3"
     count = 1 # teams shouldn't exist empty
     stringofallplayers = teamdatalist[3]
     for x in xrange(4,16): # yes 4 that's on purpose
         if teamdatalist[x]:
-	    count = count + 1
+            count = count + 1
             stringofallplayers = stringofallplayers + ', ' + teamdatalist[x]
     csstype = 'roster_teamslots'
     if count < 5:
-	csstype = 'roster_teamslots_small'
+        csstype = 'roster_teamslots_small'
     if count > 12:
-	csstype = 'roster_teamslots_full'
+        csstype = 'roster_teamslots_full'
     return (csstype, count, teamname, friendleader, stringofallplayers)
 
 
@@ -394,15 +392,15 @@ def add_player_to_team(player, teamname, flwilling, email, notes, cursor):
        If the player is already on the team, continue without changes.
        If the player is willing and there is no friendleader, FLify them.
        If the team has at least 5 members, make it active."""
-
+    
     if teamname == 'noir':
-	add_player_to_noir(player, cursor)
-	cursor.execute('UPDATE players set team=? where dwname=?', ('noir', player))
-	return
-
+        add_player_to_noir(player, cursor)
+        cursor.execute('UPDATE players set team=? where dwname=?', ('noir', player))
+        return
+    
     if not team_exists(teamname, cursor):
         add_team(teamname, cursor)
-
+    
     if team_exists(teamname, cursor):  
         array = (teamname,)
         cursor.execute('SELECT * from teams where name=?', array)
@@ -410,16 +408,16 @@ def add_player_to_team(player, teamname, flwilling, email, notes, cursor):
         alreadyonteam = 0 
         teamindex = 0
         friendleader = teamdatalist[2]
-
+        
         # it's gnarly finite state machine time, kids!
         # that's how you know i'm a shitty programmer <3
-
+        
         for x in xrange(3,16): # 0 is name, 1 is active, 2 is FL
             if teamdatalist[x]:
                 if teamdatalist[x] == player:
                     # you're already on that team you dingus
                     alreadyonteam = 1
-		    break
+                    break
                 else:
                     # someone else has this slot
                     continue
@@ -427,52 +425,52 @@ def add_player_to_team(player, teamname, flwilling, email, notes, cursor):
                 # this is your slot now
                 teamindex = x
                 break
-
+        
         # in theory being already on the team should have been caught earlier
-	# but this will double-catch it just in case because not doing so is bad
-	# also it is already written
+        # but this will double-catch it just in case because not doing so is bad
+        # also it is already written
         if not alreadyonteam:
             if teamindex:
                 # because if it's zero, the team is full         
                 strteamindex = 'member' + str(teamindex - 2)
-
+                
                 # python the fact that I have to do the below makes me sad
                 string = 'UPDATE teams set %s=? where name=?' % strteamindex
                 cursor.execute(string, (player, teamname))
-		cursor.execute('UPDATE players set team=? where dwname=?', (teamname, player))
+                cursor.execute('UPDATE players set team=? where dwname=?', (teamname, player))
                 if not friendleader:
                     if flwilling:
                         make_friendleader(player, teamname, cursor) 
                 #dbconn.commit()
                 return
             else:
-		if teamname == 'abstrata':
-		    # abstrata is full, go to next abstrata
-		    status = add_player_to_team(player, 'abstrata2', flwilling, email, notes, cursor)
-		    return status
-	        elif teamname == 'abstrata2':
-		    status = add_player_to_team(player, 'abstrata3', flwilling, email, notes, cursor)
-		    return status
-	        elif teamname == 'abstrata3':
-		    status = add_player_to_team(player, 'abstrata4', flwilling, email, notes, cursor)
-		    return status
-	        elif teamname == 'abstrata4':
-	            status = add_player_to_team(player, 'abstrata5', flwilling, email, notes, cursor)
-		    return status
-	        elif teamname == 'abstrata5':
-		    return "Rax didn't make enough abstrata teams, tell them they were wrong"
+                if teamname == 'abstrata':
+                    # abstrata is full, go to next abstrata
+                    status = add_player_to_team(player, 'abstrata2', flwilling, email, notes, cursor)
+                    return status
+                elif teamname == 'abstrata2':
+                    status = add_player_to_team(player, 'abstrata3', flwilling, email, notes, cursor)
+                    return status
+                elif teamname == 'abstrata3':
+                    status = add_player_to_team(player, 'abstrata4', flwilling, email, notes, cursor)
+                    return status
+                elif teamname == 'abstrata4':
+                    status = add_player_to_team(player, 'abstrata5', flwilling, email, notes, cursor)
+                    return status
+                elif teamname == 'abstrata5':
+                    return "Rax didn't make enough abstrata teams, tell them they were wrong"
                 return "Sorry, that team filled up due to a race condition."
         else:
             if not friendleader:
                 if flwilling:
                     make_friendleader(player, teamname)
-		    return
-	        else:
-	            return
-	    else:
-	        if not flwilling:
+                    return
+                else:
+                    return
+            else:
+                if not flwilling:
                     make_friendleader('', teamname)
-		return
+                return
     else:
         return "Team doesn't exist after creating it, contact rax."
     return "This error should never happen! Contact rax." 
@@ -480,18 +478,18 @@ def add_player_to_team(player, teamname, flwilling, email, notes, cursor):
 def scrub_team(team):
     """Return a valid team name based on the user input.
        If there is no valid team name, return nothing."""
-
+    
     string = team.lower()
     string = string.strip()
-
+    
     # if it has more than one ship symbol we are not touching this belunkus
     symbolcount = 0
     for x in ['<3<', '<3[^<]', '<>', 'c3<', 'o8<'] :
         if re.search(x, string):
-	    symbolcount = symbolcount +1
+            symbolcount = symbolcount + 1
     if symbolcount > 1:
-	return string
-
+        return string
+    
     if string == '':
         return 0 
     elif re.search('<3<', string):
@@ -507,8 +505,8 @@ def scrub_team(team):
         namelist = string.split('c3<')
         shipsymbol = 'c3<'
     elif re.search('o8<', string):
-	namelist = string.split('o8<')
-	shipsymbol = 'c3<'
+        namelist = string.split('o8<')
+        shipsymbol = 'c3<'
     elif re.search('abstrata', string):
         return 'abstrata'
     elif re.search('noir', string):
@@ -518,36 +516,36 @@ def scrub_team(team):
         # in which case THE CODE CAN'T EVEN HANDLE YOU RIGHT NOW
         return 'noir'
     else:
-	# then you have some kinda theme team or something whatever
+        # then you have some kinda theme team or something whatever
         return string
-
+    
     newlist = []
     newstring = ''
-
+    
     for name in namelist:
         name = name.strip()
         newlist.append(name)
-
+    
     newlist.sort()
-
+    
     for x in range(0,(len(newlist) -1)):
         newstring = newstring + newlist[x] + shipsymbol
-
+    
     newstring = newstring + newlist[(len(newlist) - 1)]
-
+    
     return newstring
 
 if __name__ == "__main__":
     teamnames = ('rax<3<computers', 'modship<3players', 'h8rs<>h8rs')
     playernames = ('alice', 'bob', 'carol', 'dave', 'elsa', 'fiddlesticks')
-
+    
     # add teams if they don't exist
     for team in teamnames:
         if team_exists(team):
             print "hooray"
         else:
             add_team(team)
-
+    
     # print a list of all teams
     teamlist = get_list_of_teams()
     print teamlist 
@@ -555,4 +553,3 @@ if __name__ == "__main__":
     add_player_to_team('rax','rax<3<computers',0,'rax@akrasiac.org','')
     for player in playernames:
         add_player_to_team(player, 'rax<3<computers',0,'test@example.com','')
- 

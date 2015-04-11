@@ -16,7 +16,7 @@ import sasoutil as saso
 
 #dbstuff
 import sqlite3, sys
-dbconn = sqlite3.connect('hswc.db')
+dbconn = sqlite3.connect('saso.db')
 cursor = dbconn.cursor()
 
 # MODES
@@ -69,10 +69,10 @@ it's set up in Apache2.
         HTTPServer.__init__(self, *args, **kwargs)
         self.sessions = {}
         self.store = store
-
+        
         if self.server_port != 80:
-#            self.base_url = ('http://%s:%s/' %
-#                             (self.server_name, self.server_port))
+            #self.base_url = ('http://%s:%s/' %
+                              #(self.server_name, self.server_port))
              self.base_url = 'http://autumnfox.akrasiac.org:8600'
         else:
             self.base_url = 'http://%s/' % (self.server_name,)
@@ -80,21 +80,21 @@ it's set up in Apache2.
 class OpenIDRequestHandler(BaseHTTPRequestHandler):
     """Request handler that knows how to verify an OpenID identity."""
     SESSION_COOKIE_NAME = 'sasopage'
-
+    
     session = None
-
+    
     def getConsumer(self, stateless=False):
         if stateless:
             store = None
         else:
             store = self.server.store
         return consumer.Consumer(self.getSession(), store)
-
+    
     def getSession(self):
         """Return the existing session or a new session"""
         if self.session is not None:
             return self.session
-
+        
         # Get value of cookie header that was sent
         cookie_str = self.headers.get('Cookie')
         if cookie_str:
@@ -106,27 +106,27 @@ class OpenIDRequestHandler(BaseHTTPRequestHandler):
                 sid = None
         else:
             sid = None
-
+        
         # If a session id was not set, create a new one
         if sid is None:
             sid = randomString(16, '0123456789abcdef')
             session = None
         else:
             session = self.server.sessions.get(sid)
-
+        
         # If no session exists for this session ID, create one
         if session is None:
             session = self.server.sessions[sid] = {}
-
+        
         session['id'] = sid
         self.session = session
         return session
-
+    
     def setSessionCookie(self):
         sid = self.getSession()['id']
         session_cookie = '%s=%s;' % (self.SESSION_COOKIE_NAME, sid)
         self.send_header('Set-Cookie', session_cookie)
-
+    
     def do_GET(self):
         """Dispatching logic. There are multiple paths defined:
 
@@ -146,7 +146,7 @@ written to the requesting browser.
             self.query = {}
             for k, v in cgi.parse_qsl(self.parsed_uri[4]):
                 self.query[k] = v.decode('utf-8')
-
+            
             path = self.parsed_uri[2]
             if path == '':
                 path = '/' + self.parsed_uri[1] 
@@ -164,7 +164,7 @@ written to the requesting browser.
 		self.doTest()
             else:
                 self.notFound()
-
+        
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
@@ -173,7 +173,7 @@ written to the requesting browser.
             self.setSessionCookie()
             self.end_headers()
             self.wfile.write(cgitb.html(sys.exc_info(), context=10))
-
+    
     def doTest(self):
 	"""fuck me"""
 	self.send_response(200)
@@ -196,10 +196,10 @@ Content-type: text/html; charset=UTF-8
 	return
 
     def doNoir(self):
-	"""Show the noir list page."""
-	noircount = str(hswc.get_noir_members_count(cursor))
+        """Show the noir list page."""
+        noircount = str(hswc.get_noir_members_count(cursor))
         noirplayers = hswc.get_noir_members_list(cursor)
-
+        
         self.send_response(200)
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
@@ -291,7 +291,7 @@ table {
         <h1>
         HSWC 2014 Team Noir Roster
         </h1>''')
-
+        
         self.wfile.write('''\
  
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/hswc/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/hswc/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://hs_worldcup.dreamwidth.org">Dreamwidth</a> | <a href="http://autumnfox.akrasiac.org/hswcrules">Rules Wiki</a> | <a href="http://hswc-announce.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
@@ -310,24 +310,24 @@ table {
 </tr>
 <tr>
         <td class="noir_members">''' % noircount)
-
+        
         # MAGIC MARKER
         # DO NOIR LOGIC
         # THIS CODE SUCKS I AM TIRED
-
+        
         noirlist = saso.get_noir_members_list(cursor)
-
+        
         noirdict = {}
         for x in noirlist:
-	    firstchar = x[0]
-	    if firstchar in noirdict: 
-	        noirdict[firstchar] = noirdict[firstchar] + ', ' + x
+            firstchar = x[0]
+            if firstchar in noirdict: 
+                noirdict[firstchar] = noirdict[firstchar] + ', ' + x
             else:
-		noirdict[firstchar] = x
-
+                noirdict[firstchar] = x
+        
         for x in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']:
-	    if x in noirdict:
-	        self.wfile.write('''\
+            if x in noirdict:
+                self.wfile.write('''\
 <p><span class="noir_%s" style="font-weight:bold;text-transform:none">%s:</span>%s</p>''' % (x,x, noirdict[x]))
 
         self.wfile.write('''\
@@ -342,12 +342,12 @@ table {
 
 
     def doTeams(self):
-	"""Show the page with all of the teams on it."""
-	teamcount = str(saso.get_teamcount(cursor))
-	playercount = str(saso.get_playercount(cursor))
-
-	self.send_response(200)
-	self.vwfile.write('''\
+        """Show the page with all of the teams on it."""
+        teamcount = str(saso.get_teamcount(cursor))
+        playercount = str(saso.get_playercount(cursor))
+        
+        self.send_response(200)
+        self.vwfile.write('''\
 Content-type: text/html; charset=UTF-8
 
 <head>
@@ -474,11 +474,11 @@ table {
 
 <table>''' % (teamcount,playercount))
         
-	allteams = saso.get_list_of_teams(cursor)
-	for team in allteams:
-	    displayline = saso.get_team_display_line(team, cursor)
-	    if team != 'noir':
-	        self.wfile.write('''\
+        allteams = saso.get_list_of_teams(cursor)
+        for team in allteams:
+            displayline = saso.get_team_display_line(team, cursor)
+            if team != 'noir':
+                self.wfile.write('''\
 <tr>
 	<td class="%s">
 	%s/13
@@ -498,7 +498,7 @@ table {
 	<span style="font-weight:bold;text-transform:none">Members:</span> %s
 	</td>
 </tr>''' % displayline)
-	    else:
+            else:
                 self.wfile.write('''\
 <tr>
         <td class="%s">
@@ -527,140 +527,138 @@ table {
 
 </body>
 </html>''')
-
-
-
+    
+    
     def doVerify(self):
         """Process the form submission, initating OpenID verification.
 """
-
+        
         # First, collect all the data.
         openid_url = self.query.get('username')
-	openid_url = re.sub('_','-',openid_url)
-	if openid_url:
-	    openid_url = openid_url.lower()
-	email = self.query.get('email')
-	team = self.query.get('team')
-	contentnotes = self.query.get('contentnotes')
-	if team:
+        openid_url = re.sub('_','-',openid_url)
+        if openid_url:
+            openid_url = openid_url.lower()
+        email = self.query.get('email')
+        team = self.query.get('team')
+        contentnotes = self.query.get('contentnotes')
+        if team:
             # everything depends on unicode type strings BUT
-	    # if someone tries to paste in unicode ship symbols everything goes to hell
-	    asciiteam = team.encode('ascii', 'ignore')
-	    convertedteam = unicode(asciiteam)
-	    if not team == convertedteam:
+            # if someone tries to paste in unicode ship symbols everything goes to hell
+            asciiteam = team.encode('ascii', 'ignore')
+            convertedteam = unicode(asciiteam)
+            if not team == convertedteam:
                 self.render('Please do not use unicode characters in team names.', css_class='error',
-			    form_contents=(openid_url,email,team,contentnotes))
-		return
-	    team = saso.scrub_team(team)
-	if self.query.get('FL') == 'yes':
+                            form_contents=(openid_url,email,team,contentnotes))
+                return
+            team = saso.scrub_team(team)
+        if self.query.get('FL') == 'yes':
             flwilling = 1
-	else:
-	    # if they didn't check anything we assume they do not want to
-	    # be a friendleader. that seems best here.
-            flwilling = 0
-	#contentnotes = self.query.get('content-tags')
+        else:
+            # if they didn't check anything we assume they do not want to
+            # be a friendleader. that seems best here.
+                flwilling = 0
+        #contentnotes = self.query.get('content-tags')
 
-	# You have to even enter the rules check.
-	if not self.query.get('rules-check'):
-	    self.render('Please enter the rules check text.', css_class='error',
-			form_contents=(openid_url,email,team,contentnotes))
-	    return
-	
-	# You have to get the rules check right.
-	if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2014 HSWC.':
-	   self.render('Please enter the correct rules check text.', css_class='error',
-		       form_contents=(openid_url,email,team,contentnotes))
-	   return
-
+        # You have to even enter the rules check.
+        if not self.query.get('rules-check'):
+            self.render('Please enter the rules check text.', css_class='error',
+                        form_contents=(openid_url,email,team,contentnotes))
+            return
+        
+        # You have to get the rules check right.
+        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2014 HSWC.':
+            self.render('Please enter the correct rules check text.', css_class='error',
+                        form_contents=(openid_url,email,team,contentnotes))
+        return
+        
         # There has to be a team name.
-	if not team:
+        if not team:
             self.render('Please enter a team name.', css_class='error',
-			form_contents=(openid_url,email,team,contentnotes))
-	    return
+                        form_contents=(openid_url,email,team,contentnotes))
+            return
         if re.search('team', team) or re.search('/', team) or re.search('&', team) or re.search(';', team):
-		self.render('Team formatted incorrectly, see <a href="http://hswc-announce.tumblr.com/post/49934185410/how-to-write-ship-names">How To Format Ship Names</a>.', css_class='error',
-			    form_contents=(openid_url,email,team,contentnotes))
-		return
-	team = saso.scrub_team(team)
-	if not team:
-	    self.render('Please enter a valid team name.', css_class='error',
-			form_contents=(openid_url,email,team,contentnotes))
-	    return
-
-	# There also has to be an email address!
-	if not email:
+            self.render('Team formatted incorrectly, see <a href="http://hswc-announce.tumblr.com/post/49934185410/how-to-write-ship-names">How To Format Ship Names</a>.', css_class='error',
+                        form_contents=(openid_url,email,team,contentnotes))
+            return
+        team = saso.scrub_team(team)
+        if not team:
+            self.render('Please enter a valid team name.', css_class='error',
+                        form_contents=(openid_url,email,team,contentnotes))
+            return
+        
+        # There also has to be an email address!
+        if not email:
             self.render('Please enter an email address.', css_class='error',
-			form_contents=(openid_url,email,team,contentnotes))
-	    return
-	if not re.match(r'[^@]+@[^@]+\.[^@]+',email):
+                        form_contents=(openid_url,email,team,contentnotes))
+            return
+        if not re.match(r'[^@]+@[^@]+\.[^@]+',email):
             self.render('Please enter a valid email address.', css_class='error',
-			form_contents=(openid_url,email,team,contentnotes))
-	    return
-
-	# There has to be a username.
+                        form_contents=(openid_url,email,team,contentnotes))
+            return
+        
+        # There has to be a username.
         if not openid_url:
             self.render('Please enter a Dreamwidth username.',
                         css_class='error', form_contents=(openid_url,email,team,contentnotes))
             return 
         
         # If mode is switch, new players can only join noir,
-	#                    players on sailing ships can only drop,
-	#                    players on sinking ships can switch to sailing ones or drop
+        #                    players on sailing ships can only drop,
+        #                 players on sinking ships can switch to sailing ones or drop
         if mode == "switch":
-	    if not saso.player_exists(openid_url, cursor):
+            if not saso.player_exists(openid_url, cursor):
                 if not team == 'noir':
-		    self.render('Sorry, new players can only join Team Noir at this point.',
-				css_class='error', form_contents=(openid_url,email,team,contentnotes))
-		    return
-	    currentteam = saso.get_current_team(openid_url, cursor)
-	    if saso.is_team_active(currentteam, cursor):
-		print team
-		if not team == 'remove':
-		    self.render('Sorry, players on sailing ships can only drop.',
-				css_class='error', form_contents=(openid_url,email,team,contentnotes))
-		    return
-	    if not hswc.is_team_active(team, cursor):
-		if not team == 'remove':
-		    self.render('Sorry, you can only join a sailing ship.',
-		                css_class='error', form_contents=(openid_url,email,team,contentnotes))
-		    return
-
+                    self.render('Sorry, new players can only join Team Noir at this point.',
+                                css_class='error', form_contents=(openid_url,email,team,contentnotes))
+                    return
+            currentteam = saso.get_current_team(openid_url, cursor)
+            if saso.is_team_active(currentteam, cursor):
+                print team
+                if not team == 'remove':
+                    self.render('Sorry, players on sailing ships can only drop.',
+                                css_class='error', form_contents=(openid_url,email,team,contentnotes))
+                    return
+            if not saso.is_team_active(team, cursor):
+                if not team == 'remove':
+                    self.render('Sorry, you can only join a sailing ship.',
+                                css_class='error', form_contents=(openid_url,email,team,contentnotes))
+                    return
+        
         # If mode is drop, all you can do is drop. That's it.
-	#
-	if mode == "drop":
+        if mode == "drop":
             if team != 'remove':
-		self.render('Sorry, at this point in the event all you can do is drop.',
-			    css_class='error', form_contents=(openid_url,email,team,contentnotes))
-		return
-	    
-
+                self.render('Sorry, at this point in the event all you can do is drop.',
+                            css_class='error', form_contents=(openid_url,email,team,contentnotes))
+                return
+        
+        
         # The team can't be full. 
-	if saso.get_team_members_count(team, cursor) >=13 and team != 'noir' and team != 'abstrata' and team != 'abstrata2' and team != 'abstrata3' and team != 'abstrata4':
-	    if not saso.player_is_on_team(openid_url, team, cursor):
-		self.render('That team is full, sorry. Try signing up for another one!',
-		            css_class='error', form_contents=(openid_url,email,team,contentnotes))
-		return
-
+        if saso.get_team_members_count(team, cursor) >=13 and team != 'noir' and team != 'abstrata' and team != 'abstrata2' and team != 'abstrata3' and team != 'abstrata4':
+            if not saso.player_is_on_team(openid_url, team, cursor):
+                self.render('That team is full, sorry. Try signing up for another one!',
+                            css_class='error', form_contents=(openid_url,email,team,contentnotes))
+                return
+        
         # We want this to go through, so we make an entry in the pending table.
         saso.make_pending_entry(openid_url, email, team, flwilling, contentnotes, cursor)
-	dbconn.commit()
-
+        dbconn.commit()
+        
         # Now add the DW part of the string --- we don't want other OpenID
-	# providers because they are cubeless and shall surely be put to
-	# death.
+        # providers because they are cubeless and shall surely be put to
+        # death.
         openid_url = openid_url + '.dreamwidth.org'
-
+        
         # we're not using these parts of the example but I did not strip them
-	# out on the theory that we might end up needing them for some reason
+        # out on the theory that we might end up needing them for some reason
         #immediate = 'immediate' in self.query
         #use_sreg = 'use_sreg' in self.query
         #use_pape = 'use_pape' in self.query
         #use_stateless = 'use_stateless' in self.query
-	immediate = 0
-	use_sreg = 0
-	use_pape = 0
-	use_stateless = 0
-
+        immediate = 0
+        use_sreg = 0
+        use_pape = 0
+        use_stateless = 0
+        
         oidconsumer = self.getConsumer(stateless = use_stateless)
         try:
             request = oidconsumer.begin(openid_url)
@@ -682,10 +680,10 @@ table {
                 # communicate securely with the identity server.
                 if use_sreg:
                     self.requestRegistrationData(request)
-
+                
                 if use_pape:
                     self.requestPAPEDetails(request)
-
+                
                 trust_root = self.server.base_url
                 #print 'trust_root is ' + trust_root
                 return_to = self.buildURL('process')
@@ -702,33 +700,33 @@ table {
                         trust_root, return_to,
                         form_tag_attrs={'id':'openid_message'},
                         immediate=immediate)
-
+                    
                     self.wfile.write(form_html)
-
+    
     def requestRegistrationData(self, request):
         sreg_request = sreg.SRegRequest(
             required=['nickname'], optional=['fullname', 'email'])
         request.addExtension(sreg_request)
-
+    
     def requestPAPEDetails(self, request):
         pape_request = pape.Request([pape.AUTH_PHISHING_RESISTANT])
         request.addExtension(pape_request)
-
+    
     def doProcess(self):
         """Handle the redirect from the OpenID server.
 """
         oidconsumer = self.getConsumer()
-
+        
         # Ask the library to check the response that the server sent
         # us. Status is a code indicating the response type. info is
         # either None or a string containing more information about
         # the return type.
-#        url = 'http://'+self.headers.get('Host')+self.path
-	# rax: hardcoding this for maximum bullshit
+        # url = 'http://'+self.headers.get('Host')+self.path
+        # rax: hardcoding this for maximum bullshit
         # this makes me not just a bad programmer but a bad person
         url = 'http://autumnfox.akrasiac.org/saso/'+ self.path.strip('/')
         info = oidconsumer.complete(self.query, url)
-
+        
         sreg_resp = None
         pape_resp = None
         css_class = 'error'
@@ -738,21 +736,21 @@ table {
             self.render('Please enter a Dreamwidth username.',
                         css_class='error', form_contents=('','','',''))
             return
-	dwname = (display_identifier.split('.')[0]).split('//')[1]
-	openid_url = dwname
-
-	pending_entry = saso.retrieve_pending_entry(dwname, cursor)
-	if not pending_entry:
-	    self.render('The software choked and lost your preferences, sorry. Kick rax.',
-			css_class='error', form_contents=(dwname,'','',''))
-	    return
+        dwname = (display_identifier.split('.')[0]).split('//')[1]
+        openid_url = dwname
+        
+        pending_entry = saso.retrieve_pending_entry(dwname, cursor)
+        if not pending_entry:
+            self.render('The software choked and lost your preferences, sorry. Kick rax.',
+                css_class='error', form_contents=(dwname,'','',''))
+            return
         email = pending_entry[1]
-	team = pending_entry[2]
-	flwilling = pending_entry[3]
-	contentnotes = pending_entry[4]
+        team = pending_entry[2]
+        flwilling = pending_entry[3]
+        contentnotes = pending_entry[4]
         saso.remove_pending_entry(dwname, cursor)
-	dbconn.commit()
-
+        dbconn.commit()
+        
         if info.status == consumer.FAILURE and display_identifier:
             # In the case of failure, if info is non-None, it is the
             # URL that we were verifying. We include it in the error
@@ -765,104 +763,102 @@ table {
             # error. If info is None, it means that the user cancelled
             # the verification.
             css_class = 'alert'
-
+            
             # This is a successful verification attempt. Since this
             # is now a real application, we do stuff with the form data.
-	    # Or at least will.
+            # Or at least will.
             fmt = "You have successfully signed up with %s as your identity."
             message = fmt % (cgi.escape(display_identifier),)
-	    # ACTUALLY DO SHIT
+            # ACTUALLY DO SHIT
             #sreg_resp = sreg.SRegResponse.fromSuccessResponse(info)
             #pape_resp = pape.Response.fromSuccessResponse(info)
-
-	    # MAGIC MARKER 
-          
-	    # If they're not in the database yet at all, add them without a team.
-	    # This way they're logged even if their team falls through for some reason
-	    # and we can track them down. Plus we can now depend on them existing
-	    # for the rest of this code block.
-	    if not saso.player_exists(openid_url, cursor):
-		saso.add_player_to_players(openid_url, email, contentnotes, cursor)
-		dbconn.commit()
             
-	    teamclean = re.sub('<', '&lt;', team)
-	    teamclean = re.sub('>', '&gt;', teamclean)
-	    if flwilling == '0':
-		flwilling = 0
-
-	    if team == 'remove':
-		currentteam = saso.get_current_team(openid_url, cursor)
-		if not currentteam:
-		    self.render('Cannot remove you from no team.', css_class='error',
-				form_contents=(openid_url, email, team, contentnotes))
-		    return
-	        currentteamclean = re.sub('<', '&lt;', currentteam)
-		currentteamclean = re.sub('>', '&gt;', currentteamclean)
-	        saso.remove_player_from_team(openid_url, currentteam, cursor)
-		saso.remove_player(openid_url, cursor)
-		dbconn.commit()
-		self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
-			    form_contents=(openid_url, email, team, contentnotes))
-		return
-
-	    #If the player is already on the team, just update 
-	    if saso.player_is_on_team(openid_url, team, cursor):
-		# this got stringified by putting it into the db and taking it out again
-		# THAT'S WHY NOTHING WAS WORKING
-		if not flwilling:
-		    # they don't want to be friendleader so nothing changes unless they already are
+            # MAGIC MARKER 
+            
+            # If they're not in the database yet at all, add them without a team.
+            # This way they're logged even if their team falls through for some reason
+            # and we can track them down. Plus we can now depend on them existing
+            # for the rest of this code block.
+            if not saso.player_exists(openid_url, cursor):
+                saso.add_player_to_players(openid_url, email, contentnotes, cursor)
+                dbconn.commit()
+            
+            teamclean = re.sub('<', '&lt;', team)
+            teamclean = re.sub('>', '&gt;', teamclean)
+            if flwilling == '0':
+                flwilling = 0
+            
+            if team == 'remove':
+                currentteam = saso.get_current_team(openid_url, cursor)
+                if not currentteam:
+                    self.render('Cannot remove you from no team.', css_class='error',
+                                form_contents=(openid_url, email, team, contentnotes))
+                    return
+                currentteamclean = re.sub('<', '&lt;', currentteam)
+                currentteamclean = re.sub('>', '&gt;', currentteamclean)
+                saso.remove_player_from_team(openid_url, currentteam, cursor)
+                saso.remove_player(openid_url, cursor)
+                dbconn.commit()
+                self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
+                            form_contents=(openid_url, email, team, contentnotes))
+                return
+            
+            #If the player is already on the team, just update 
+            if saso.player_is_on_team(openid_url, team, cursor):
+                # this got stringified by putting it into the db and taking it out again
+                # THAT'S WHY NOTHING WAS WORKING
+                if not flwilling:
+                    # they don't want to be friendleader so nothing changes unless they already are
                     if saso.get_friendleader(team, cursor) == openid_url:
-			saso.make_friendleader('', team, cursor)
-			dbconn.commit()
-			self.render('You are no longer the %s friendleader.' % teamclean, css_class='alert',
-		                    form_contents=(openid_url, email, team, contentnotes))
-			return
-	            saso.update_player(openid_url, email, contentnotes, team, cursor)
-		    dbconn.commit()
-		    self.render('No change to team, personal information updated.', css_class='alert',
-			        form_contents=(openid_url,email, team, contentnotes))
-		    return
-	        else:
-		    # they do want to be friendleader so if no one else is, they get the slot
-	            if not saso.team_has_friendleader(team, cursor):
+                        saso.make_friendleader('', team, cursor)
+                        dbconn.commit()
+                        self.render('You are no longer the %s friendleader.' % teamclean, css_class='alert',
+                                    form_contents=(openid_url, email, team, contentnotes))
+                        return
+                    saso.update_player(openid_url, email, contentnotes, team, cursor)
+                    dbconn.commit()
+                    self.render('No change to team, personal information updated.', css_class='alert',
+                                form_contents=(openid_url,email, team, contentnotes))
+                    return
+                else:
+                    # they do want to be friendleader so if no one else is, they get the slot
+                    if not saso.team_has_friendleader(team, cursor):
                         saso.make_friendleader(openid_url, team, cursor)
-			saso.update_player(openid_url, email, contentnotes, team, cursor)
-			dbconn.commit()
-			self.render('Became friendleader of %s.' % teamclean, css_class='alert',
-			            form_contents=(openid_url, email, team, contentnotes))
-			return
-		    else:
+                        saso.update_player(openid_url, email, contentnotes, team, cursor)
+                        dbconn.commit()
+                        self.render('Became friendleader of %s.' % teamclean, css_class='alert',
+                                    form_contents=(openid_url, email, team, contentnotes))
+                        return
+                    else:
                         saso.update_player(openid_url, email, contentnotes, team, cursor)
                         dbconn.commit()
                         self.render('No change to team, personal information updated.', css_class='alert',
                                     form_contents=(openid_url,email, team, contentnotes))
                         return
-
+            
             # Try to add them to whatever team they want to be on.
             oldteam = saso.get_current_team(openid_url, cursor)
-	    errorstatus = saso.add_player_to_team(openid_url, team, flwilling, email, contentnotes, cursor)
-	    dbconn.commit()
-	    teamclean = re.sub('<', '&lt;', team)
-	    teamclean = re.sub('>', '&gt;', teamclean)
-	    if errorstatus:
-		# some belunkus error got passed back, don't remove from old team
-		self.render(errorstatus, css_class='alert', form_contents=(openid_url, email, team, contentnotes))
-		return
-	    if oldteam:
-		if oldteam != team:
-		    saso.remove_player_from_team(openid_url, oldteam, cursor)
-		    dbconn.commit()
-		    oldteamclean = re.sub('<', '&lt;', oldteam)
-		    oldteamclean = re.sub('>', '&gt;', oldteamclean)
-		    self.render('%s added to %s and removed from %s!' % (openid_url, teamclean, oldteamclean), css_class='alert', 
-				form_contents=(openid_url, email, team, contentnotes))
-		    return
-	    self.render('Added %s to %s!' % (openid_url, teamclean), css_class='alert',
-			form_contents=(openid_url, email, team, contentnotes))
-	    return
-
-
-
+            errorstatus = saso.add_player_to_team(openid_url, team, flwilling, email, contentnotes, cursor)
+            dbconn.commit()
+            teamclean = re.sub('<', '&lt;', team)
+            teamclean = re.sub('>', '&gt;', teamclean)
+            if errorstatus:
+                # some belunkus error got passed back, don't remove from old team
+                self.render(errorstatus, css_class='alert', form_contents=(openid_url, email, team, contentnotes))
+                return
+            if oldteam:
+                if oldteam != team:
+                    saso.remove_player_from_team(openid_url, oldteam, cursor)
+                    dbconn.commit()
+                    oldteamclean = re.sub('<', '&lt;', oldteam)
+                    oldteamclean = re.sub('>', '&gt;', oldteamclean)
+                    self.render('%s added to %s and removed from %s!' % (openid_url, teamclean, oldteamclean), css_class='alert', 
+                                form_contents=(openid_url, email, team, contentnotes))
+                    return
+            self.render('Added %s to %s!' % (openid_url, teamclean), css_class='alert',
+                        form_contents=(openid_url, email, team, contentnotes))
+            return
+            
         elif info.status == consumer.CANCEL:
             # cancelled
             message = 'Verification cancelled'
@@ -880,24 +876,24 @@ table {
             # failure message. The library should supply debug
             # information in a log.
             message = 'Verification failed.'
-
+        
         self.render(message, css_class, display_identifier,
                     sreg_data=sreg_resp, pape_data=pape_resp)
-
+    
     def buildURL(self, action, **query):
         """Build a URL relative to the server base_url, with the given
 query parameters added."""
-	# ugly hacks that work work
+        # ugly hacks that work work
         base = self.server.base_url + '/' + action
         return appendArgs(base, query)
-
+    
     def notFound(self):
         """Render a page with a 404 return code and a message."""
         fmt = 'The path <q>%s</q> was not understood by this server.'
         msg = fmt % (self.path,)
         openid_url = self.query.get('openid_identifier')
         self.render(msg, 'error', openid_url, status=404)
-
+    
     def render(self, message=None, css_class='alert', form_contents=None,
                status=200, title="Homestuck Shipping World Cup",
                sreg_data=None, pape_data=None):
@@ -905,16 +901,16 @@ query parameters added."""
         self.send_response(status)
         self.pageHeader(title)
         if message:
-	    #print message
+            #print message
             self.wfile.write("<div class='%s'>" % (css_class,))
             self.wfile.write(message)
             self.wfile.write("</div>")
         self.pageFooter(form_contents)
-
+    
     def pageHeader(self, title):
         """Render the page header"""
         self.setSessionCookie()
-	#print (title, title, quoteattr(self.buildURL('verify')))
+        #print (title, title, quoteattr(self.buildURL('verify')))
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 
@@ -1031,7 +1027,7 @@ input, textarea {
 
 <p class="navigation"> <a href="http://autumnfox.akrasiac.org/hswc/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%20Contact">Mod Contact</a> | <a href="http://hs_worldcup.dreamwidth.org">Dreamwidth</a> | <a href="http://autumnfox.akrasiac.org/hswcrules">Rules Wiki</a> | <a href="http://hswc-announce.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
 ''')
-
+    
     def pageFooter(self, form_contents):
         """Render the page footer"""
         if not form_contents:
@@ -1098,13 +1094,13 @@ def main(host, port, data_path, weak_ssl=False):
         store = filestore.FileOpenIDStore(data_path)
     else:
         store = memstore.MemoryStore()
-
+    
     if weak_ssl:
         setDefaultFetcher(Urllib2Fetcher())
-
+    
     addr = (host, port)
     server = OpenIDHTTPServer(store, addr, OpenIDRequestHandler)
-
+    
     print 'Server running at:'
     print server.base_url
     server.serve_forever()
@@ -1113,7 +1109,7 @@ if __name__ == '__main__':
     host = 'localhost'
     port = 8600
     weak_ssl = False
-
+    
     try:
         import optparse
     except ImportError:
@@ -1135,14 +1131,14 @@ if __name__ == '__main__':
         parser.add_option(
             '-w', '--weakssl', dest='weakssl', default=False,
             action='store_true', help='Skip ssl cert verification')
-
+        
         options, args = parser.parse_args()
         if args:
             parser.error('Expected no arguments. Got %r' % args)
-
+        
         host = options.host
         port = options.port
         data_path = options.data_path
         weak_ssl = options.weakssl
-
+    
     main(host, port, data_path, weak_ssl)

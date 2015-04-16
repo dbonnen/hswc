@@ -22,15 +22,15 @@ import sqlite3, sys, re
 
 #cursor = dbconn.cursor()
 
-def send_inactives_to_noir(cursor):
-    """Take players on inactive teams and send them to noir."""
+def send_inactives_to_grandstand(cursor):
+    """Take players on inactive teams and send them to grandstand."""
     allteams = get_list_of_teams(cursor)
     
     for team in allteams:
         if not is_team_active(team, cursor):
             players = get_team_members_list(team, cursor)
             for player in players:
-                add_player_to_noir(player, cursor)
+                add_player_to_grandstand(player, cursor)
                 remove_player_from_team(player, team, cursor)
     
     #dbconn.commit()
@@ -71,7 +71,7 @@ def make_team_active(team, cursor):
 
 def is_team_active(team, cursor):
     """Return the active bit on a team."""
-    if team == 'noir':
+    if team == 'grandstand':
         return 'yes'
     
     array = (team,)
@@ -118,7 +118,7 @@ def team_exists(teamname, cursor):
     """See if a team exists in the database or not. If yes, return 1,
       if not return 0."""
     array = (teamname,) # for sanitizing
-    if teamname == 'noir':
+    if teamname == 'grandstand':
         return 1
     cursor.execute('SELECT * from teams where name=?', array)
     if cursor.fetchone():
@@ -157,10 +157,10 @@ def get_current_team(player, cursor):
     if currentteam:
         return currentteam[3]
     else:
-        cursor.execute('SELECT * from noir where dwname=?', array)
-        noirstatus = cursor.fetchone()
-        if noirstatus:
-            return 'noir'
+        cursor.execute('SELECT * from grandstand where dwname=?', array)
+        grandstandstatus = cursor.fetchone()
+        if grandstandstatus:
+            return 'grandstand'
         return 0
     
 def add_team(teamname, cursor):
@@ -173,8 +173,8 @@ def add_team(teamname, cursor):
 def remove_team(teamname, cursor):
     """Delete a team."""
     array = (teamname,)
-    if teamname == 'noir':
-        # don't delete noir
+    if teamname == 'grandstand':
+        # don't delete grandstand
         return
     cursor.execute('DELETE from teams where name=?', array)
     #dbconn.commit()
@@ -192,7 +192,7 @@ def get_list_of_teams(cursor):
     teamlist = []
     for team in cursor.execute('SELECT * from teams'):
         teamlist.append(team[0]) # man isn't it cool that order matters
-    teamlist.append('noir')
+    teamlist.append('grandstand')
     # soni doesn't like it alphabetical
     # teamlist.sort()
     return teamlist
@@ -214,8 +214,8 @@ def get_friendleader(team, cursor):
     array = (team, )
     if not team_exists(team, cursor):
         return 0
-    if team == 'noir':
-        return 'worldcup-mods'
+    if team == 'grandstand':
+        return 'olympics-mods'
     cursor.execute('SELECT * from teams where name=?', array)
     teamrow = cursor.fetchone()
     return teamrow[2]
@@ -228,25 +228,25 @@ def make_friendleader(player, teamname, cursor):
     #dbconn.commit()
     return
 
-def remove_player_from_noir(player, cursor):
-    """Remove a player from noir."""
+def remove_player_from_grandstand(player, cursor):
+    """Remove a player from grandstand."""
     array = (player,)
-    cursor.execute('DELETE from noir where dwname=?', array)
+    cursor.execute('DELETE from grandstand where dwname=?', array)
     #dbconn.commit()
     return
 
-def add_player_to_noir(player, cursor):
-    """Add a player to noir."""
+def add_player_to_grandstand(player, cursor):
+    """Add a player to grandstand."""
     array = (player,)
-    cursor.execute('INSERT into noir (dwname) values (?)', array)
-    cursor.execute('UPDATE players set team=? where dwname=?', ('noir', player))
+    cursor.execute('INSERT into grandstand (dwname) values (?)', array)
+    cursor.execute('UPDATE players set team=? where dwname=?', ('grandstand', player))
     return
 
 def remove_player_from_team(player, teamname, cursor):
     """Remove a player from a team, presumably because they joined another."""
     array = (teamname,)
-    if teamname == 'noir':
-        remove_player_from_noir(player, cursor)
+    if teamname == 'grandstand':
+        remove_player_from_grandstand(player, cursor)
         return
     cursor.execute('SELECT * from teams where name=?', array)
     teamdatalist = cursor.fetchone()
@@ -291,8 +291,8 @@ def get_team_members_count(team, cursor):
     array=(team,)
     if not team_exists(team, cursor):
         return 0
-    if team == 'noir':
-        return get_noir_members_count(cursor)
+    if team == 'grandstand':
+        return get_grandstand_members_count(cursor)
     cursor.execute('SELECT * from teams where name=?',array)
     teamdatalist = cursor.fetchone()
     count = 0
@@ -306,8 +306,8 @@ def get_team_members_list(team, cursor):
     array = (team,)
     if not team_exists(team, cursor):
         return 0
-    if team == 'noir':
-        return get_noir_members_list(cursor)
+    if team == 'grandstand':
+        return get_grandstand_members_list(cursor)
     cursor.execute('SELECT * from teams where name=?', array)
     teamdatalist = cursor.fetchone()
     teamplayers = []
@@ -317,30 +317,30 @@ def get_team_members_list(team, cursor):
     
     return teamplayers
 
-def get_noir_members_count(cursor):
-    """How many players on team noir?"""
-    cursor.execute('SELECT * from noir')
-    noirlist = cursor.fetchall()
-    return len(noirlist)
+def get_grandstand_members_count(cursor):
+    """How many players on team grandstand?"""
+    cursor.execute('SELECT * from grandstand')
+    grandstandlist = cursor.fetchall()
+    return len(grandstandlist)
 
-def get_noir_members_list(cursor):
-    """Which players are on team noir?"""
-    cursor.execute('SELECT * from noir')
-    noirlist = cursor.fetchall()
-    if not noirlist:
+def get_grandstand_members_list(cursor):
+    """Which players are on team grandstand?"""
+    cursor.execute('SELECT * from grandstand')
+    grandstandlist = cursor.fetchall()
+    if not grandstandlist:
         return ['nobody']
-    noirplayers = []
-    for x in noirlist:
-        noirplayers.append(x[0])
-    noirplayers.sort()
-    return noirplayers
+    grandstandplayers = []
+    for x in grandstandlist:
+        grandstandplayers.append(x[0])
+    grandstandplayers.sort()
+    return grandstandplayers
 
 def player_is_on_team(player, team, cursor):
     """Is the player on the team?"""
     array=(team,)
-    if team == 'noir':
-        noir_members = get_noir_members_list(cursor)
-        for x in noir_members:
+    if team == 'grandstand':
+        grandstand_members = get_grandstand_members_list(cursor)
+        for x in grandstand_members:
             if player == x:
                 return 1
         return 0
@@ -359,11 +359,11 @@ def get_team_display_line(team, cursor):
     array=(team,)
     teamname = re.sub('<', '&lt;', team)
     teamname = re.sub('>', '&gt;', teamname)
-    if teamname == 'noir':
-        stringofallplayers = 'Please see the noir page at <a href="http://autumnfox.akrasiac.org/hswc/noir">this link</a>.'
+    if teamname == 'grandstand':
+        stringofallplayers = 'Please see the grandstand page at <a href="http://autumnfox.akrasiac.org/hswc/noir">this link</a>.'
         csstype= 'roster_teamslots'
-        count = get_noir_members_count(cursor)
-        friendleader = 'worldcup-mods'
+        count = get_grandstand_members_count(cursor)
+        friendleader = 'olympics-mods'
         return (csstype, count, teamname, friendleader, stringofallplayers)
     cursor.execute('SELECT * from teams where name=?', array)
     teamdatalist = cursor.fetchone()
@@ -393,9 +393,9 @@ def add_player_to_team(player, teamname, flwilling, email, notes, cursor):
        If the player is willing and there is no friendleader, FLify them.
        If the team has at least 5 members, make it active."""
     
-    if teamname == 'noir':
-        add_player_to_noir(player, cursor)
-        cursor.execute('UPDATE players set team=? where dwname=?', ('noir', player))
+    if teamname == 'grandstand':
+        add_player_to_grandstand(player, cursor)
+        cursor.execute('UPDATE players set team=? where dwname=?', ('grandstand', player))
         return
     
     if not team_exists(teamname, cursor):
@@ -491,7 +491,10 @@ def scrub_team(team):
         return string
     
     if string == '':
-        return 0 
+        return 0
+    elif re.search('/', string):
+        namelist = string.split('/')
+        shipsymbol = '/'
     elif re.search('<3<', string):
         namelist = string.split('<3<')
         shipsymbol = '<3<'
@@ -509,12 +512,12 @@ def scrub_team(team):
         shipsymbol = 'c3<'
     elif re.search('abstrata', string):
         return 'abstrata'
-    elif re.search('noir', string):
-        # jack noir won't show up, because there would be a ship symbol
-        # unless you ship just... jack noir
-        # no ship, just jack noir
+    elif re.search('grandstand', string):
+        # grandstand won't show up, because there would be a ship symbol
+        # unless you ship just... grandstands
+        # no ship, just grandstands
         # in which case THE CODE CAN'T EVEN HANDLE YOU RIGHT NOW
-        return 'noir'
+        return 'grandstand'
     else:
         # then you have some kinda theme team or something whatever
         return string

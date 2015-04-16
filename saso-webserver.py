@@ -24,7 +24,7 @@ cursor = dbconn.cursor()
 #The default mode lets any authed user sign up for anything.
 #mode = 'default' 
 
-#The switch mode lets players switch off of sinking ships, join noir,
+#The switch mode lets players switch off of sinking ships, join grandstand,
 # or drop.
 #mode = 'switch'
 
@@ -158,8 +158,8 @@ written to the requesting browser.
                 self.doProcess()
 	    elif path == '/teams':
 		self.doTeams()
-	    elif path == '/noir':
-		self.doNoir()
+	    elif path == '/grandstand':
+		self.doGrandstand()
 	    elif path == '/test':
 		self.doTest()
             else:
@@ -181,13 +181,13 @@ written to the requesting browser.
 Content-type: text/html; charset=UTF-8
 <head>
         <title>
-        HSWC 2014 TEAM NOIR ROSTER
+        SASO 2015 GRANDSTAND ROSTER
         </title>
  
 </head><body>
  
         <h1>
-        HSWC 2014 Team Noir Roster
+        SASO 2015 Grandstand Roster
         </h1>
  
 </body>
@@ -195,10 +195,10 @@ Content-type: text/html; charset=UTF-8
 	print "I got this far 3"
 	return
 
-    def doNoir(self):
-        """Show the noir list page."""
-        noircount = str(hswc.get_noir_members_count(cursor))
-        noirplayers = hswc.get_noir_members_list(cursor)
+    def doGrandstand(self):
+        """Show the grandstand list page."""
+        grandstandcount = str(saso.get_grandstand_members_count(cursor))
+        grandstandplayers = saso.get_grandstand_members_list(cursor)
         
         self.send_response(200)
         self.wfile.write('''\
@@ -206,12 +206,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
         <title>
-        HSWC 2014 TEAM NOIR ROSTER
+        SASO 2015 GRANDSTAND ROSTER
         </title>
  
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta http-equiv="refresh" content="300" />
-        <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team" />
+        <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team, 2015 SASO Mod Team" />
         <link rel="shortcut icon" href="http://autumnfox.akrasiac.org/permalinks/hswc.ico">
  
         <style type="text/css" media="all">
@@ -280,7 +280,7 @@ table {
         padding: 7px;
 }
  
-.noir_members {
+.grandstand_members {
         padding: 3px 0px 15px 15px;
         text-transform:lowercase;
         width: 100%;
@@ -289,15 +289,15 @@ table {
 </head><body>
  
         <h1>
-        HSWC 2014 Team Noir Roster
+        SASO 2015 Grandstand Roster
         </h1>''')
         
         self.wfile.write('''\
  
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/hswc/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/hswc/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://hs_worldcup.dreamwidth.org">Dreamwidth</a> | <a href="http://autumnfox.akrasiac.org/hswcrules">Rules Wiki</a> | <a href="http://hswc-announce.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
  
 <p class="tally">
-        There are currently <strong>%s participants</strong> in Team Noir.<br />
+        There are currently <strong>%s participants</strong> in the grandstand.<br />
         This page will automatically update every <strong>5 minutes</strong>.
 </p>
  
@@ -305,30 +305,30 @@ table {
  
 <tr>
         <td class="roster_teamname">
-        Noir
+        Grandstand
         </td>
 </tr>
 <tr>
-        <td class="noir_members">''' % noircount)
+        <td class="grandstand_members">''' % grandstandcount)
         
         # MAGIC MARKER
-        # DO NOIR LOGIC
+        # DO GRANDSTAND LOGIC
         # THIS CODE SUCKS I AM TIRED
         
-        noirlist = saso.get_noir_members_list(cursor)
+        grandstandlist = saso.get_grandstand_members_list(cursor)
         
-        noirdict = {}
-        for x in noirlist:
+        grandstanddict = {}
+        for x in grandstandlist:
             firstchar = x[0]
-            if firstchar in noirdict: 
-                noirdict[firstchar] = noirdict[firstchar] + ', ' + x
+            if firstchar in grandstanddict: 
+                grandstanddict[firstchar] = grandstanddict[firstchar] + ', ' + x
             else:
-                noirdict[firstchar] = x
+                grandstanddict[firstchar] = x
         
         for x in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']:
-            if x in noirdict:
+            if x in grandstanddict:
                 self.wfile.write('''\
-<p><span class="noir_%s" style="font-weight:bold;text-transform:none">%s:</span>%s</p>''' % (x,x, noirdict[x]))
+<p><span class="grandstand_%s" style="font-weight:bold;text-transform:none">%s:</span>%s</p>''' % (x,x, grandstanddict[x]))
 
         self.wfile.write('''\
 </td>
@@ -445,7 +445,7 @@ table {
 	text-align: center;
 }
 
-.roster_fl {
+.roster_cpn {
 	padding: 7px 0px 5px 15px;
 	border-bottom: 1px dotted #babad5;
 	text-transform:lowercase;
@@ -462,13 +462,13 @@ table {
 <body>
 
 	<h1>
-	HSWC 2014 Team Roster
+	SASO 2015 Team Roster
 	</h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/hswc/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://hs_worldcup.dreamwidth.org">Dreamwidth</a> | <a href="http://autumnfox.akrasiac.org/hswcrules">Rules Wiki</a> | <a href="http://hswc-announce.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
 
 <p class="tally">
-	There are currently <strong>%s teams</strong> and <strong>%s participants</strong> in the HSWC.<br />
+	There are currently <strong>%s teams</strong> and <strong>%s participants</strong>.<br />
 	This page will automatically update every 5 minutes.
 </p>
 
@@ -477,7 +477,7 @@ table {
         allteams = saso.get_list_of_teams(cursor)
         for team in allteams:
             displayline = saso.get_team_display_line(team, cursor)
-            if team != 'noir':
+            if team != 'grandstand':
                 self.wfile.write('''\
 <tr>
 	<td class="%s">
@@ -489,8 +489,8 @@ table {
 	</td>
 </tr>
 <tr>
-	<td colspan="2" class="roster_fl">
-	<span style="font-weight:bold;text-transform:none">Friendleader:</span> %s 
+	<td colspan="2" class="roster_cpn">
+	<span style="font-weight:bold;text-transform:none">Captain:</span> %s 
 	</td>
 </tr>
 <tr>
@@ -510,8 +510,8 @@ table {
         </td>
 </tr>
 <tr>
-        <td colspan="2" class="roster_fl">
-        <span style="font-weight:bold;text-transform:none">Friendleader:</span> %s 
+        <td colspan="2" class="roster_cpn">
+        <span style="font-weight:bold;text-transform:none">Captain:</span> %s 
         </td>
 </tr>
 <tr>
@@ -551,12 +551,12 @@ table {
                             form_contents=(openid_url,email,team,contentnotes))
                 return
             team = saso.scrub_team(team)
-        if self.query.get('FL') == 'yes':
-            flwilling = 1
+        if self.query.get('CPN') == 'yes':
+            cpnwilling = 1
         else:
             # if they didn't check anything we assume they do not want to
             # be a friendleader. that seems best here.
-                flwilling = 0
+            cpnwilling = 0
         #contentnotes = self.query.get('content-tags')
 
         # You have to even enter the rules check.
@@ -566,7 +566,7 @@ table {
             return
         
         # You have to get the rules check right.
-        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2014 HSWC.':
+        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2014 SASO.':
             self.render('Please enter the correct rules check text.', css_class='error',
                         form_contents=(openid_url,email,team,contentnotes))
         return
@@ -576,8 +576,8 @@ table {
             self.render('Please enter a team name.', css_class='error',
                         form_contents=(openid_url,email,team,contentnotes))
             return
-        if re.search('team', team) or re.search('/', team) or re.search('&', team) or re.search(';', team):
-            self.render('Team formatted incorrectly, see <a href="http://hswc-announce.tumblr.com/post/49934185410/how-to-write-ship-names">How To Format Ship Names</a>.', css_class='error',
+        if re.search('team', team) or re.search('&', team) or re.search(';', team):
+            self.render('Team formatted incorrectly, see <a href="http://sportsanime.dreamwidth.org/750.html#teams">How To Format Ship Names</a>.', css_class='error',
                         form_contents=(openid_url,email,team,contentnotes))
             return
         team = saso.scrub_team(team)
@@ -602,13 +602,13 @@ table {
                         css_class='error', form_contents=(openid_url,email,team,contentnotes))
             return 
         
-        # If mode is switch, new players can only join noir,
+        # If mode is switch, new players can only join grandstand,
         #                    players on sailing ships can only drop,
-        #                 players on sinking ships can switch to sailing ones or drop
+        #                    players on sinking ships can switch to sailing ones or drop
         if mode == "switch":
             if not saso.player_exists(openid_url, cursor):
-                if not team == 'noir':
-                    self.render('Sorry, new players can only join Team Noir at this point.',
+                if not team == 'grandstand':
+                    self.render('Sorry, new players can only join Team Grandstand at this point.',
                                 css_class='error', form_contents=(openid_url,email,team,contentnotes))
                     return
             currentteam = saso.get_current_team(openid_url, cursor)
@@ -633,7 +633,7 @@ table {
         
         
         # The team can't be full. 
-        if saso.get_team_members_count(team, cursor) >=13 and team != 'noir' and team != 'abstrata' and team != 'abstrata2' and team != 'abstrata3' and team != 'abstrata4':
+        if saso.get_team_members_count(team, cursor) >=13 and team != 'grandstand' and team != 'abstrata' and team != 'abstrata2' and team != 'abstrata3' and team != 'abstrata4':
             if not saso.player_is_on_team(openid_url, team, cursor):
                 self.render('That team is full, sorry. Try signing up for another one!',
                             css_class='error', form_contents=(openid_url,email,team,contentnotes))
@@ -1060,7 +1060,7 @@ switching teams).
 
 <p>
 	<span class="field">Would you like to volunteer to be the team's <a href="http://sportsanime.dreamwidth.org/750.html#teams">Captain</a>?:</span><br />
-	<input name="FL" value="yes" type="radio" />Yes &nbsp; <input name="FL" value="no" type="radio" checked/>No
+	<input name="CPN" value="yes" type="radio" />Yes &nbsp; <input name="CPN" value="no" type="radio" checked/>No
 </p>
 
 <p>

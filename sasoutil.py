@@ -246,7 +246,7 @@ def make_captain(player, teamname, cursor):
     """Make player captain of teamname."""
     #FINISHED FOR SASO
     array = (player, teamname)
-    cursor.execute('UPDATE teams set captain=? where name=?', array) 
+    cursor.execute('UPDATE teams set captain=? where team_name=?', array) 
     cursor.execute('UPDATE players set cpn=? where name=?', (1, player))
     #cursor.execute('UPDATE players set captain=? where dwname=?', ('yes', player))
     #dbconn.commit()
@@ -454,6 +454,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                     if old_team[4] < 4:
                         cursor.execute("UPDATE teams set active=0 where team_id=?", (player_info[1],))
                 if teamdatalist[4] == 0:
+                    print teamdatalist
                     make_captain(player, teamname, cursor)
                 elif not captain:
                     if cpnwilling:

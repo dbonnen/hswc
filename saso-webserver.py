@@ -156,14 +156,14 @@ written to the requesting browser.
                 self.doVerify()
             elif path == '/process':
                 self.doProcess()
-	    elif path == '/teams':
-            self.doTeams()
-	    elif path == '/grandstand':
-            self.doGrandstand()
-	    elif path == '/test':
-            self.doTest()
-                else:
-                    self.notFound()
+            elif path == '/teams':
+                self.doTeams()
+            elif path == '/grandstand':
+                self.doGrandstand()
+            elif path == '/test':
+                self.doTest()
+                    else:
+                        self.notFound()
         
         except (KeyboardInterrupt, SystemExit):
             raise

@@ -815,8 +815,7 @@ table {
                                 form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
-                currentteamclean = re.sub('>', '&gt;', curre        
-        print 'is this even running at all? 1'ntteamclean)
+                currentteamclean = re.sub('>', '&gt;', currentteamclean)
                 saso.remove_player_from_team(openid_url, currentteam, cursor)
                 saso.remove_player(openid_url, cursor)
                 dbconn.commit()

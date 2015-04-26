@@ -537,7 +537,7 @@ def valid_fandom(fandom):
     if re.search(',', fandom):
         fandom_new = fandom.split(',')
         for i in range(len(fandom_new)):
-            fandom_new[i] = i.strip()
+            fandom_new[i] = fandom_new[i].strip()
     else:
         fandom_new = [fandom]
     fandom_list = ['Haikyuu!!', 'Daiya no Ace', 'Yowamushi Pedal', 'Free!' ,'Chihayafuru', 'Ookiku Furikabutte', 'Kuroko no Basuke', 'Ping Pong: The Animation', 'Eyeshield 21', 'Love Live!', 'Prince of Tennis', 'Hikaru no Go', 'Teppuu', 'Baby Steps' 'Slam Dunk', 'Angelic Layer']

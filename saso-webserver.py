@@ -157,13 +157,13 @@ written to the requesting browser.
             elif path == '/process':
                 self.doProcess()
 	    elif path == '/teams':
-		self.doTeams()
+            self.doTeams()
 	    elif path == '/grandstand':
-		self.doGrandstand()
+            self.doGrandstand()
 	    elif path == '/test':
-		self.doTest()
-            else:
-                self.notFound()
+            self.doTest()
+                else:
+                    self.notFound()
         
         except (KeyboardInterrupt, SystemExit):
             raise
@@ -347,7 +347,7 @@ table {
         playercount = str(saso.get_playercount(cursor))
         
         self.send_response(200)
-        self.vwfile.write('''\
+        self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 
 <head>

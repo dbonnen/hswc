@@ -390,7 +390,7 @@ def get_team_display_line(team, cursor):
     if teamdatalist[5]:
         captain = teamdatalist[5]
     else: 
-        captain = "None! You should sign up =D"
+        captain = "None! You should sign up =o"
     count = teamdatalist[4]
     stringofallplayers = ''
     print teamdatalist

@@ -665,8 +665,8 @@ table {
                 team = newest_team
         
         # We want this to go through, so we make an entry in the pending table.
-        saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, cursor)
-        dbconn.commit()
+        #saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, cursor)
+        #dbconn.commit()
         '''
         # Now add the DW part of the string --- we don't want other OpenID
         # providers because they are cubeless and shall surely be put to

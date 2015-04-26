@@ -674,8 +674,6 @@ table {
         use_pape = 0
         use_stateless = 0
         
-        print 'is this even running at all? 1'
-        
         oidconsumer = self.getConsumer(stateless = use_stateless)
         try:
             request = oidconsumer.begin(openid_url)
@@ -817,7 +815,8 @@ table {
                                 form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
-                currentteamclean = re.sub('>', '&gt;', currentteamclean)
+                currentteamclean = re.sub('>', '&gt;', curre        
+        print 'is this even running at all? 1'ntteamclean)
                 saso.remove_player_from_team(openid_url, currentteam, cursor)
                 saso.remove_player(openid_url, cursor)
                 dbconn.commit()

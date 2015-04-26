@@ -429,7 +429,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
         if player_info:
             if player_info[1] == teamdatalist[0]:
                 alreadyonteam = 1
-        print player_info
+        
         # in theory being already on the team should have been caught earlier
         # but this will double-catch it just in case because not doing so is bad
         # also it is already written
@@ -437,7 +437,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
             if teamdatalist[4] < 8:
                 cursor.execute('UPDATE teams set num_participants = (num_participants + 1) where team_id=?', (teamdatalist[0],))
                 cursor.execute('UPDATE players set team_id=? where dwname=?', (teamdatalist[0], player,))
-                if player_info:
+                if player_info[1] != -1:
                     cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (player_info[1],))
                     cursor.execute('SELECT * from teams where team_id=?', (player_info[1],))
                     old_team = cursor.fetchone()

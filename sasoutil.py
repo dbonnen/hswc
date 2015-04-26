@@ -394,7 +394,7 @@ def get_team_display_line(team, cursor):
     count = teamdatalist[4]
     stringofallplayers = ''
     print teamdatalist
-    for x in cursor.execute('SELECT * from players where team_id=?', (teamdatalist[1])):
+    for x in cursor.execute('SELECT * from players where team_id=?', (teamdatalist[0])):
         stringofallplayers = stringofallplayers + ' ' + x[0]
     stringofallplayers = stringofallplayers.strip()
     csstype = 'roster_teamslots'

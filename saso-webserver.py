@@ -554,7 +554,7 @@ table {
                 return
             team = saso.scrub_team(team)
         if fandom:
-            if not saso.valid_fandom(fandom):
+            if not saso.valid_fandom(fandom) and team_type != 'grandstand':
                 self.render('Please only enter pairings and teams from nominated fandoms. If your fandom is nominated, please spell it the same way it is spelled on the list of nominated fandoms.', css_class='error',
                             form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
         elif team != 'grandstand':

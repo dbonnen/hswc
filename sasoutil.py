@@ -295,8 +295,8 @@ def update_player(player, email, notes, cursor):
     """Update the player's information in the db after a new form submission."""
     #team does not change
     #FINISHED FOR SASO
-    array=(email, notes, teamname, player)
-    cursor.execute('UPDATE players set email=?, notes=?, team=? where dwname=?', array)
+    array=(email, notes, player)
+    cursor.execute('UPDATE players set email=?, notes=? where dwname=?', array)
     #dbconn.commit()
     return
 

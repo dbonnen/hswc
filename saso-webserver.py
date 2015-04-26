@@ -852,7 +852,7 @@ table {
                                     form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
                         return
                     else:
-                        saso.update_player(openid_url, email, contentnotes, team, cursor)
+                        saso.update_player(openid_url, email, contentnotes, cursor)
                         dbconn.commit()
                         self.render('No change to team, personal information updated.', css_class='alert',
                                     form_contents=(openid_url,email, team_type, team, fandom, contentnotes))

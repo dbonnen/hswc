@@ -641,7 +641,7 @@ table {
                             css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                 return
         
-        
+        print 'do we get here'
         # The team can't be full. 
         if saso.get_team_members_count(team, cursor) >= 8 and team_type != 'grandstand' and team_type != 'sports':
             if not saso.player_is_on_team(openid_url, team, cursor):
@@ -665,7 +665,7 @@ table {
         # We want this to go through, so we make an entry in the pending table.
         saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, cursor)
         dbconn.commit()
-        
+        '''
         # Now add the DW part of the string --- we don't want other OpenID
         # providers because they are cubeless and shall surely be put to
         # death.
@@ -725,7 +725,7 @@ table {
                         immediate=immediate)
                     
                     self.wfile.write(form_html)
-    
+    '''
     def requestRegistrationData(self, request):
         sreg_request = sreg.SRegRequest(
             required=['nickname'], optional=['fullname', 'email'])

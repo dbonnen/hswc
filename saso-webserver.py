@@ -860,7 +860,7 @@ table {
             
             # Try to add them to whatever team they want to be on.
             oldteam = saso.get_current_team(openid_url, cursor)
-            errorstatus = saso.add_player_to_team(openid_url, team, team_type, fandom, cpnwilling, email, contentnotes, cursor)
+            errorstatus = saso.add_player_to_team(openid_url, team, team_type, fandom, cpn_willing, email, contentnotes, cursor)
             dbconn.commit()
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)

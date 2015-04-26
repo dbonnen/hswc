@@ -385,7 +385,7 @@ def get_team_display_line(team, cursor):
         return (csstype, count, teamname, captain, stringofallplayers)
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
-    teamname = re.sub('<', '&lt;', teamdatalist[0])
+    teamname = re.sub('<', '&lt;', teamdatalist[1])
     teamname = re.sub('>', '&gt;', teamname)
     if teamdatalist[5]:
         captain = teamdatalist[5]

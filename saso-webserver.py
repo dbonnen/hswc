@@ -648,7 +648,9 @@ table {
                 self.render('That team is full, sorry. Try signing up for another one!',
                             css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                 return
-        
+	
+	print 'do we even get here'
+
         if saso.get_team_members_count(team, cursor) >= 8 and team_type == 'sports':
             #this code only works if you assume that there will be less than 80 people signing up for one fandom
             #this is in no way scalable and you shouldn't do this

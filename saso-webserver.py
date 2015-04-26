@@ -800,7 +800,7 @@ table {
             # and we can track them down. Plus we can now depend on them existing
             # for the rest of this code block.
             if not saso.player_exists(openid_url, cursor):
-                saso.add_player_to_players(openid_url, email, cpnwilling, contentnotes, cursor)
+                saso.add_player_to_players(openid_url, email, cpn_willing, contentnotes, cursor)
                 dbconn.commit()
             
             teamclean = re.sub('<', '&lt;', team)

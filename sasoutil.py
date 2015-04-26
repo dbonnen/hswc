@@ -543,7 +543,7 @@ def valid_fandom(fandom):
             fandom_new[i] = fandom_new[i].strip()
     else:
         fandom_new = [fandom]
-    fandom_list = ['Haikyuu!!', 'Daiya no Ace', 'Yowamushi Pedal', 'Free!' ,'Chihayafuru', 'Ookiku Furikabutte', 'Kuroko no Basuke', 'Ping Pong: The Animation', 'Eyeshield 21', 'Love Live!', 'Prince of Tennis', 'Hikaru no Go', 'Teppuu', 'Baby Steps' 'Slam Dunk', 'Angelic Layer']
+    fandom_list = ['Haikyuu!!', 'Daiya no Ace', 'Yowamushi Pedal', 'Free!' ,'Chihayafuru', 'Ookiku Furikabutte', 'Kuroko no Basuke', 'Ping Pong: The Animation', 'Eyeshield 21', 'Love Live!', 'Prince of Tennis', 'Hikaru no Go', 'Teppuu', 'Baby Steps', 'Slam Dunk', 'Angelic Layer']
     for i in range(len(fandom_new)):
         if not fandom_new[i] in fandom_list:
             return False

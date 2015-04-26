@@ -162,8 +162,8 @@ written to the requesting browser.
                 self.doGrandstand()
             elif path == '/test':
                 self.doTest()
-                    else:
-                        self.notFound()
+            else:
+                self.notFound()
         
         except (KeyboardInterrupt, SystemExit):
             raise

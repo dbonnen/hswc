@@ -481,7 +481,7 @@ table {
                 self.wfile.write('''\
 <tr>
 	<td class="%s">
-	%s/13
+	%s/8
 	</td>
 
 	<td class="roster_teamname">

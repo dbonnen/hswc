@@ -294,7 +294,7 @@ table {
         
         self.wfile.write('''\
  
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://sportsanime.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
  
 <p class="tally">
         There are currently <strong>%s participants</strong> in the grandstand.<br />
@@ -465,7 +465,7 @@ table {
 	SASO 2015 Team Roster
 	</h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%%20Contact">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
 
 <p class="tally">
 	There are currently <strong>%s teams</strong> and <strong>%s participants</strong>.<br />
@@ -1050,7 +1050,7 @@ input, textarea {
 	SASO 2015 Sign Up Form
 	</h1>
 
-<p class="navigation"> <a href="http://autumnfox.akrasiac.org/hswc/teams">Team Roster</a> | <a href="http://autumnfox.akrasiac.org/hswcrules/Mod%20Contact">Mod Contact</a> | <a href="http://hs_worldcup.dreamwidth.org">Dreamwidth</a> | <a href="http://autumnfox.akrasiac.org/hswcrules">Rules Wiki</a> | <a href="http://hswc-announce.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
 ''')
     
     def pageFooter(self, form_contents):

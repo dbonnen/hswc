@@ -153,7 +153,6 @@ written to the requesting browser.
             if path == '/':
                 self.render()
             elif path == '/verify':
-                print 'somewhere in this pipeline it breaks'
                 self.doVerify()
             elif path == '/process':
                 self.doProcess()
@@ -535,7 +534,6 @@ table {
         """
         
         # First, collect all the data.
-        print 'is this even running at all?'
         openid_url = self.query.get('username')
         openid_url = re.sub('_','-',openid_url)
         if openid_url:
@@ -545,6 +543,7 @@ table {
         team = self.query.get('team')
         fandom = self.query.get('fandom')
         contentnotes = self.query.get('contentnotes')
+        print 'is this even running at all? 1'
         if team:
             # everything depends on unicode type strings BUT
             # if someone tries to paste in unicode ship symbols everything goes to hell
@@ -555,6 +554,7 @@ table {
                             form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                 return
             team = saso.scrub_team(team)
+        print 'is this even running at all? 2'
         if fandom:
             if not saso.valid_fandom(fandom) and team_type != 'grandstand':
                 self.render('Please only enter pairings and teams from nominated fandoms. If your fandom is nominated, please spell it the same way it is spelled on the list of nominated fandoms.', css_class='error',
@@ -563,6 +563,7 @@ table {
             self.render('Please enter the anime/manga your team belongs to.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
+        print 'is this even running at all? 3'
         if self.query.get('CPN') == 'yes':
             cpnwilling = 1
         else:
@@ -570,53 +571,57 @@ table {
             # be a captain. that seems best here.
             cpnwilling = 0
         #contentnotes = self.query.get('content-tags')
-        
+        print 'is this even running at all? 4'
         # You have to even enter the rules check.
         if not self.query.get('rules-check'):
             self.render('Please enter the rules check text.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
-        
+        print 'is this even running at all? 5'
         # You have to get the rules check right.
         if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2015 SASO.':
             self.render('Please enter the correct rules check text.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
         return
-        
+        print 'is this even running at all? 6'
         # There has to be a team name.
         if not team:
             self.render('Please enter a team name.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
+        print 'is this even running at all? 7'
         if re.search('team', team) or re.search('&', team) or re.search(';', team):
             self.render('Team formatted incorrectly, see <a href="http://sportsanime.dreamwidth.org/750.html#teams">How To Format Ship Names</a>.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
+        print 'is this even running at all? 8'
         team = saso.scrub_team(team)
         if not team:
             self.render('Please enter a valid team name.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
-        
+        print 'is this even running at all? 9'
         # There also has to be an email address!
         if not email:
             self.render('Please enter an email address.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
+        print 'is this even running at all? 10'
         if not re.match(r'[^@]+@[^@]+\.[^@]+',email):
             self.render('Please enter a valid email address.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
-        
+        print 'is this even running at all? 11'
         # There has to be a username.
         if not openid_url:
             self.render('Please enter a Dreamwidth username.',
                         css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return 
-        
+        print 'is this even running at all? 12'
         # If mode is switch, new players can only join grandstand,
         #                    players on qualifying teams can only drop,
         #                    players on non-qualifying teams can switch to qualifying ones or drop
+        print 'is this even running at all? 13'
         if mode == "switch":
             if not saso.player_exists(openid_url, cursor):
                 if not team == 'grandstand':
@@ -635,7 +640,7 @@ table {
                     self.render('Sorry, you can only join a qualifying team.',
                                 css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                     return
-        
+        print 'is this even running at all? 14'
         # If mode is drop, all you can do is drop. That's it.
         if mode == "drop":
             if team != 'remove':
@@ -643,16 +648,15 @@ table {
                             css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                 return
         
-        print 'do we get here'
+        print 'is this even running at all? 15'
         # The team can't be full. 
         if saso.get_team_members_count(team, cursor) >= 8 and team_type != 'grandstand' and team_type != 'sports':
             if not saso.player_is_on_team(openid_url, team, cursor):
                 self.render('That team is full, sorry. Try signing up for another one!',
                             css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                 return
-	
-	print 'do we even get here'
-
+        
+        print 'is this even running at all? 16'
         if saso.get_team_members_count(team, cursor) >= 8 and team_type == 'sports':
             #this code only works if you assume that there will be less than 80 people signing up for one fandom
             #this is in no way scalable and you shouldn't do this

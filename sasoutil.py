@@ -383,7 +383,7 @@ def get_team_display_line(team, cursor):
         count = get_team_members_count(teamname, cursor)
         captain = 'olympics-mods'
         return (csstype, count, teamname, captain, stringofallplayers)
-    cursor.execute('SELECT * from teams where name=?', array)
+    cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
     teamname = re.sub('<', '&lt;', teamdatalist[0])
     teamname = re.sub('>', '&gt;', teamname)

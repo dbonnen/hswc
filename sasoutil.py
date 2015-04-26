@@ -247,7 +247,7 @@ def make_captain(player, teamname, cursor):
     #FINISHED FOR SASO
     array = (player, teamname)
     cursor.execute('UPDATE teams set captain=? where team_name=?', array) 
-    cursor.execute('UPDATE players set cpn=? where name=?', (1, player))
+    cursor.execute('UPDATE players set cpn=? where dwname=?', (1, player))
     #cursor.execute('UPDATE players set captain=? where dwname=?', ('yes', player))
     #dbconn.commit()
     return

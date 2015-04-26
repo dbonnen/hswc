@@ -429,7 +429,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
         if player_info:
             if player_info[1] == teamdatalist[0]:
                 alreadyonteam = 1
-        
+        print player_info
         # in theory being already on the team should have been caught earlier
         # but this will double-catch it just in case because not doing so is bad
         # also it is already written

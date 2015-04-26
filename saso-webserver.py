@@ -761,12 +761,13 @@ table {
             self.render('The software choked and lost your preferences, sorry. Kick hurristat.',
                 css_class='error', form_contents=(dwname,'','',''))
             return
-        ##THESE NEED FIXING FOR SASO
+        
         email = pending_entry[1]
-        team = pending_entry[2]
-        cpnwilling = pending_entry[3]
-        contentnotes = pending_entry[4]
-        team_type = pending_entry[5]
+        team_type = pending_entry[2]
+        team = pending_entry[3]
+        fandom = pending_entry[4]
+        cpn_willing = pending_entry[5]
+        contentnotes = pending_entry[6]
         saso.remove_pending_entry(dwname, cursor)
         dbconn.commit()
         
@@ -804,14 +805,16 @@ table {
             
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
-            if cpnwilling == '0':
-                cpnwilling = 0
+            if cpn_willing == '0':
+                cpn_willing = 0
+            else:
+                cpn_willing = 1
             
             if team == 'remove':
                 currentteam = saso.get_current_team(openid_url, cursor)
                 if not currentteam:
                     self.render('Cannot remove you from no team.', css_class='error',
-                                form_contents=(openid_url, email, team_type,team,fandom, contentnotes))
+                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
                 currentteamclean = re.sub('>', '&gt;', currentteamclean)
@@ -826,7 +829,7 @@ table {
             if saso.player_is_on_team(openid_url, team, cursor):
                 # this got stringified by putting it into the db and taking it out again
                 # THAT'S WHY NOTHING WAS WORKING
-                if not cpnwilling:
+                if not cpn_willing:
                     # they don't want to be captain so nothing changes unless they already are
                     if saso.get_captain(team, cursor) == openid_url:
                         saso.make_captain('', team, cursor)

@@ -173,6 +173,8 @@ def get_current_team(player, cursor):
         realteam = cursor.fetchone()
         if realteam:
             return realteam[1]
+        else:
+            return 0
     else:
         return 0
     

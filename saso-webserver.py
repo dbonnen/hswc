@@ -582,7 +582,7 @@ table {
         if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2015 SASO.':
             self.render('Please enter the correct rules check text.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
-        return
+            return
         print 'is this even running at all? 6'
         # There has to be a team name.
         if not team:

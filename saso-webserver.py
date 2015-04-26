@@ -22,14 +22,14 @@ cursor = dbconn.cursor()
 # MODES
 
 #The default mode lets any authed user sign up for anything.
-#mode = 'default' 
+mode = 'default' 
 
 #The switch mode lets players switch off of sinking ships, join grandstand,
 # or drop.
 #mode = 'switch'
 
 #The drop mode only lets players drop.
-mode = 'drop'
+#mode = 'drop'
 
 def quoteattr(s):
     qs = cgi.escape(s, 1)

@@ -73,7 +73,7 @@ it's set up in Apache2.
         if self.server_port != 80:
             #self.base_url = ('http://%s:%s/' %
                               #(self.server_name, self.server_port))
-             self.base_url = 'http://autumnfox.akrasiac.org/saso'
+             self.base_url = 'http://autumnfox.akrasiac.org:8600'
         else:
             self.base_url = 'http://%s/' % (self.server_name,)
 
@@ -153,6 +153,7 @@ written to the requesting browser.
             if path == '/':
                 self.render()
             elif path == '/verify':
+                print 'somewhere in this pipeline it breaks'
                 self.doVerify()
             elif path == '/process':
                 self.doProcess()
@@ -534,6 +535,7 @@ table {
         """
         
         # First, collect all the data.
+        print 'is this even running at all?'
         openid_url = self.query.get('username')
         openid_url = re.sub('_','-',openid_url)
         if openid_url:

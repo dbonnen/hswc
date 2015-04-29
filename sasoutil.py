@@ -365,9 +365,10 @@ def player_is_on_team(player, team, cursor):
     team_team_id = teamdatalist[0]
     cursor.execute('SELECT * from players where dwname=?', (player,))
     playerlist = cursor.fetchone()
-    player_team_id = playerlist[1]
-    if team_team_id == player_team_id:
-        return 1
+    if playerlist:
+        player_team_id = playerlist[1]
+        if team_team_id == player_team_id:
+            return 1
     return 0
 
 def get_team_display_line(team, cursor):

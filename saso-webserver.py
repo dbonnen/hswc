@@ -315,7 +315,7 @@ table {
         # DO GRANDSTAND LOGIC
         # THIS CODE SUCKS I AM TIRED
         
-        grandstandlist = saso.get_grandstand_members_list(cursor)
+        grandstandlist = saso.get_team_members_list('grandstand', cursor)
         
         grandstanddict = {}
         for x in grandstandlist:

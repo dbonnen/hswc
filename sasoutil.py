@@ -378,7 +378,7 @@ def get_team_display_line(team, cursor):
     teamname = re.sub('<', '&lt;', team)
     teamname = re.sub('>', '&gt;', teamname)
     if teamname == 'grandstand':
-        stringofallplayers = 'Please see the grandstand page at <a href="http://autumnfox.akrasiac.org/hswc/noir">this link</a>.'
+        stringofallplayers = 'Please see the grandstand page at <a href="http://autumnfox.akrasiac.org/saso/grandstand">this link</a>.'
         csstype= 'roster_teamslots'
         count = get_team_members_count(teamname, cursor)
         captain = 'olympics-mods'

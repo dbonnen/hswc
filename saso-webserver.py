@@ -197,8 +197,8 @@ Content-type: text/html; charset=UTF-8
 
     def doGrandstand(self):
         """Show the grandstand list page."""
-        grandstandcount = str(saso.get_grandstand_members_count(cursor))
-        grandstandplayers = saso.get_grandstand_members_list(cursor)
+        grandstandcount = str(saso.get_team_members_count(grandstand, cursor))
+        grandstandplayers = saso.get_team_members_list(grandstand, cursor)
         
         self.send_response(200)
         self.wfile.write('''\
@@ -212,7 +212,7 @@ Content-type: text/html; charset=UTF-8
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta http-equiv="refresh" content="300" />
         <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team, 2015 SASO Mod Team" />
-        <link rel="shortcut icon" href="http://autumnfox.akrasiac.org/permalinks/hswc.ico">
+        <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
  
         <style type="text/css" media="all">
 html, body {   
@@ -294,7 +294,7 @@ table {
         
         self.wfile.write('''\
  
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://sportsanime.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://sportsanime.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
  
 <p class="tally">
         There are currently <strong>%s participants</strong> in the grandstand.<br />
@@ -335,7 +335,7 @@ table {
 </tr>
 </table>
  
-<p style="text-align:center;"><img src="http://i.imgur.com/GtSM6ie.png" alt="The four Homestuck quadrant symbols." /></p>
+<p style="text-align:center;"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
  
 </body>
 </html>''')
@@ -358,7 +358,7 @@ Content-type: text/html; charset=UTF-8
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="300" />
 	<meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
-        <link rel="shortcut icon" href="http://autumnfox.akrasiac.org/permalinks/hswc.ico">
+        <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
 	<style type="text/css" media="all">
 html, body {	
@@ -465,7 +465,7 @@ table {
 	SASO 2015 Team Roster
 	</h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 
 <p class="tally">
 	There are currently <strong>%s teams</strong> and <strong>%s participants</strong>.<br />
@@ -523,7 +523,7 @@ table {
         self.wfile.write('''\
 </table>
 
-<p style="text-align:center"><img src="http://i.imgur.com/GtSM6ie.png" alt="Homestuck's four quadrant symbols" /></p>
+<p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body>
 </html>''')
@@ -942,7 +942,7 @@ Content-type: text/html; charset=UTF-8
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="50000" />
 	<meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
-	<link rel="shortcut icon" href="http://autumnfox.akrasiac.org/permalinks/hswc.ico">
+	<link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
 	<style type="text/css" media="all">
 html, body {	
@@ -1045,7 +1045,7 @@ input, textarea {
 	SASO 2015 Sign Up Form
 	</h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://hswc-announce.tumblr.com/post/82066717289/hswc-2014-official-chat-room">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 ''')
     
     def pageFooter(self, form_contents):
@@ -1112,7 +1112,7 @@ sarcastic comments or jokes. Misusing the tag request form may result in
 
 </form>
 
-<p style="text-align:center"><img src="http://i.imgur.com/GtSM6ie.png" alt="Homestuck's four quadrant symbols" /></p>
+<p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body></html>
 ''' % (quoteattr(self.buildURL('verify')),))

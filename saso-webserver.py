@@ -197,8 +197,8 @@ Content-type: text/html; charset=UTF-8
 
     def doGrandstand(self):
         """Show the grandstand list page."""
-        grandstandcount = str(saso.get_team_members_count(grandstand, cursor))
-        grandstandplayers = saso.get_team_members_list(grandstand, cursor)
+        grandstandcount = str(saso.get_team_members_count('grandstand', cursor))
+        grandstandplayers = saso.get_team_members_list('grandstand', cursor)
         
         self.send_response(200)
         self.wfile.write('''\

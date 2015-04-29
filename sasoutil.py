@@ -325,7 +325,7 @@ def get_team_members_list(team, cursor):
     array = (team,)
     if not team_exists(team, cursor):
         return 0
-    cursor.execute('SELECT * from teams where name=?', array)
+    cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
     team_id = teamdatalist[0]
     teamplayers = []

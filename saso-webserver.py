@@ -584,7 +584,7 @@ table {
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
         if re.search('team', team) or re.search('&', team) or re.search(';', team):
-            self.render('Team formatted incorrectly, see <a href="http://sportsanime.dreamwidth.org/750.html#teams">How To Format Ship Names</a>.', css_class='error',
+            self.render('Team formatted incorrectly, see <a href="http://sportsanime.dreamwidth.org/2696.html#formatting">How To Format Ship Names</a>.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
         team = saso.scrub_team(team)
@@ -1079,7 +1079,7 @@ switching teams).
 
 <p>
 	<span class="field">Joining SASO Team:</span><br />
-	<span class="descrip">Format your team name <a href="http://sportsanime.dreamwidth.org/750.html#teams">like this</a>! Enter "Grandstand" if you're joining the Team Grandstand.</span><br />
+	<span class="descrip">Format your team name <a href="http://sportsanime.dreamwidth.org/2696.html#formatting">like this</a>! Enter "Grandstand" if you're joining the Team Grandstand.</span><br />
 	<input name="team" type="text" />
 </p>
 

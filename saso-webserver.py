@@ -807,7 +807,7 @@ table {
                 cpn_willing = 0
             else:
                 cpn_willing = 1
-            
+            print cpn_willing
             if team == 'remove':
                 currentteam = saso.get_current_team(openid_url, cursor)
                 if not currentteam:

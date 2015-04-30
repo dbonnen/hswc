@@ -455,10 +455,10 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
                     if old_team[4] < 4:
                         cursor.execute("UPDATE teams set active=0 where team_id=?", (player_info[1],))
-                if teamdatalist[4] == 0:
-                    print teamdatalist
-                    make_captain(player, teamname, cursor)
-                elif not captain:
+                #if teamdatalist[4] == 0:
+                #    print teamdatalist
+                #    make_captain(player, teamname, cursor)
+                if not teamdatalist[5]:
                     if cpnwilling:
                         make_captain(player, teamname, cursor)
                 if teamdatalist[4] == 3:

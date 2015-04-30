@@ -237,7 +237,7 @@ def get_captain(team, cursor):
     if not team_exists(team, cursor):
         return 0
     if team == 'grandstand':
-        return 'olympics-mods'
+        return 'saso mods'
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamrow = cursor.fetchone()
     return teamrow[5]

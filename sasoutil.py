@@ -240,6 +240,7 @@ def get_captain(team, cursor):
         return 'saso mods'
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamrow = cursor.fetchone()
+    print teamrow[5]
     return teamrow[5]
 
 def make_captain(player, teamname, cursor):

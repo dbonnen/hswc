@@ -830,7 +830,7 @@ table {
                 if not cpn_willing:
                     # they don't want to be captain so nothing changes unless they already are
                     if saso.get_captain(team, cursor) == openid_url:
-                        saso.make_captain('', team, cursor)
+                        saso.uncaptain(team, cursor)
                         dbconn.commit()
                         self.render('You are no longer the captain of %s.' % teamclean, css_class='alert',
                                     form_contents=(openid_url, email, team_type,team,fandom, team_type, contentnotes))

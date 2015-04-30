@@ -245,11 +245,20 @@ def get_captain(team, cursor):
 def make_captain(player, teamname, cursor):
     """Make player captain of teamname."""
     #FINISHED FOR SASO
-    array = (player, teamname)
-    cursor.execute('UPDATE teams set captain=? where team_name=?', array) 
+    array = (player, teamname,)
+    cursor.execute('UPDATE teams set captain=? where team_name=?', array)
     cursor.execute('UPDATE players set cpn=? where dwname=?', (1, player))
     #cursor.execute('UPDATE players set captain=? where dwname=?', ('yes', player))
     #dbconn.commit()
+    return
+
+def uncaptain(teamname, cursor):
+    '''kill the captain of the ship, stage a mutiny'''
+    array = (teamname,)
+    cursor.execute('SELECT * from teams where team_name=?', array)
+    team_info = cursor.fetchone()
+    cursor.execute('UPDATE players set cpn=0 where dwname=?', (team_info[5],))
+    cursor.execute('UPDATE teams set captain='' where team_name=?', array)
     return
 
 def remove_player_from_grandstand(player, cursor):
@@ -465,7 +474,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                     cursor.execute('UPDATE teams set active = 1 where team_id=?', (teamdatalist[0],))
             else:
                 return 'This team is already full! Sorry!'
-        if not captain:
+        if not teamdatalist[5]:
             if cpnwilling:
                 make_captain(player, teamname, cursor)
         return

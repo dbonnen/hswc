@@ -803,7 +803,7 @@ table {
             
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
-            print 'captain', cpn_willing
+            print 'captain', type(cpn_willing)
             if cpn_willing == '0':
                 cpn_willing = 0
             else:
@@ -936,7 +936,7 @@ Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	SASO 2014 SIGNUPS
+	SASO 2015 SIGNUPS
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />

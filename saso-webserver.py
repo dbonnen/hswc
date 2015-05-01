@@ -803,11 +803,11 @@ table {
             
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
+            print 'captain ' + cpn_willing
             if cpn_willing == '0':
                 cpn_willing = 0
             else:
                 cpn_willing = 1
-            print 'captain ' + cpn_willing
             if team == 'remove':
                 currentteam = saso.get_current_team(openid_url, cursor)
                 if not currentteam:

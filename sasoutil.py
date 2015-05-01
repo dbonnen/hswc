@@ -240,7 +240,6 @@ def get_captain(team, cursor):
         return 'saso mods'
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamrow = cursor.fetchone()
-    print teamrow[5]
     return teamrow[5]
 
 def make_captain(player, teamname, cursor):
@@ -404,7 +403,6 @@ def get_team_display_line(team, cursor):
         captain = "None! You should sign up =o"
     count = teamdatalist[4]
     stringofallplayers = ''
-    print teamdatalist
     for x in cursor.execute('SELECT * from players where team_id=?', (teamdatalist[0],)):
         stringofallplayers = stringofallplayers + ' ' + x[0]
     stringofallplayers = stringofallplayers.strip()
@@ -465,9 +463,6 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
                     if old_team[4] < 4:
                         cursor.execute("UPDATE teams set active=0 where team_id=?", (player_info[1],))
-                #if teamdatalist[4] == 0:
-                #    print teamdatalist
-                #    make_captain(player, teamname, cursor)
                 if not teamdatalist[5]:
                     if cpnwilling:
                         make_captain(player, teamname, cursor)

@@ -617,7 +617,6 @@ table {
                     return
             currentteam = saso.get_current_team(openid_url, cursor)
             if saso.is_team_active(currentteam, cursor):
-                print team
                 if not team == 'remove':
                     self.render('Sorry, players on qualifying teams can only drop.',
                                 css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))

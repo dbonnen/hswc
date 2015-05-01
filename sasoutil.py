@@ -259,7 +259,7 @@ def uncaptain(teamname, cursor):
     cursor.execute('SELECT * from teams where team_name=?', array)
     team_info = cursor.fetchone()
     cursor.execute('UPDATE players set cpn=0 where dwname=?', (team_info[5],))
-    cursor.execute('UPDATE teams set captain='' where team_name=?', array)
+    cursor.execute("UPDATE teams set captain='' where team_name=?", array)
     return
 
 def remove_player_from_grandstand(player, cursor):

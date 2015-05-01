@@ -803,7 +803,7 @@ table {
             
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
-            print 'captain ' + cpn_willing
+            print 'captain', cpn_willing
             if cpn_willing == '0':
                 cpn_willing = 0
             else:

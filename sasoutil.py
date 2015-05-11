@@ -211,7 +211,7 @@ def get_list_of_teams(cursor):
     #FINISHED FOR SASO
     teamlist = []
     cursor.execute('SELECT * from teams where team_id = 0')
-    teamlist.append
+    teamlist.append(cursor.fetchone()[1])
     for team in cursor.execute('SELECT * from teams WHERE team_id != 0 ORDER BY num_participants ASC'):
         teamlist.append(team[1]) # man isn't it cool that order matters
     # soni doesn't like it alphabetical

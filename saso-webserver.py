@@ -638,11 +638,11 @@ table {
             if not saso.player_exists(openid_url, cursor):
                 if not team_type == 'grandstand':
                     self.render('Sorry, new players can only join Team Grandstand at this point.',
-                                css_class='error', form_contents(openid_url,email,team_type,team,fandom,contentnotes))
+                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                     return
             elif not team == 'remove':
-                self.render('Sorry, players on existing teams can only drop.', css_class='error',
-                            form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                    self.render('Sorry, players on qualifying teams can only drop.',
+                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
         # If mode is drop, all you can do is drop. That's it.
         if mode == "drop":
             if team != 'remove':

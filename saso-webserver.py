@@ -29,7 +29,10 @@ cursor = dbconn.cursor()
 
 #The switch mode lets players switch off of sinking ships, join grandstand,
 # or drop.
-mode = 'switch'
+#mode = 'switch'
+
+#The gs mode lets players drop, or join grandstand, but not switch to qualifying teams
+mode = 'gs'
 
 #The drop mode only lets players drop.
 #mode = 'drop'
@@ -629,6 +632,17 @@ table {
                     self.render('Sorry, you can only join a qualifying team.',
                                 css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                     return
+        #New players can join grandstand if the mode is gs, and existing users can drop,
+        #but no one else can switch
+        if mode = 'gs':
+            if not saso.player_exists(openid_url, cursor):
+                if not team_type = 'grandstand':
+                    self.render('Sorry, new players can only join Team Grandstand at this point.',
+                                css_class='error', form_contents(openid_url,email,team_type,team,fandom,contentnotes))
+                    return
+            elif not team == 'remove':
+                self.render('Sorry, players on existing teams can only drop.', css_class='error',
+                            form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
         # If mode is drop, all you can do is drop. That's it.
         if mode == "drop":
             if team != 'remove':

@@ -78,10 +78,10 @@ def is_team_active(team, cursor):
     """Return the active bit on a team."""
     #FINISHED FOR SASO
     if team == 'grandstand':
-        return 'yes'
+        return 1
     
     array = (team,)
-    cursor.execute('SELECT * from teams where name=?', array)
+    cursor.execute('SELECT * from teams where team_name=?', array)
     thing = cursor.fetchone()
     if thing:
         activebit = thing[7]

@@ -634,9 +634,9 @@ table {
                     return
         #New players can join grandstand if the mode is gs, and existing users can drop,
         #but no one else can switch
-        if mode = 'gs':
+        if mode == 'gs':
             if not saso.player_exists(openid_url, cursor):
-                if not team_type = 'grandstand':
+                if not team_type == 'grandstand':
                     self.render('Sorry, new players can only join Team Grandstand at this point.',
                                 css_class='error', form_contents(openid_url,email,team_type,team,fandom,contentnotes))
                     return

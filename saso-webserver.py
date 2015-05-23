@@ -22,11 +22,14 @@ cursor = dbconn.cursor()
 # MODES
 
 #The default mode lets any authed user sign up for anything.
-mode = 'default' 
+#mode = 'default' 
+
+# THIS CHANGE MADE BY RAX MAY 19 2015
+# YOU SHOULD RESTART THE SERVER NOT IN MY TERMINAL SOMETIME :P
 
 #The switch mode lets players switch off of sinking ships, join grandstand,
 # or drop.
-#mode = 'switch'
+mode = 'switch'
 
 #The drop mode only lets players drop.
 #mode = 'drop'

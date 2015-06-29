@@ -1267,7 +1267,7 @@ input, textarea {
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body></html>
-''')
+''' % (quoteattr(self.buildURL('vote')),))
         openid_url = self.query.get('username')
         openid_url = re.sub('_','-',openid_url)
         if openid_url:

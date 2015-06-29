@@ -32,10 +32,10 @@ cursor = dbconn.cursor()
 #mode = 'switch'
 
 #The gs mode lets players drop, or join grandstand, but not switch to qualifying teams
-mode = 'gs'
+#mode = 'gs'
 
 #The drop mode only lets players drop.
-#mode = 'drop'
+mode = 'drop'
 
 def quoteattr(s):
     qs = cgi.escape(s, 1)

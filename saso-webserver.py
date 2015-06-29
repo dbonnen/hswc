@@ -37,6 +37,9 @@ cursor = dbconn.cursor()
 #The drop mode only lets players drop.
 mode = 'drop'
 
+main_round = 1
+#main_round = 2
+
 def quoteattr(s):
     qs = cgi.escape(s, 1)
     return '"%s"' % (qs,)
@@ -168,6 +171,8 @@ written to the requesting browser.
                 self.doGrandstand()
             elif path == '/test':
                 self.doTest()
+            elif path == '/vote':
+                self.doVote()
             else:
                 self.notFound()
         
@@ -926,7 +931,7 @@ query parameters added."""
         self.render(msg, 'error', openid_url, status=404)
     
     def render(self, message=None, css_class='alert', form_contents=None,
-               status=200, title="Homestuck Shipping World Cup",
+               status=200, title="Sports Anime Shipping Olympics",
                sreg_data=None, pape_data=None):
         """Render the signup page."""
         self.send_response(status)
@@ -1127,6 +1132,201 @@ sarcastic comments or jokes. Misusing the tag request form may result in
 
 </body></html>
 ''' % (quoteattr(self.buildURL('verify')),))
+    
+    def doVote(self):
+        self.send_response(200)
+        """Render the page header"""
+        self.setSessionCookie()
+        #print (title, title, quoteattr(self.buildURL('verify')))
+        self.wfile.write('''\
+Content-type: text/html; charset=UTF-8
+
+<head>
+    <title>
+    SASO 2015 VOTING
+    </title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="refresh" content="50000" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+    <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
+
+    <style type="text/css" media="all">
+html, body {    
+    font-family: Verdana,Arial,"Liberation Sans",sans-serif;
+    color: #000;
+    font-size: 11pt;
+    background-color: #e5e4e5;
+}
+
+a:link,a:visited {
+    color: #3c3c89;
+    font-weight:bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4e5273;
+    font-weight:bold;
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 18pt;
+    text-transform: uppercase;
+    color: #3c3c89;
+    text-align: center;
+}
+
+.navigation {
+    margin-left: auto;
+    margin-right: auto; 
+    text-align: center;
+    border-top: 1px #4e5273 solid;
+    width:50%;
+    padding: 22px 0px 10px 0px;
+}
+
+.alert {
+    border: 2px solid #e7dc2b;
+    margin: 0px 10px 20px 0px;
+    padding: 7px;
+    background-color: #fff888;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.error {
+    border: 2px solid #ff0000;
+    margin: 0px 10px 20px 0px;
+    padding: 7px;
+    background-color: #ffaaaa;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+form {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:1%;
+    border-radius:10px;
+    box-shadow:5px 5px #babad5;
+}
+
+.edit { 
+    border: 2px #4e5273 solid;
+    margin: 7px;
+    padding: 7px;
+    background-color: #f1f1f1;
+    }
+
+input, textarea {
+    border: 1px solid black;
+    background-color: #fff;
+    margin: 3px 0px 0px 0px;
+}
+
+.field {
+    font-weight:bold
+    }
+
+.descrip {
+    font-size:10pt;
+    color:#202020;
+}
+    </style>
+</head>
+
+<body>
+
+    <h1>
+    SASO 2015 VOTING FORM
+    </h1>
+
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+
+<p>
+    <span class="field">Dreamwidth Username:</span><br />
+    <span class="descrip">Please enter your dreamwidth username</span><br />
+    <input name="username" type="text" />
+</p>
+
+<p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
+
+</body></html>
+''')
+        openid_url = self.query.get('username')
+        openid_url = re.sub('_','-',openid_url)
+        if openid_url:
+            openid_url = openid_url.lower()
+        
+        openid_url = openid_url + '.dreamwidth.org'
+        
+        # we're not using these parts of the example but I did not strip them
+        # out on the theory that we might end up needing them for some reason
+        #immediate = 'immediate' in self.query
+        #use_sreg = 'use_sreg' in self.query
+        #use_pape = 'use_pape' in self.query
+        #use_stateless = 'use_stateless' in self.query
+        immediate = 0
+        use_sreg = 0
+        use_pape = 0
+        use_stateless = 0
+        
+        oidconsumer = self.getConsumer(stateless = use_stateless)
+        try:
+            request = oidconsumer.begin(openid_url)
+        except consumer.DiscoveryFailure, exc:
+            fetch_error_string = 'Error in discovery: %s' % (
+                cgi.escape(str(exc[0])))
+            self.render(fetch_error_string,
+                        css_class='error',
+                        form_contents=openid_url)
+        else:
+            if request is None:
+                msg = 'No OpenID services found for <code>%s</code>' % (
+                    cgi.escape(openid_url),)
+                self.render(msg, css_class='error', form_contents=openid_url)
+            else:
+                # Then, ask the library to begin the authorization.
+                # Here we find out the identity server that will verify the
+                # user's identity, and get a token that allows us to
+                # communicate securely with the identity server.
+                if use_sreg:
+                    self.requestRegistrationData(request)
+                
+                if use_pape:
+                    self.requestPAPEDetails(request)
+                
+                trust_root = self.server.base_url
+                #print 'trust_root is ' + trust_root
+                return_to = self.buildURL('process')
+                #print 'return_to is ' + return_to
+                if request.shouldSendRedirect():
+                    redirect_url = request.redirectURL(
+                        trust_root, return_to, immediate=immediate)
+                    self.send_response(302)
+                    self.send_header('Location', redirect_url)
+                    self.writeUserHeader()
+                    self.end_headers()
+                else:
+                    form_html = request.htmlMarkup(
+                        trust_root, return_to,
+                        form_tag_attrs={'id':'openid_message'},
+                        immediate=immediate)
+                    
+                    self.wfile.write(form_html)
+
+        
 
 def main(host, port, data_path, weak_ssl=False):
     # Instantiate OpenID consumer store and OpenID consumer. If you

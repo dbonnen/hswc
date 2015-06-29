@@ -1148,7 +1148,7 @@ sarcastic comments or jokes. Misusing the tag request form may result in
             self.wfile.write("</div>")
     
     
-    def votePage(self, title, form_contents)
+    def votePage(self, title, form_contents):
         """Render the page header"""
         self.setSessionCookie()
         print quoteattr(self.buildURL('voteverify'))

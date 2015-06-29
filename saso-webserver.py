@@ -173,6 +173,8 @@ written to the requesting browser.
                 self.doTest()
             elif path == '/vote':
                 self.doVote()
+            elif path == '/voteverify':
+                self.doVoteVerify()
             else:
                 self.notFound()
         
@@ -1267,7 +1269,9 @@ input, textarea {
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body></html>
-''' % (quoteattr(self.buildURL('vote')),))
+''' % (quoteattr(self.buildURL('voteverify')),))
+    
+    def doVoteVerify(self):
         openid_url = self.query.get('username')
         openid_url = re.sub('_','-',openid_url)
         if openid_url:

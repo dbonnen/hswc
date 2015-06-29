@@ -1135,8 +1135,20 @@ sarcastic comments or jokes. Misusing the tag request form may result in
 </body></html>
 ''' % (quoteattr(self.buildURL('verify')),))
     
-    def doVote(self):
-        self.send_response(200)
+    def doVote(self, message=None, css_class='alert', form_contents=None,
+               status=200, title="Sports Anime Shipping Olympics",
+               sreg_data=None, pape_data=None):
+        """Render the signup page."""
+        self.send_response(status)
+        self.votePage(title, form_contents)
+        if message:
+            #print message
+            self.wfile.write("<div class='%s'>" % (css_class,))
+            self.wfile.write(message)
+            self.wfile.write("</div>")
+    
+    
+    def votePage(self, title, form_contents)
         """Render the page header"""
         self.setSessionCookie()
         print quoteattr(self.buildURL('voteverify'))
@@ -1256,7 +1268,7 @@ input, textarea {
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 
-<form method="GET" accept-charset="UTF-8" action=/voteverify%s>
+<form method="GET" accept-charset="UTF-8" action=%s>
 <p>
     <span class="field">Dreamwidth Username:</span><br />
     <span class="descrip">Please enter your dreamwidth username</span><br />
@@ -1269,7 +1281,7 @@ input, textarea {
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body></html>
-''')
+''' % (quoteattr(self.buildURL('voteverify')),))
     
     def doVoteVerify(self):
         openid_url = self.query.get('username')

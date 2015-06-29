@@ -1139,7 +1139,7 @@ sarcastic comments or jokes. Misusing the tag request form may result in
         self.send_response(200)
         """Render the page header"""
         self.setSessionCookie()
-        #print (title, title, quoteattr(self.buildURL('verify')))
+        print (title, title, quoteattr(self.buildURL('voteverify')))
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 

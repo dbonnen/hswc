@@ -1535,7 +1535,7 @@ input, textarea {
 <p>
     <span class="field">Vote 3:</span><br />
     <span class="descrip">Please enter your third vote</span><br />
-    <input name="vote 3" type="text" />
+    <input name="vote3" type="text" />
 </p>
 
 <input type="submit" value="Submit">

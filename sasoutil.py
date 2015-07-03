@@ -597,7 +597,7 @@ def assign_voting_assignments(dwname, cursor):
             if team_name not in assigned_teams and team_name != current_team:
                 assigned_teams.append(team_name)
                 current_teams -= 1
-                cursor.execute("UPDATE mr1_team_votes SET players_min_assigned = (players_min_assigned + 1) WHERE team_name = ?", (team_name,))
+                cursor.execute("UPDATE mr1_team_votes SET players_assigned = (players_assigned + 1) WHERE team_name = ?", (team_name,))
                 dbconn.commit()
             team_list.pop(todaysInt)
     array = (dwname, team_no, 0, '', '', '', assigned_teams[0], assigned_teams[1], assigned_teams[2], assigned_teams[3], assigned_teams[4], assigned_teams[5], assigned_teams[6], assigned_teams[7], assigned_teams[8], assigned_teams[9],)

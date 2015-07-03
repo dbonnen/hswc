@@ -582,7 +582,7 @@ def existing_voting_team_assignments(dwname, cursor):
 def assign_voting_assignments(dwname, cursor):
     current_team = get_current_team(dwname, cursor)
     cursor.execute("SELECT team_id FROM players WHERE dwname = ?", (dwname,))
-    team_no = int(cursor.fetchone())
+    team_no = int(cursor.fetchone()[0])
     current_teams = 10
     assigned_teams = []
     while len(assigned_teams) < 10:

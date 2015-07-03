@@ -586,7 +586,7 @@ def assign_voting_assignments(dwname, cursor):
     current_teams = 10
     assigned_teams = []
     while len(assigned_teams) < 10:
-        cursor.execute("SELECT * FROM mr1_team_votes WHERE players_min_assigned = (SELECT MIN(players_min_assigned) FROM mr1_team_votes)")
+        cursor.execute("SELECT * FROM mr1_team_votes WHERE players_assigned = (SELECT MIN(players_assigned) FROM mr1_team_votes)")
         team_list = cursor.fetchall()
         cont_empty = false
         if len(team_list) == 0:

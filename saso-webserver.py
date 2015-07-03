@@ -1545,7 +1545,7 @@ input, textarea {
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body></html>
-''' % vote_option_string)
+''')
 
 def main(host, port, data_path, weak_ssl=False):
     # Instantiate OpenID consumer store and OpenID consumer. If you

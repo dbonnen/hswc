@@ -191,8 +191,8 @@ written to the requesting browser.
     
     def doTest(self):
 	"""fuck me"""
-	self.send_response(200)
-	self.wfile.write('''\
+        self.send_response(200)
+        self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 <head>
         <title>
@@ -1519,7 +1519,7 @@ input, textarea {
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 
-<p>Please read and choose your favorite three of the following ten choices:</p>
+<p>Please read and choose your favorite three of the following ten choices: %s</p>
 
 <form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>
@@ -1544,7 +1544,7 @@ input, textarea {
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
 </body></html>
-''')
+''' % (vote_option_string))
 
 def main(host, port, data_path, weak_ssl=False):
     # Instantiate OpenID consumer store and OpenID consumer. If you

@@ -1390,7 +1390,7 @@ input, textarea {
         if not saso.existing_voting_team_assignments(dwname, cursor):
             saso.assign_voting_assignments(dwname, cursor)
         
-        saso.remove_pending_vote_entry(dwname, cursor)
+        saso.remove_pending_voting_entry(dwname, cursor)
         
         vote_options = saso.get_vote_option_list(dwname, cursor)
         

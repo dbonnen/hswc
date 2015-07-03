@@ -588,9 +588,9 @@ def assign_voting_assignments(dwname, cursor):
     while len(assigned_teams) < 10:
         cursor.execute("SELECT * FROM mr1_team_votes WHERE players_assigned = (SELECT MIN(players_assigned) FROM mr1_team_votes)")
         team_list = cursor.fetchall()
-        cont_empty = false
+        cont_empty = False
         if len(team_list) == 0:
-            cont_empty = true
+            cont_empty = True
         while len(assigned_teams) < 10 and not cont_empty:
             todaysInt = random.randint(0, len(team_list) - 1)
             team_name = assigned_teams[todaysInt][1]

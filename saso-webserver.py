@@ -1388,7 +1388,7 @@ input, textarea {
                 css_class='error', form_contents=(dwname,'','',''))
             return
         
-        if not saso.existing_voting_team_assignments(dwname, cursor):
+        if not saso.existing_voting_team_assignments(dwname + '.dreamwidth.org', cursor):
             saso.assign_voting_assignments(dwname, cursor)
         
         saso.remove_pending_voting_entry(dwname, cursor)
@@ -1403,7 +1403,16 @@ input, textarea {
         
         print vote_option_string
         dbconn.commit()
-        self.wfile.write('''\
+        
+        if info.status == consumer.FAILURE and display_identifier:
+            # In the case of failure, if info is non-None, it is the
+            # URL that we were verifying. We include it in the error
+            # message to help the user figure out what happened.
+            fmt = "Verification of %s failed: %s"
+            message = fmt % (cgi.escape(display_identifier),
+                             info.message)
+        elif info.status == consumer.SUCCESS:
+            self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 
 <head>

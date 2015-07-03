@@ -573,7 +573,7 @@ def get_newest_team(cursor):
     return team_num[0]
 
 def existing_voting_team_assignments(dwname, cursor):
-    cursor.execute("SELECT * FROM mr1_player_vote WHERE dwname = ?", (dwname,))
+    cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
     if cursor.fetchone():
         return 1
     else:

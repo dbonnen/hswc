@@ -1537,7 +1537,7 @@ input, textarea {
 
 <p>Please read and choose your favorite three of the following ten choices: </p>''' + vote_option_string + '''
 
-<form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
+<form method="POST" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>
     <span class="field">Vote 1:</span><br />
     <span class="descrip">Please enter your first vote</span><br />

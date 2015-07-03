@@ -1395,7 +1395,7 @@ input, textarea {
         
         vote_options = saso.get_vote_option_list(dwname, cursor)
         
-        vote_option_string = ''
+        vote_option_string = str()
         
         for i in vote_options:
             vote_option_string = vote_option_string + '\n<p>' + i + '</p>'

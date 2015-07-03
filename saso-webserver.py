@@ -1400,6 +1400,7 @@ input, textarea {
             vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
         vote_option_string = vote_option_string + '\n'
         
+        dbconn.commit()
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 

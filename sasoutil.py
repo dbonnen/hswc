@@ -593,7 +593,7 @@ def assign_voting_assignments(dwname, cursor):
             cont_empty = True
         while len(assigned_teams) < 10 and not cont_empty:
             todaysInt = random.randint(0, len(team_list) - 1)
-            team_name = assigned_teams[todaysInt][1]
+            team_name = team_list[todaysInt][1]
             if team_name not in assigned_teams and team_name != current_team:
                 assigned_teams.append(team_name)
                 current_teams -= 1

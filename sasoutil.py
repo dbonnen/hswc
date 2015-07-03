@@ -556,10 +556,8 @@ def get_newest_sports_team(fandom, cursor):
     return newest_team_name[1]
 
 def check_pending_vote_entry(dwname,cursor):
-    cursor.execute("SELECT COUNT(*) FROM pending_vote WHERE dwname=?",(dwname,))
-    real_count = int(cursor.fetchone()[0])
-    print real_count
-    if real_count > 0:
+    cursor.execute("SELECT * FROM pending_vote WHERE dwname=?",(dwname,))
+    if cursor.fetchone():
         return True
     else:
         return False

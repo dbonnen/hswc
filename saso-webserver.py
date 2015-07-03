@@ -1434,15 +1434,7 @@ Content-type: text/html; charset=UTF-8
 
 </head>
 
-<body>
-
-    <h1>
-    SASO 2015 VOTING FORM
-    </h1>
-
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
-
-</body></html>
+</html>
 ''')
 
 def main(host, port, data_path, weak_ssl=False):

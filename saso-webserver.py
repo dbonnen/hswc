@@ -1157,6 +1157,7 @@ sarcastic comments or jokes. Misusing the tag request form may result in
         print quoteattr(self.buildURL('voteverify'))
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
+<!DOCTYPE html>
 
 <head>
     <title>

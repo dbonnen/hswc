@@ -175,6 +175,8 @@ written to the requesting browser.
                 self.doVote()
             elif path == '/voteverify':
                 self.doVoteVerify()
+            elif path == '/voting':
+                self.renderVoting()
             else:
                 self.notFound()
         
@@ -1289,7 +1291,13 @@ input, textarea {
         if openid_url:
             openid_url = openid_url.lower()
         
+        if not saso.player_exists(openid_url, cursor):
+            self.doVote('Only participants can vote for main round entries.', css_class='error', form_contents=(openid_url))
+        
         openid_url = openid_url + '.dreamwidth.org'
+        
+        saso.make_pending_vote_entry(openid_url, cursor)
+        dbconn.commit()
         
         # we're not using these parts of the example but I did not strip them
         # out on the theory that we might end up needing them for some reason
@@ -1329,7 +1337,7 @@ input, textarea {
                 
                 trust_root = self.server.base_url
                 #print 'trust_root is ' + trust_root
-                return_to = self.buildURL('process')
+               return_to = self.buildURL('voting')
                 #print 'return_to is ' + return_to
                 if request.shouldSendRedirect():
                     redirect_url = request.redirectURL(
@@ -1345,8 +1353,193 @@ input, textarea {
                         immediate=immediate)
                     
                     self.wfile.write(form_html)
-
+    
+    def renderVoting(self):
+        """Render the page header"""
+        """Handle the redirect from the OpenID server.
+"""
+        oidconsumer = self.getConsumer()
         
+        # Ask the library to check the response that the server sent
+        # us. Status is a code indicating the response type. info is
+        # either None or a string containing more information about
+        # the return type.
+        # url = 'http://'+self.headers.get('Host')+self.path
+        # rax: hardcoding this for maximum bullshit
+        # this makes me not just a bad programmer but a bad person
+        url = 'http://autumnfox.akrasiac.org/saso/'+ self.path.strip('/')
+        info = oidconsumer.complete(self.query, url)
+        
+        sreg_resp = None
+        pape_resp = None
+        css_class = 'error'
+        display_identifier = info.getDisplayIdentifier()
+        # There has to be a username.
+        if not display_identifier:
+            self.render('Please enter a Dreamwidth username.',
+                        css_class='error', form_contents=('','','',''))
+            return
+        dwname = (display_identifier.split('.')[0]).split('//')[1]
+        openid_url = dwname
+        
+        if not saso.check_pending_vote_entry(dwname, cursor):
+            self.render('The software choked and lost your login name, sorry. Kick hurristat.',
+                css_class='error', form_contents=(dwname,'','',''))
+            return
+        
+        if not saso.existing_voting_team_assignments(dwname, cursor):
+            saso.assign_voting_assignments(dwname, cursor)
+        
+        saso.remove_pending_vote_entry(dwname, cursor)
+        
+        vote_options = saso.get_vote_option_list(dwname, cursor)
+        
+        vote_option_string = ''
+        
+        for i in vote_options:
+            vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
+        vote_option_string = vote_option_string + '\n'
+        
+        self.wfile.write('''\
+Content-type: text/html; charset=UTF-8
+
+<head>
+    <title>
+    SASO 2015 VOTING
+    </title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="refresh" content="50000" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+    <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
+
+    <style type="text/css" media="all">
+html, body {    
+    font-family: Verdana,Arial,"Liberation Sans",sans-serif;
+    color: #000;
+    font-size: 11pt;
+    background-color: #e5e4e5;
+}
+
+a:link,a:visited {
+    color: #3c3c89;
+    font-weight:bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4e5273;
+    font-weight:bold;
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 18pt;
+    text-transform: uppercase;
+    color: #3c3c89;
+    text-align: center;
+}
+
+.navigation {
+    margin-left: auto;
+    margin-right: auto; 
+    text-align: center;
+    border-top: 1px #4e5273 solid;
+    width:50%;
+    padding: 22px 0px 10px 0px;
+}
+
+.alert {
+    border: 2px solid #e7dc2b;
+    margin: 0px 10px 20px 0px;
+    padding: 7px;
+    background-color: #fff888;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.error {
+    border: 2px solid #ff0000;
+    margin: 0px 10px 20px 0px;
+    padding: 7px;
+    background-color: #ffaaaa;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+form {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:1%;
+    border-radius:10px;
+    box-shadow:5px 5px #babad5;
+}
+
+.edit { 
+    border: 2px #4e5273 solid;
+    margin: 7px;
+    padding: 7px;
+    background-color: #f1f1f1;
+    }
+
+input, textarea {
+    border: 1px solid black;
+    background-color: #fff;
+    margin: 3px 0px 0px 0px;
+}
+
+.field {
+    font-weight:bold
+    }
+
+.descrip {
+    font-size:10pt;
+    color:#202020;
+}
+    </style>
+</head>
+
+<body>
+
+    <h1>
+    SASO 2015 VOTING FORM
+    </h1>
+
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+
+<p>Please read and choose your favorite three of the following ten choices:</p>''' + vote_option_string + '''<form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
+<p>
+    <span class="field">Vote 1:</span><br />
+    <span class="descrip">Please enter your first vote</span><br />
+    <input name="vote1" type="text" />
+</p>
+<p>
+    <span class="field">Vote 2:</span><br />
+    <span class="descrip">Please enter your second vote</span><br />
+    <input name="vote2" type="text" />
+</p>
+<p>
+    <span class="field">Vote 3:</span><br />
+    <span class="descrip">Please enter your third vote</span><br />
+    <input name="vote 3" type="text" />
+</p>
+
+<input type="submit" value="Submit">
+</form>
+
+<p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
+
+</body></html>
+''')
 
 def main(host, port, data_path, weak_ssl=False):
     # Instantiate OpenID consumer store and OpenID consumer. If you

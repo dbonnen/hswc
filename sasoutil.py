@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sqlite3, sys, re
+import sqlite3, sys, re, random
 #dbconn = sqlite3.connect('hswc.db')
 
 ## Assumptions about the database are currently:
@@ -92,7 +92,6 @@ def is_team_active(team, cursor):
 def activate_qualifying_teams(cursor):
     """Set the active bit on all teams with 4 or more participants.
     And all teams that are abstrata."""
-    #FINISHED FOR SASO
 
     teamlist = get_list_of_teams(cursor)
     for team in teamlist:
@@ -103,14 +102,12 @@ def activate_qualifying_teams(cursor):
 
 def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, cursor):
     """Make a pending entry to be processed if the DW auth goes through."""
-    #FINISHED FOR SASO
     array = (dwname, email, team_type, team, fandom, captain, notes)
     cursor.execute('INSERT into pending (dwname, email, team_type, team, fandom, cpn_willing, notes) values (?,?,?,?,?,?,?)', array)
     return
 
 def retrieve_pending_entry(dwname, cursor):
     """Get a pending entry out for a username."""
-    #FINISHED FOR SASO
     array = (dwname,)
     cursor.execute('SELECT * from pending where dwname=?', array)
     pending_entry = cursor.fetchone()
@@ -118,16 +115,20 @@ def retrieve_pending_entry(dwname, cursor):
 
 def remove_pending_entry(dwname, cursor):
     """Remove a pending entry for a username."""
-    #FINISHED FOR SASO
     array = (dwname,)
     cursor.execute('DELETE from pending where dwname=?', array)
     #dbconn.commit()
     return
 
+def make_pending_vote_entry(dwname, cursor):
+    """make a pending vote entry to be processed if the DW auth goes through."""
+    array = (dwname,)
+    cursor.execute('INSERT into pending_vote (dwname) values (?)', array)
+    return
+
 def team_exists(teamname, cursor):
     """See if a team exists in the database or not. If yes, return 1,
       if not return 0."""
-    #FINISHED FOR SASO
     array = (teamname,) # for sanitizing
     if teamname == 'grandstand':
         return 1
@@ -139,7 +140,6 @@ def team_exists(teamname, cursor):
 
 def team_has_captain(teamname, cursor):
     """If a team has a friendleader, return 0, otherwise return 1"""
-    #FINISHED FOR SASO
     array = (teamname,)
     if not team_exists(teamname, cursor):
         # there's not a friendleader if there's no team!
@@ -154,7 +154,6 @@ def team_has_captain(teamname, cursor):
 def player_exists(player, cursor):
     """See if a player exists in the database or not. If yes, return 1,
        if not return 0."""
-    #FINISHED FOR SASO
     array = (player,)
     cursor.execute('SELECT * from players where dwname=?', array)
     if cursor.fetchone():
@@ -164,7 +163,6 @@ def player_exists(player, cursor):
 
 def get_current_team(player, cursor):
     """Get the team the player is currently on, if there is one."""
-    #FINISHED FOR SASO
     array = (player,)
     cursor.execute('SELECT * from players where dwname=?', array)
     currentteam = cursor.fetchone()
@@ -305,7 +303,6 @@ def remove_player_from_team(player, teamname, cursor):
 def update_player(player, email, notes, cursor):
     """Update the player's information in the db after a new form submission."""
     #team does not change
-    #FINISHED FOR SASO
     array=(email, notes, player)
     cursor.execute('UPDATE players set email=?, notes=? where dwname=?', array)
     #dbconn.commit()
@@ -314,7 +311,6 @@ def update_player(player, email, notes, cursor):
 def add_player_to_players(player, email, cpnwilling, notes, cursor):
     """Put the player in the player database at all.
        Team preference is not handled here."""
-    #FINISHED FOR SASO
     array=(player, -1, cpnwilling, email, notes)
     cursor.execute('INSERT into players (dwname, team_id, cpn_willing, email, notes) values (?,?,?,?,?)', array)
     #dbconn.commit()
@@ -322,7 +318,6 @@ def add_player_to_players(player, email, cpnwilling, notes, cursor):
 
 def get_team_members_count(team, cursor):
     """How many players on the team?"""
-    #FINISHED FOR SASO
     array=(team,)
     if not team_exists(team, cursor):
         return 0
@@ -332,7 +327,6 @@ def get_team_members_count(team, cursor):
 
 def get_team_members_list(team, cursor):
     """Who are the players on the team?"""
-    #FINISHED FOR SASO
     array = (team,)
     if not team_exists(team, cursor):
         return 0
@@ -367,7 +361,6 @@ def get_grandstand_members_list(cursor):
 
 def player_is_on_team(player, team, cursor):
     """Is the player on the team?"""
-    #FINISHED FOR SASO
     array=(team,)
     if not team_exists(team, cursor):
         return 0
@@ -385,7 +378,6 @@ def player_is_on_team(player, team, cursor):
 def get_team_display_line(team, cursor):
     """Make the display line that goes into the teams table.
     Format is csstype, count, teamname, fl, stringofallplayers."""
-    #FIX UP LATER, ONCE I GET /SASO/GRANDSTAND WORKING...
     array=(team,)
     teamname = re.sub('<', '&lt;', team)
     teamname = re.sub('>', '&gt;', teamname)
@@ -421,7 +413,6 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
        If the player is already on the team, continue without changes.
        If the player is willing and there is no captain, Cpn them.
        If the team has at least 4 members, make it active."""
-    #FINISHED FOR SASO
     if teamname == 'grandstand':
         add_player_to_grandstand(player, cursor)
         return
@@ -483,7 +474,6 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
 def scrub_team(team):
     """Return a valid team name based on the user input.
        If there is no valid team name, return nothing."""
-    #FINISHED FOR SASO
     string = team.lower()
     string = string.strip()
     
@@ -565,10 +555,60 @@ def get_newest_sports_team(fandom, cursor):
     newest_team_name = cursor.fetchone()
     return newest_team_name[1]
 
+def check_pending_vote_entry(dwname,cursor):
+    cursor.execute("SELECT COUNT(*) FROM pending_vote WHERE dwname=?",(dwname,))
+    real_count = int(cursor.fetchone())
+    if real_count > 0:
+        return True
+    else:
+        return False
+
+def remove_pending_voting_entry(dwname, cursor):
+    cursor.execute("DELETE FROM pending_vote WHERE dwname=?", (dwname,))
+    return
+
 def get_newest_team(cursor):
     cursor.execute("SELECT MAX(team_id) FROM teams;")
     team_num = cursor.fetchone()
     return team_num[0]
+
+def existing_voting_team_assignments(dwname, cursor):
+    cursor.execute("SELECT * FROM mr1_player_vote WHERE dwname = ?", (dwname,))
+    if cursor.fetchone():
+        return 1
+    else:
+        return 0
+
+def assign_voting_assignments(dwname, cursor):
+    current_team = get_current_team(dwname, cursor)
+    cursor.execute("SELECT team_id FROM players WHERE dwname = ?", (dwname,))
+    team_no = int(cursor.fetchone())
+    current_teams = 10
+    assigned_teams = []
+    while len(assigned_teams) < 10:
+        cursor.execute("SELECT * FROM mr1_team_votes WHERE players_min_assigned = (SELECT MIN(players_min_assigned) FROM mr1_team_votes)")
+        team_list = cursor.fetchall()
+        cont_empty = false
+        if len(team_list) == 0:
+            cont_empty = true
+        while len(assigned_teams) < 10 and not cont_empty:
+            todaysInt = random.randint(0, len(team_list) - 1)
+            team_name = assigned_teams[todaysInt][1]
+            if team_name not in assigned_teams and team_name != current_team:
+                assigned_teams.append(team_name)
+                current_teams -= 1
+                cursor.execute("UPDATE mr1_team_votes SET players_min_assigned = (players_min_assigned + 1) WHERE team_name = ?", (team_name,))
+            team_list.pop(todaysInt)
+    array = (dwname, team_no, 0, '', '', '', assigned_teams[0], assigned_teams[1], assigned_teams[2], assigned_teams[3], assigned_teams[4], assigned_teams[5], assigned_teams[6], assigned_teams[7], assigned_teams[8], assigned_teams[9],)
+    cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
+    return
+
+def get_vote_option_list(dwname, cursor):
+    agg_list = []
+    cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    player_vote_list = cursor.fetchone()
+    agg_list = [player_vote_list[6], player_vote_list[7], player_vote_list[8], player_vote_list[9], player_vote_list[10], player_vote_list[11], player_vote_list[12], player_vote_list[13], player_vote_list[14], player_vote_list[15]]
+    return agg_list
 
 if __name__ == "__main__":
     teamnames = ('rax<3<computers', 'modship<3players', 'h8rs<>h8rs')

@@ -1412,6 +1412,13 @@ input, textarea {
             message = fmt % (cgi.escape(display_identifier),
                              info.message)
         elif info.status == consumer.SUCCESS:
+            self.actuallyVotingPage()
+    
+    def actuallyVotingPage(self, title, form_contents):
+        """Render the page header"""
+        self.setSessionCookie()
+        self.send_response(200)
+        print quoteattr(self.buildURL('voteverify'))
             self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 

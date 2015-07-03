@@ -557,11 +557,11 @@ def get_newest_sports_team(fandom, cursor):
 
 def check_pending_vote_entry(dwname,cursor):
     cursor.execute("SELECT * FROM pending_vote")# WHERE dwname=?",(dwname,))
-    print cursor.fetchone()
-    #if cursor.fetchone():
-    #    return True
-    #else:
-    return False
+    cursor.fetchone()
+    if cursor.fetchone():
+        return True
+    else:
+        return False
 
 def remove_pending_voting_entry(dwname, cursor):
     cursor.execute("DELETE FROM pending_vote WHERE dwname=?", (dwname,))

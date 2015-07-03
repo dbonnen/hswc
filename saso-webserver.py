@@ -1153,6 +1153,7 @@ sarcastic comments or jokes. Misusing the tag request form may result in
     def votePage(self, title, form_contents):
         """Render the page header"""
         self.setSessionCookie()
+        self.send_response(200)
         print quoteattr(self.buildURL('voteverify'))
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
@@ -1356,8 +1357,8 @@ input, textarea {
     
     def renderVoting(self):
         """Render the page header"""
-        """Handle the redirect from the OpenID server.
-"""
+        """Handle the redirect from the OpenID server."""
+        
         oidconsumer = self.getConsumer()
         
         # Ask the library to check the response that the server sent

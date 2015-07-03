@@ -1337,7 +1337,7 @@ input, textarea {
                 
                 trust_root = self.server.base_url
                 #print 'trust_root is ' + trust_root
-               return_to = self.buildURL('voting')
+                return_to = self.buildURL('voting')
                 #print 'return_to is ' + return_to
                 if request.shouldSendRedirect():
                     redirect_url = request.redirectURL(

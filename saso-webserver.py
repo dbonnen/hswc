@@ -1419,7 +1419,7 @@ input, textarea {
         self.setSessionCookie()
         self.send_response(200)
         print quoteattr(self.buildURL('voteverify'))
-            self.wfile.write('''\
+        self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
 
 <head>

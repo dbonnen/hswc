@@ -600,7 +600,7 @@ def assign_voting_assignments(dwname, cursor):
                 cursor.execute("UPDATE mr1_team_votes SET players_assigned = (players_assigned + 1) WHERE team_name = ?", (team_name,))
             team_list.pop(todaysInt)
     array = (dwname, team_no, 0, '', '', '', assigned_teams[0], assigned_teams[1], assigned_teams[2], assigned_teams[3], assigned_teams[4], assigned_teams[5], assigned_teams[6], assigned_teams[7], assigned_teams[8], assigned_teams[9],)
-    cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
+    cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
     return
 
 def get_vote_option_list(dwname, cursor):

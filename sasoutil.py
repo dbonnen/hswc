@@ -167,8 +167,8 @@ def get_current_team(player, cursor):
     cursor.execute('SELECT * from players where dwname=?', array)
     currentteam = cursor.fetchone()
     if currentteam:
-        cursor.execute('SELECT * from teams where team_id=?', (currentteam[2],))
-        print currentteam[2]
+        cursor.execute('SELECT * from teams where team_id=?', (currentteam[1],))
+        print currentteam[1]
         realteam = cursor.fetchone()
         print realteam
         if realteam:

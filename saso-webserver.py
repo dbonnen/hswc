@@ -1435,8 +1435,8 @@ input, textarea {
     
     def actuallyVotingPage(self, form_contents, vote_option_string):
         """Render the page header"""
-        self.setSessionCookie()
-        self.send_response(200)
+        #self.setSessionCookie()
+        #self.send_response(200)
         self.wfile.write('''\
 <html>
 <head>

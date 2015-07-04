@@ -1438,7 +1438,6 @@ input, textarea {
         self.setSessionCookie()
         self.send_response(200)
         self.wfile.write('''\
-Content-type: text/html; charset=UTF-8
 <html>
 <head>
     <title>

@@ -1399,7 +1399,7 @@ input, textarea {
                              info.message)
         elif info.status == consumer.SUCCESS:
             if not saso.existing_voting_team_assignments(dwname, cursor):
-            saso.assign_voting_assignments(dwname, cursor)
+                saso.assign_voting_assignments(dwname, cursor)
             
             saso.remove_pending_voting_entry(dwname, cursor)
             

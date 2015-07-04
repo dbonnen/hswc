@@ -1388,21 +1388,7 @@ input, textarea {
                 css_class='error', form_contents=(dwname,'','',''))
             return
         
-        if not saso.existing_voting_team_assignments(dwname, cursor):
-            saso.assign_voting_assignments(dwname, cursor)
         
-        saso.remove_pending_voting_entry(dwname, cursor)
-        
-        vote_options = saso.get_vote_option_list(dwname, cursor)
-        
-        vote_option_string = str()
-        
-        for i in vote_options:
-            vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
-        vote_option_string = vote_option_string + '\n'
-        
-        print vote_option_string
-        dbconn.commit()
         
         if info.status == consumer.FAILURE and display_identifier:
             # In the case of failure, if info is non-None, it is the
@@ -1412,6 +1398,21 @@ input, textarea {
             message = fmt % (cgi.escape(display_identifier),
                              info.message)
         elif info.status == consumer.SUCCESS:
+            if not saso.existing_voting_team_assignments(dwname, cursor):
+            saso.assign_voting_assignments(dwname, cursor)
+            
+            saso.remove_pending_voting_entry(dwname, cursor)
+            
+            vote_options = saso.get_vote_option_list(dwname, cursor)
+            
+            vote_option_string = str()
+            
+            for i in vote_options:
+                vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
+            vote_option_string = vote_option_string + '\n'
+            
+            print vote_option_string
+            dbconn.commit()
             self.actuallyVotingPage(None, vote_option_string)
     
     def actuallyVotingPage(self, form_contents, vote_option_string):
@@ -1420,7 +1421,7 @@ input, textarea {
         self.send_response(200)
         self.wfile.write('''\
 Content-type: text/html; charset=UTF-8
-
+<html>
 <head>
     <title>
     SASO 2015 VOTING
@@ -1430,8 +1431,9 @@ Content-type: text/html; charset=UTF-8
     <meta http-equiv="refresh" content="50000" />
     <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
-
+    
     <style type="text/css" media="all">
+
 html, body {    
     font-family: Verdana,Arial,"Liberation Sans",sans-serif;
     color: #000;
@@ -1525,7 +1527,6 @@ input, textarea {
 }
     </style>
 </head>
-
 <body>
 
     <h1>
@@ -1534,11 +1535,23 @@ input, textarea {
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 
-<form method="GET" accept-charset="UTF-8" action=/saso/voteverify>
+<p>Please read and choose your favorite three of the following ten choices: </p>''' + vote_option_string + '''
+
+<form method="POST" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>
-    <span class="field">Dreamwidth Username:</span><br />
-    <span class="descrip">Please enter your dreamwidth username</span><br />
-    <input name="username" type="text" />
+    <span class="field">Vote 1:</span><br />
+    <span class="descrip">Please enter your first vote</span><br />
+    <input name="vote1" type="text" />
+</p>
+<p>
+    <span class="field">Vote 2:</span><br />
+    <span class="descrip">Please enter your second vote</span><br />
+    <input name="vote2" type="text" />
+</p>
+<p>
+    <span class="field">Vote 3:</span><br />
+    <span class="descrip">Please enter your third vote</span><br />
+    <input name="vote3" type="text" />
 </p>
 
 <input type="submit" value="Submit">
@@ -1546,7 +1559,8 @@ input, textarea {
 
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 
-</body></html>
+</body>
+</html>
 ''')
 
 def main(host, port, data_path, weak_ssl=False):

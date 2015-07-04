@@ -952,7 +952,7 @@ query parameters added."""
         self.setSessionCookie()
         #print (title, title, quoteattr(self.buildURL('verify')))
         self.wfile.write('''\
-Content-type: html; charset=UTF-8
+Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
@@ -1388,6 +1388,8 @@ input, textarea {
                 css_class='error', form_contents=(dwname,'','',''))
             return
         
+        vote_option_string = ''
+        
         if info.status == consumer.FAILURE and display_identifier:
             # In the case of failure, if info is non-None, it is the
             # URL that we were verifying. We include it in the error
@@ -1411,7 +1413,25 @@ input, textarea {
             
             print vote_option_string
             dbconn.commit()
-            self.actuallyVotingPage(None, vote_option_string)
+        elif info.status == consumer.CANCEL:
+            # cancelled
+            message = 'Verification cancelled'
+        elif info.status == consumer.SETUP_NEEDED:
+            if info.setup_url:
+                message = '<a href=%s>Setup needed</a>' % (
+                    quoteattr(info.setup_url),)
+            else:
+                # This means auth didn't succeed, but you're welcome to try
+                # non-immediate mode.
+                message = 'Setup needed'
+        else:
+            # Either we don't understand the code or there is no
+            # openid_url included with the error. Give a generic
+            # failure message. The library should supply debug
+            # information in a log.
+            message = 'Verification failed.'
+        
+        self.actuallyVotingPage(None, vote_option_string)
     
     def actuallyVotingPage(self, form_contents, vote_option_string):
         """Render the page header"""

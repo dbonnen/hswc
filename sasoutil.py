@@ -581,6 +581,7 @@ def existing_voting_team_assignments(dwname, cursor):
 
 def assign_voting_assignments(dwname, cursor):
     current_team = get_current_team(dwname, cursor)
+    print current_team
     cursor.execute("SELECT team_id FROM players WHERE dwname = ?", (dwname,))
     team_no = int(cursor.fetchone()[0])
     current_teams = 10
@@ -594,6 +595,7 @@ def assign_voting_assignments(dwname, cursor):
         while len(assigned_teams) < 10 and not cont_empty:
             todaysInt = random.randint(0, len(team_list) - 1)
             team_name = team_list[todaysInt][1]
+            print team_name
             if team_name not in assigned_teams and team_name != current_team:
                 assigned_teams.append(team_name)
                 current_teams -= 1

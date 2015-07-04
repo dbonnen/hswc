@@ -952,7 +952,7 @@ query parameters added."""
         self.setSessionCookie()
         #print (title, title, quoteattr(self.buildURL('verify')))
         self.wfile.write('''\
-Content-type: text/html; charset=UTF-8
+Content-type: html; charset=UTF-8
 
 <head>
 	<title>
@@ -1387,8 +1387,6 @@ input, textarea {
             self.render('The software choked and lost your login name, sorry. Kick hurristat.',
                 css_class='error', form_contents=(dwname,'','',''))
             return
-        
-        
         
         if info.status == consumer.FAILURE and display_identifier:
             # In the case of failure, if info is non-None, it is the

@@ -612,6 +612,18 @@ def get_vote_option_list(dwname, cursor):
     agg_list = [player_vote_list[6], player_vote_list[7], player_vote_list[8], player_vote_list[9], player_vote_list[10], player_vote_list[11], player_vote_list[12], player_vote_list[13], player_vote_list[14], player_vote_list[15]]
     return agg_list
 
+def enter_votes(dwname, vote1, vote2, vote3, cursor):
+    cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    current_vote = cursor.fetchone()
+    if current_vote[3] or current_vote[4] or current_vote[5]:
+        cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[3]))
+        cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[4]))
+        cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[5]))
+    cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote1)
+    cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote2)
+    cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote3)
+    return 0
+
 if __name__ == "__main__":
     teamnames = ('rax<3<computers', 'modship<3players', 'h8rs<>h8rs')
     playernames = ('alice', 'bob', 'carol', 'dave', 'elsa', 'fiddlesticks')

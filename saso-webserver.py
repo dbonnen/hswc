@@ -177,6 +177,8 @@ written to the requesting browser.
                 self.doVoteVerify()
             elif path == '/voting':
                 self.renderVoting()
+            elif path == '/voteaccept':
+                self.acceptMessage()
             else:
                 self.notFound()
         
@@ -1554,7 +1556,7 @@ input, textarea {
 
 <p>Please read and choose your favorite three of the following ten choices: </p>''' + vote_option_string + '''
 
-<form method="POST" accept-charset="UTF-8" action=/saso/voteaccept>
+<form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>
     <span class="field">Vote 1:</span><br />
     <span class="descrip">Please enter your first vote</span><br />
@@ -1569,10 +1571,148 @@ input, textarea {
     <span class="field">Vote 3:</span><br />
     <span class="descrip">Please enter your third vote</span><br />
     <input name="vote3" type="text" />
+    
+    <input name="username" type="hidden" value="''' + openid_url + '''"/>
 </p>
 
 <input type="submit" value="Submit">
 </form>
+
+<p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
+
+</body>
+</html>
+''')
+    
+    def acceptMessage(self):
+        response = ''
+        vote1 = self.query.get('vote1')
+        vote2 = self.query.get('vote2')
+        vote3 = self.query.get('vote3')
+        openid_url = self.query.get('username')
+        
+        valid_teams = saso.get_vote_option_list(openid_url, cursor)
+        if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
+            response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+        else:
+            response = 'your votes were received! thank you for voting!'
+            saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
+        self.wfile.write('''\
+<html>
+<head>
+    <title>
+    SASO 2015 VOTING
+    </title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="refresh" content="50000" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+    <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
+    
+    <style type="text/css" media="all">
+
+html, body {    
+    font-family: Verdana,Arial,"Liberation Sans",sans-serif;
+    color: #000;
+    font-size: 11pt;
+    background-color: #e5e4e5;
+}
+
+a:link,a:visited {
+    color: #3c3c89;
+    font-weight:bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4e5273;
+    font-weight:bold;
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 18pt;
+    text-transform: uppercase;
+    color: #3c3c89;
+    text-align: center;
+}
+
+.navigation {
+    margin-left: auto;
+    margin-right: auto; 
+    text-align: center;
+    border-top: 1px #4e5273 solid;
+    width:50%;
+    padding: 22px 0px 10px 0px;
+}
+
+.alert {
+    border: 2px solid #e7dc2b;
+    margin: 0px 10px 20px 0px;
+    padding: 7px;
+    background-color: #fff888;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.error {
+    border: 2px solid #ff0000;
+    margin: 0px 10px 20px 0px;
+    padding: 7px;
+    background-color: #ffaaaa;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+form {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:1%;
+    border-radius:10px;
+    box-shadow:5px 5px #babad5;
+}
+
+.edit { 
+    border: 2px #4e5273 solid;
+    margin: 7px;
+    padding: 7px;
+    background-color: #f1f1f1;
+    }
+
+input, textarea {
+    border: 1px solid black;
+    background-color: #fff;
+    margin: 3px 0px 0px 0px;
+}
+
+.field {
+    font-weight:bold
+    }
+
+.descrip {
+    font-size:10pt;
+    color:#202020;
+}
+    </style>
+</head>
+<body>
+
+    <h1>
+    SASO 2015 VOTING FORM
+    </h1>
+
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+
+''' + response + '''
 
 <p style="text-align:center"><img src="http://i.imgur.com/98vfANt.png" alt="SPORTS!" /></p>
 

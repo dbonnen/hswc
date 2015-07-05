@@ -1433,9 +1433,9 @@ input, textarea {
             # information in a log.
             message = 'Verification failed.'
         
-        self.actuallyVotingPage(None, vote_option_string)
+        self.actuallyVotingPage(None, vote_option_string, openid_url)
     
-    def actuallyVotingPage(self, form_contents, vote_option_string):
+    def actuallyVotingPage(self, form_contents, vote_option_string, openid_url):
         """Render the page header"""
         #self.setSessionCookie()
         #self.send_response(200)

@@ -1589,6 +1589,7 @@ input, textarea {
         vote1 = self.query.get('vote1')
         vote2 = self.query.get('vote2')
         vote3 = self.query.get('vote3')
+        print vote1, vote2, vote3
         openid_url = self.query.get('username')
         
         valid_teams = saso.get_vote_option_list(openid_url, cursor)
@@ -1597,6 +1598,7 @@ input, textarea {
         else:
             response = 'your votes were received! thank you for voting!'
             saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
+        dbconn.commit()
         self.wfile.write('''\
 <html>
 <head>

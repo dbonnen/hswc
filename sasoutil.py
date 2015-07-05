@@ -625,6 +625,9 @@ def enter_votes(dwname, vote1, vote2, vote3, cursor):
     cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote1,))
     cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote2,))
     cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote3,))
+    cursor.execute("UPDATE mr1_player_votes SET vote_1 = ?", (vote1,))
+    cursor.execute("UPDATE mr1_player_votes SET vote_2 = ?", (vote2,))
+    cursor.execute("UPDATE mr1_player_votes SET vote_3 = ?", (vote3,))
     return 0
 
 if __name__ == "__main__":

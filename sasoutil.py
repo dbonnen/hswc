@@ -613,7 +613,10 @@ def get_vote_option_list(dwname, cursor):
     return agg_list
 
 def enter_votes(dwname, vote1, vote2, vote3, cursor):
-    cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    cursor.execute("SELECT vote_1, vote_2, vote_3 FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    print vote_1
+    print vote_2
+    print vote_3
     current_vote = cursor.fetchone()
     if current_vote[3] or current_vote[4] or current_vote[5]:
         cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[3],))

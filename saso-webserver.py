@@ -1556,7 +1556,7 @@ input, textarea {
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 
-<p>Please read and choose your favorite three of the following ten choices: </p>''' + vote_option_string + '''
+<p>Please read <a href="http://saso2015-r1.dreamwidth.org/7028.html#cutid1">(masterpost here)</a> and choose your favorite three of the following ten choices: </p>''' + vote_option_string + '''
 
 <form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>

@@ -1384,6 +1384,10 @@ input, textarea {
         dwname = (display_identifier.split('.')[0]).split('//')[1]
         openid_url = dwname
         
+        if saso.get_player_email(dwname, cursor) == 'player does not exist':
+            self.render('Only partipants may vote.',
+                        css_class='error', form_contents=('','','',''))
+        
         if not saso.check_pending_vote_entry(dwname, cursor):
             self.render('The software choked and lost your login name, sorry. Kick hurristat.',
                 css_class='error', form_contents=(dwname,'','',''))
@@ -1412,7 +1416,6 @@ input, textarea {
                 vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
             vote_option_string = vote_option_string + '\n'
             
-            print vote_option_string
             dbconn.commit()
         elif info.status == consumer.CANCEL:
             # cancelled

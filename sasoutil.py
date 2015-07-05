@@ -58,7 +58,6 @@ def make_cpn_list(cursor):
 
 def get_player_email(player, cursor):
     """Get a player's email address."""
-    #FINISHED FOR SASO
     array = (player,)
     cursor.execute('SELECT * from players where dwname=?', array)
     playerdata = cursor.fetchone()
@@ -68,7 +67,6 @@ def get_player_email(player, cursor):
 
 def make_team_active(team, cursor):
     """Set the active bit on a team."""
-    #FINISHED FOR SASO
     string = """UPDATE teams set active=1 where name='%s'""" % team
     cursor.execute(string)
     # whatever calls this has to dbconn.commit()
@@ -76,7 +74,6 @@ def make_team_active(team, cursor):
 
 def is_team_active(team, cursor):
     """Return the active bit on a team."""
-    #FINISHED FOR SASO
     if team == 'grandstand':
         return 1
     

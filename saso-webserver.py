@@ -1596,6 +1596,8 @@ input, textarea {
         valid_teams = saso.get_vote_option_list(openid_url, cursor)
         if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
             response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+        elif vote1 == vote2 or vote1 == vote3 or vote2 == vote3:
+            response = 'all votes must be for different entries! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
         else:
             response = 'your votes were received! thank you for voting!'
             saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)

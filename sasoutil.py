@@ -570,7 +570,7 @@ def get_newest_team(cursor):
     return team_num[0]
 
 def existing_voting_team_assignments(dwname, cursor):
-    cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    cursor.execute("SELECT * FROM mr2_player_votes WHERE dwname = ?", (dwname,))
     if cursor.fetchone():
         return 1
     else:
@@ -583,7 +583,7 @@ def assign_voting_assignments(dwname, cursor):
     current_teams = 10
     assigned_teams = []
     while len(assigned_teams) < 10:
-        cursor.execute("SELECT * FROM mr1_team_votes WHERE players_assigned = (SELECT MIN(players_assigned) FROM mr1_team_votes)")
+        cursor.execute("SELECT * FROM mr2_team_votes WHERE players_assigned = (SELECT MIN(players_assigned) FROM mr2_team_votes)")
         team_list = cursor.fetchall()
         cont_empty = False
         if len(team_list) == 0:
@@ -594,34 +594,34 @@ def assign_voting_assignments(dwname, cursor):
             if team_name not in assigned_teams and team_name != current_team:
                 assigned_teams.append(team_name)
                 current_teams -= 1
-                cursor.execute("UPDATE mr1_team_votes SET players_assigned = (players_assigned + 1) WHERE team_name = ?", (team_name,))
+                cursor.execute("UPDATE mr2_team_votes SET players_assigned = (players_assigned + 1) WHERE team_name = ?", (team_name,))
             team_list.pop(todaysInt)
             if len(team_list) == 0:
                 cont_empty = True
     array = (dwname, team_no, 0, '', '', '', assigned_teams[0], assigned_teams[1], assigned_teams[2], assigned_teams[3], assigned_teams[4], assigned_teams[5], assigned_teams[6], assigned_teams[7], assigned_teams[8], assigned_teams[9],'',)
-    cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
+    cursor.execute("INSERT INTO mr2_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
     return
 
 def get_vote_option_list(dwname, cursor):
     agg_list = []
-    cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    cursor.execute("SELECT * FROM mr2_player_votes WHERE dwname = ?", (dwname,))
     player_vote_list = cursor.fetchone()
     agg_list = [player_vote_list[6], player_vote_list[7], player_vote_list[8], player_vote_list[9], player_vote_list[10], player_vote_list[11], player_vote_list[12], player_vote_list[13], player_vote_list[14], player_vote_list[15]]
     return agg_list
 
 def enter_votes(dwname, vote1, vote2, vote3, cursor):
-    cursor.execute("SELECT vote_1, vote_2, vote_3 FROM mr1_player_votes WHERE dwname = ?", (dwname,))
+    cursor.execute("SELECT vote_1, vote_2, vote_3 FROM mr2_player_votes WHERE dwname = ?", (dwname,))
     current_vote = cursor.fetchone()
     if current_vote[0] or current_vote[1] or current_vote[2]:
-        cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[0],))
-        cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[1],))
-        cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[2],))
-    cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote1,))
-    cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote2,))
-    cursor.execute("UPDATE mr1_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote3,))
-    cursor.execute("UPDATE mr1_player_votes SET vote_1 = ? WHERE dwname = ?", (vote1, dwname,))
-    cursor.execute("UPDATE mr1_player_votes SET vote_2 = ? WHERE dwname = ?", (vote2, dwname,))
-    cursor.execute("UPDATE mr1_player_votes SET vote_3 = ? WHERE dwname = ?", (vote3, dwname,))
+        cursor.execute("UPDATE mr2_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[0],))
+        cursor.execute("UPDATE mr2_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[1],))
+        cursor.execute("UPDATE mr2_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[2],))
+    cursor.execute("UPDATE mr2_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote1,))
+    cursor.execute("UPDATE mr2_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote2,))
+    cursor.execute("UPDATE mr2_team_votes SET votes = votes + 1 WHERE team_name = ?", (vote3,))
+    cursor.execute("UPDATE mr2_player_votes SET vote_1 = ? WHERE dwname = ?", (vote1, dwname,))
+    cursor.execute("UPDATE mr2_player_votes SET vote_2 = ? WHERE dwname = ?", (vote2, dwname,))
+    cursor.execute("UPDATE mr2_player_votes SET vote_3 = ? WHERE dwname = ?", (vote3, dwname,))
     return 0
 
 if __name__ == "__main__":

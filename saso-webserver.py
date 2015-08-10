@@ -1272,12 +1272,7 @@ input, textarea {
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
 
-<form method="GET" accept-charset="UTF-8" action=/saso/voteverify>
-<p>
-    <span class="field">Dreamwidth Username:</span><br />
-    <span class="descrip">Please enter your dreamwidth username</span><br />
-    <input name="username" type="text" />
-</p>
+<p>Voting is over!</p>
 
 <input type="submit" value="Submit">
 </form>

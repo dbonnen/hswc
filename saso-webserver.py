@@ -2,7 +2,7 @@
 """
 Cribbed off of python-openid's Simple example for an OpenID consumer.
 
-The SASO signup page for 2015.
+The SASO signup page for 2016.
 Almost all the code here was written for HSWC 2014 by the lovely raxraxraxraxrax@github
 All SASO additions by dbonnen@github
 """
@@ -22,7 +22,7 @@ cursor = dbconn.cursor()
 # MODES
 
 #The default mode lets any authed user sign up for anything.
-#mode = 'default' 
+mode = 'default' 
 
 # THIS CHANGE MADE BY RAX MAY 19 2015
 # YOU SHOULD RESTART THE SERVER NOT IN MY TERMINAL SOMETIME :P
@@ -35,7 +35,7 @@ cursor = dbconn.cursor()
 #mode = 'gs'
 
 #The drop mode only lets players drop.
-mode = 'drop'
+#mode = 'drop'
 
 main_round = 1
 #main_round = 2
@@ -198,13 +198,13 @@ written to the requesting browser.
 Content-type: text/html; charset=UTF-8
 <head>
         <title>
-        SASO 2015 GRANDSTAND ROSTER
+        SASO 2016 GRANDSTAND ROSTER
         </title>
  
 </head><body>
  
         <h1>
-        SASO 2015 Grandstand Roster
+        SASO 2016 Grandstand Roster
         </h1>
  
 </body>
@@ -223,12 +223,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
         <title>
-        SASO 2015 GRANDSTAND ROSTER
+        SASO 2016 GRANDSTAND ROSTER
         </title>
  
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta http-equiv="refresh" content="300" />
-        <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team, 2015 SASO Mod Team" />
+        <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team, 2015-16 SASO Mod Team" />
         <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
  
         <style type="text/css" media="all">
@@ -306,12 +306,12 @@ table {
 </head><body>
  
         <h1>
-        SASO 2015 Grandstand Roster
+        SASO 2016 Grandstand Roster
         </h1>''')
         
         self.wfile.write('''\
  
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://sportsanime.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
  
 <p class="tally">
         There are currently <strong>%s participants</strong> in the grandstand.<br />
@@ -369,12 +369,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	SASO 2015 TEAM ROSTER
+	SASO 2016 TEAM ROSTER
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="300" />
-	<meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+	<meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
         <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
 	<style type="text/css" media="all">
@@ -482,7 +482,7 @@ table {
 	SASO 2015 Team Roster
 	</h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
 
 <p class="tally">
 	There are currently <strong>%s teams</strong> and <strong>%s participants</strong>.<br />
@@ -555,6 +555,11 @@ table {
         openid_url = re.sub('_','-',openid_url)
         if openid_url:
             openid_url = openid_url.lower()
+        minor = self.query.get('minor')
+        if minor == 'yes':
+            minor = 1
+        else:
+            minor = 0
         email = self.query.get('email')
         team_type = self.query.get('team_type')
         team = self.query.get('team')
@@ -591,7 +596,7 @@ table {
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
         # You have to get the rules check right.
-        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2015 SASO.':
+        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2016 SASO.':
             self.render('Please enter the correct rules check text.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
             return
@@ -682,7 +687,7 @@ table {
                 team = newest_team
         
         # We want this to go through, so we make an entry in the pending table.
-        saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, cursor)
+        saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, minor, cursor)
         dbconn.commit()
         
         # Now add the DW part of the string --- we don't want other OpenID
@@ -793,6 +798,7 @@ table {
         fandom = pending_entry[4]
         cpn_willing = pending_entry[5]
         contentnotes = pending_entry[6]
+        minor = pending_pending[7]
         saso.remove_pending_entry(dwname, cursor)
         dbconn.commit()
         
@@ -825,7 +831,7 @@ table {
             # and we can track them down. Plus we can now depend on them existing
             # for the rest of this code block.
             if not saso.player_exists(openid_url, cursor):
-                saso.add_player_to_players(openid_url, email, cpn_willing, contentnotes, cursor)
+                saso.add_player_to_players(openid_url, email, cpn_willing, contentnotes, minor, cursor)
                 dbconn.commit()
             
             teamclean = re.sub('<', '&lt;', team)
@@ -834,7 +840,7 @@ table {
                 currentteam = saso.get_current_team(openid_url, cursor)
                 if not currentteam:
                     self.render('Cannot remove you from no team.', css_class='error',
-                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
+                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
                 currentteamclean = re.sub('>', '&gt;', currentteamclean)
@@ -842,7 +848,7 @@ table {
                 saso.remove_player(openid_url, cursor)
                 dbconn.commit()
                 self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
-                            form_contents=(openid_url, email, team_type,team,fandom, contentnotes))
+                            form_contents=(openid_url, email, team_type,team,fandom, contentnotes, minor))
                 return
             
             #If the player is already on the team, just update 
@@ -855,12 +861,12 @@ table {
                         saso.uncaptain(team, cursor)
                         dbconn.commit()
                         self.render('You are no longer the captain of %s.' % teamclean, css_class='alert',
-                                    form_contents=(openid_url, email, team_type,team,fandom, team_type, contentnotes))
+                                    form_contents=(openid_url, email, team_type,team,fandom, team_type, contentnotes, minor))
                         return
                     saso.update_player(openid_url, email, contentnotes, cursor)
                     dbconn.commit()
                     self.render('No change to team, personal information updated.', css_class='alert',
-                                form_contents=(openid_url,email, team_type,team,fandom, team_type, contentnotes))
+                                form_contents=(openid_url,email, team_type,team,fandom, team_type, contentnotes, minor))
                     return
                 else:
                     # they do want to be captain so if no one else is, they get the slot
@@ -869,24 +875,24 @@ table {
                         saso.update_player(openid_url, email, contentnotes, cursor)
                         dbconn.commit()
                         self.render('Became captain of %s.' % teamclean, css_class='alert',
-                                    form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
+                                    form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
                         return
                     else:
                         saso.update_player(openid_url, email, contentnotes, cursor)
                         dbconn.commit()
                         self.render('No change to team, personal information updated.', css_class='alert',
-                                    form_contents=(openid_url,email, team_type, team, fandom, contentnotes))
+                                    form_contents=(openid_url,email, team_type, team, fandom, contentnotes, minor))
                         return
             
             # Try to add them to whatever team they want to be on.
             oldteam = saso.get_current_team(openid_url, cursor)
-            errorstatus = saso.add_player_to_team(openid_url, team, team_type, fandom, cpn_willing, email, contentnotes, cursor)
+            errorstatus = saso.add_player_to_team(openid_url, team, team_type, fandom, cpn_willing, email, contentnotes, minor, cursor)
             dbconn.commit()
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
             if errorstatus:
                 # some belunkus error got passed back, don't remove from old team
-                self.render(errorstatus, css_class='alert', form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
+                self.render(errorstatus, css_class='alert', form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
                 return
             if oldteam:
                 if oldteam != team:
@@ -895,10 +901,10 @@ table {
                     oldteamclean = re.sub('<', '&lt;', oldteam)
                     oldteamclean = re.sub('>', '&gt;', oldteamclean)
                     self.render('%s added to %s and removed from %s!' % (openid_url, teamclean, oldteamclean), css_class='alert', 
-                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
+                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
                     return
             self.render('Added %s to %s!' % (openid_url, teamclean), css_class='alert',
-                        form_contents=(openid_url, email, team_type, team, fandom, contentnotes))
+                        form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
             return
             
         elif info.status == consumer.CANCEL:
@@ -1093,6 +1099,10 @@ switching teams).
 	<span class="field">E-mail Address:</span><br />
 	<input name="email" type="text" />
 </p>
+
+<p>
+        <span class="field">Are you 18 or older?</span>
+        <input name="minor" value="yes" type="radio"/>Yes <input name="minor" type="no" checked />No
 
 <p>
     <span class="field">What type of team are you joining?</span><br />
@@ -1445,7 +1455,7 @@ input, textarea {
 <html>
 <head>
     <title>
-    SASO 2015 VOTING
+    SASO 2016 VOTING
     </title>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -1551,7 +1561,7 @@ input, textarea {
 <body>
 
     <h1>
-    SASO 2015 VOTING FORM
+    SASO 2016 VOTING FORM
     </h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
@@ -1591,7 +1601,7 @@ input, textarea {
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="refresh" content="50000" />
-    <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
     
     <style type="text/css" media="all">
@@ -1692,10 +1702,10 @@ input, textarea {
 <body>
 
     <h1>
-    SASO 2015 VOTING FORM
+    SASO 2016 VOTING FORM
     </h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
 
 ''' + response + '''
 

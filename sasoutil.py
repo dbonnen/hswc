@@ -545,7 +545,7 @@ def valid_fandom(fandom):
             fandom_new[i] = fandom_new[i].strip()
     else:
         fandom_new = [fandom]
-    fandom_list = ['Haikyuu!!', 'Daiya no Ace', 'Yowamushi Pedal', 'Free!' ,'Chihayafuru', 'Ookiku Furikabutte', 'Kuroko no Basuke', 'Ping Pong: The Animation', 'Eyeshield 21', 'Love Live!', 'Prince of Tennis', 'Hikaru no Go', 'Teppuu', 'Baby Steps', 'Slam Dunk', 'Angelic Layer']
+    fandom_list = ['Love Live!', 'Chihayafuru', 'Giant Killing', 'Yowamushi Pedal', 'Yawara!', 'Princess Nine', 'Teppuu', 'Ookiku Furikabutte', 'Daiya no A', 'Tennis no Ouji-sama', 'Haikyuu!!', 'Free!', 'Hikaru no Go', 'Prince of Stride', 'Eyeshield 21', 'Kuroko no Basuke', 'Stella Women\'s Academy High School Division Class C3', 'Ballroom e Youkoso', 'Food Wars: Shokugeki no Soma', 'Hajime no Ippo', 'Gundam Build Fighters', 'Saki', 'Baby Steps', 'Taisho Yakyuu Musume', 'Ping Pong: The Animation', 'Angelic Layer', 'H2', 'All Out!!', 'Hinomaru Zumou', 'Cross Game', 'Touch', '15: Meisetsu Kougyou Koukou Rugby Bu', 'Days', 'Area no Kishi']
     for i in range(len(fandom_new)):
         if not fandom_new[i] in fandom_list:
             return False

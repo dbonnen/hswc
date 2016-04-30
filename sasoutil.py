@@ -293,8 +293,8 @@ def remove_player_from_team(player, teamname, deleting, cursor):
         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', teamdatalist[0]))
         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
     if deleting:
-        cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
-    cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player,))
+        cursor.execute('UPDATE teams set team_id = -1 where dwname?', (player,))
+    cursor.execute('UPDATE players set num_participants = (num_participants - 1) where team_id?' (teamdatalist[0],))
     #dbconn.commit()
     return
 
@@ -444,7 +444,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                 cursor.execute('UPDATE teams set num_participants = (num_participants + 1) where team_id=?', (teamdatalist[0],))
                 cursor.execute('UPDATE players set team_id=? where dwname=?', (teamdatalist[0], player,))
                 if player_info[1] != -1:
-                    cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (player_info[1],))
+                    #cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (player_info[1],))
                     cursor.execute('SELECT * from teams where team_id=?', (player_info[1],))
                     old_team = cursor.fetchone()
                     if old_team[5] == player:

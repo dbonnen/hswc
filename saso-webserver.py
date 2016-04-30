@@ -552,9 +552,6 @@ table {
         
         # First, collect all the data.
         openid_url = self.query.get('username')
-        openid_url = re.sub('_','-',openid_url)
-        if openid_url:
-            openid_url = openid_url.lower()
         minor = self.query.get('minor')
         if minor == 'yes':
             minor = 1
@@ -565,6 +562,13 @@ table {
         team = self.query.get('team')
         fandom = self.query.get('fandom')
         contentnotes = self.query.get('contentnotes')
+        
+        if not openid_url:
+            self.render('Please enter your dreamwidth username.', css_class+'error',
+                        form_contents=(openid_url,minor, email, team_type, team, fandom, contentnotes))
+        openid_url = re.sub('_','-',openid_url)
+        if openid_url:
+            openid_url = openid_url.lower()
         if team:
             # everything depends on unicode type strings BUT
             # if someone tries to paste in unicode ship symbols everything goes to hell

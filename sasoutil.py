@@ -386,7 +386,7 @@ def get_team_display_line(team, cursor):
         stringofallplayers = 'Please see the grandstand page at <a href="http://autumnfox.akrasiac.org/saso/grandstand">this link</a>.'
         csstype= 'roster_teamslots'
         count = get_team_members_count(teamname, cursor)
-        captain = 'olympics-mods'
+        captain = 'referees'
         return (csstype, count, teamname, captain, stringofallplayers)
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()

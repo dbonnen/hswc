@@ -292,8 +292,8 @@ def remove_player_from_team(player, teamname, deleting, cursor):
     if teamdatalist[6] == player:
         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', teamdatalist[0]))
         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
-    #if deleting:
-    cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
+    if deleting:
+        cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
     cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player,))
     #dbconn.commit()
     return

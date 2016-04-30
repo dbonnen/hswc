@@ -1070,7 +1070,7 @@ input, textarea {
 <body>
 
 	<h1>
-	SASO 2015 Sign Up Form
+	SASO 2016 Sign Up Form
 	</h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
@@ -1102,7 +1102,7 @@ switching teams).
 
 <p>
         <span class="field">Are you 18 or older?</span>
-        <input name="minor" value="yes" type="radio"/>Yes <input name="minor" type="no" checked />No
+        <input name="minor" value="yes" type="radio"/>Yes <input name="minor" type="radio" value="no" checked />No
 </p>
 
 <p>

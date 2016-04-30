@@ -305,7 +305,7 @@ def update_player(player, email, notes, cursor):
     #dbconn.commit()
     return
 
-def add_player_to_players(player, email, cpnwilling, notes, cursor, minor):
+def add_player_to_players(player, email, cpnwilling, notes, minor, cursor):
     """Put the player in the player database at all.
        Team preference is not handled here."""
     array=(player, -1, cpnwilling, email, notes, minor)

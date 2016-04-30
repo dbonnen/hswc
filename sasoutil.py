@@ -99,7 +99,9 @@ def activate_qualifying_teams(cursor):
 
 def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, minor, cursor):
     """Make a pending entry to be processed if the DW auth goes through."""
+    print minor
     array = (dwname, email, team_type, team, fandom, captain, notes, minor)
+    print array
     cursor.execute('INSERT into pending (dwname, email, team_type, team, fandom, cpn_willing, notes, minor) values (?,?,?,?,?,?,?,?)', array)
     return
 
@@ -108,6 +110,7 @@ def retrieve_pending_entry(dwname, cursor):
     array = (dwname,)
     cursor.execute('SELECT * from pending where dwname=?', array)
     pending_entry = cursor.fetchone()
+    print pending_entry
     return pending_entry
 
 def remove_pending_entry(dwname, cursor):

@@ -286,13 +286,15 @@ def remove_player_from_team(player, teamname, cursor):
         return
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
+    print teamdatalist
+    print type(teamdatalist[0])
     if teamdatalist[5] == player:
         cursor.execute('UPDATE teams set captain=? where team_id=?', ('',teamdatalist[0]))
         cursor.execute('UPDATE players set cpn=0 where dwname=?', (player))
     if teamdatalist[6] == player:
         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', teamdatalist[0]))
         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
-    cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0]))
+    cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
     cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player))
     #dbconn.commit()
     return

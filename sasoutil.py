@@ -399,8 +399,7 @@ def get_team_display_line(team, cursor):
     stringofallplayers = ''
     for x in cursor.execute('SELECT * from players where team_id=?', (teamdatalist[0],)):
         stringofallplayers = stringofallplayers + ' ' + x[0]
-        if x[10] == '0':
-            print 'we did it fam'
+	if x[10] == 0:
             stringofallplayers = stringofallplayers + '*'
     stringofallplayers = stringofallplayers.strip()
     csstype = 'roster_teamslots'

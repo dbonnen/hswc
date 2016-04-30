@@ -577,6 +577,10 @@ table {
             # if someone tries to paste in unicode ship symbols everything goes to hell
             asciiteam = team.encode('ascii', 'ignore')
             convertedteam = unicode(asciiteam)
+            if team_type == 'grandstand' and team != 'Grandstand':
+                self.render('Please enter "Grandstand" for the team name if you want to join the Grandstand.', css_class='error',
+                            form_content=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                return
             if not team == convertedteam:
                 self.render('Please do not use unicode characters in team names.', css_class='error',
                             form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
@@ -586,6 +590,7 @@ table {
             if not saso.valid_fandom(fandom) and team_type != 'grandstand':
                 self.render('Please only enter pairings and teams from nominated fandoms. If your fandom is nominated, please spell it the same way it is spelled on the list of nominated fandoms.', css_class='error',
                             form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                return
         elif team != 'grandstand':
             self.render('Please enter the anime/manga your team belongs to.', css_class='error',
                         form_contents=(openid_url,email,team_type,team,fandom,contentnotes))

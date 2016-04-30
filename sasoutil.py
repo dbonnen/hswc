@@ -333,7 +333,7 @@ def get_team_members_list(team, cursor):
     team_id = teamdatalist[0]
     teamplayers = []
     for x in cursor.execute('SELECT * from players where team_id=?', (team_id,)):
-        if x[10] == '0':
+        if x[10] == 0:
             teamplayers.append(x[0] + '*')
         else:
             teamplayers.append(x[0])

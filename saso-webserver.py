@@ -568,8 +568,8 @@ table {
         if not openid_url:
             self.render('Please enter your dreamwidth username.', css_class='error',
                         form_contents=(openid_url,minor, email, team_type, team, fandom, contentnotes))
-        openid_url = re.sub('_','-',openid_url)
         if openid_url:
+            openid_url = re.sub('_','-',openid_url)
             openid_url = openid_url.lower()
         if team:
             # everything depends on unicode type strings BUT

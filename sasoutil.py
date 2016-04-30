@@ -492,7 +492,7 @@ def scrub_team(team):
         return 0
     elif re.search('/', string):
         namelist = string.split('/')
-        shipsymbol = '/'pdd
+        shipsymbol = '/'
     elif re.search('<3<', string):
         namelist = string.split('<3<')
         shipsymbol = '<3<'

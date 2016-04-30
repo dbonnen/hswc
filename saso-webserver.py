@@ -798,7 +798,7 @@ table {
         fandom = pending_entry[4]
         cpn_willing = pending_entry[5]
         contentnotes = pending_entry[6]
-        minor = pending_entry[7]
+        minor = pending_entry[8]
         saso.remove_pending_entry(dwname, cursor)
         dbconn.commit()
         

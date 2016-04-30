@@ -295,7 +295,7 @@ def remove_player_from_team(player, teamname, cursor):
         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', teamdatalist[0]))
         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
     cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
-    cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player))
+    cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player,))
     #dbconn.commit()
     return
 
@@ -310,7 +310,9 @@ def update_player(player, email, notes, cursor):
 def add_player_to_players(player, email, cpnwilling, notes, minor, cursor):
     """Put the player in the player database at all.
        Team preference is not handled here."""
+    print minor
     array=(player, -1, cpnwilling, email, notes, minor)
+    print array
     cursor.execute('INSERT into players (dwname, team_id, cpn_willing, email, notes, minor) values (?,?,?,?,?,?)', array)
     #dbconn.commit()
     return

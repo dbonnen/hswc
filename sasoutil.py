@@ -338,25 +338,25 @@ def get_team_members_list(team, cursor):
             teamplayers.append(x[0])
     return teamplayers
 
-'''def get_grandstand_members_count(cursor):
-    """How many players on team grandstand?"""
-    cursor.execute('SELECT * from grandstand')
-    grandstandlist = cursor.fetchall()
-    return len(grandstandlist)
+#def get_grandstand_members_count(cursor):
+#    """How many players on team grandstand?"""
+#    cursor.execute('SELECT * from grandstand')
+#    grandstandlist = cursor.fetchall()
+#    return len(grandstandlist)
 
 
-def get_grandstand_members_list(cursor):
-    """Which players are on team grandstand?"""
-    cursor.execute('SELECT * from grandstand')
-    grandstandlist = cursor.fetchall()
-    if not grandstandlist:
-        return ['nobody']
-    grandstandplayers = []
-    for x in grandstandlist:
-        grandstandplayers.append(x[0])
-    grandstandplayers.sort()
-    return grandstandplayers
-'''
+#def get_grandstand_members_list(cursor):
+#    """Which players are on team grandstand?"""
+#    cursor.execute('SELECT * from grandstand')
+#    grandstandlist = cursor.fetchall()
+#    if not grandstandlist:
+#        return ['nobody']
+#    grandstandplayers = []
+#    for x in grandstandlist:
+#        grandstandplayers.append(x[0])
+#    grandstandplayers.sort()
+#    return grandstandplayers
+
 #the schema of our database renders these functions unnecessary
 
 def player_is_on_team(player, team, cursor):
@@ -400,7 +400,7 @@ def get_team_display_line(team, cursor):
     for x in cursor.execute('SELECT * from players where team_id=?', (teamdatalist[0],)):
         stringofallplayers = stringofallplayers + ' ' + x[0]
         if x[10] == '0':
-            
+            print 'we did it fam'
             stringofallplayers = stringofallplayers + '*'
     stringofallplayers = stringofallplayers.strip()
     csstype = 'roster_teamslots'

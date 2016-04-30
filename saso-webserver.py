@@ -568,6 +568,7 @@ table {
         if not openid_url:
             self.render('Please enter your dreamwidth username.', css_class='error',
                         form_contents=(openid_url,minor, email, team_type, team, fandom, contentnotes))
+            return
         if openid_url:
             openid_url = re.sub('_','-',openid_url)
             openid_url = openid_url.lower()

@@ -1141,7 +1141,7 @@ switching teams).
 
 <p>
     <span class="field">What anime/manga is this ship/team from?</span><br />
-    <span class="descrip">Please leave this blank if you're joining Team Grandstand. If you have a cross-fandom ship, please list all shows, and separate them with commas.</span><br />
+    <span class="descrip">Please leave this blank if you're joining Team Grandstand. If you have a cross-fandom ship, please list all shows, and separate them with commas. If the canon has multiple names or you are unsure of how to spell it, there is a list <a href="http://sportsanime.dreamwidth.org/11696.html">here</a>.</span><br />
     <input name="fandom" type="text" />
 </p>
 

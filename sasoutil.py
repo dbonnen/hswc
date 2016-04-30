@@ -281,7 +281,7 @@ def remove_player_from_team(player, teamname, cursor):
     """Remove a player from a team, presumably because they joined another."""
     #FINISHED FOR SASO
     array = (teamname,)
-    if teamname == 'you?grandstand':
+    if teamname == 'grandstand':
         remove_player_from_grandstand(player, cursor)
         return
     cursor.execute('SELECT * from teams where team_name=?', array)
@@ -332,7 +332,10 @@ def get_team_members_list(team, cursor):
     team_id = teamdatalist[0]
     teamplayers = []
     for x in cursor.execute('SELECT * from players where team_id=?', (team_id,)):
-        teamplayers.append(x[0])
+        if x[10] == '0':
+            teamplayers.append(x[0] + '*')
+        else:
+            teamplayers.append(x[0])
     return teamplayers
 
 '''def get_grandstand_members_count(cursor):

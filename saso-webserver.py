@@ -585,6 +585,18 @@ table {
                 self.render('Please do not use unicode characters in team names.', css_class='error',
                             form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
                 return
+            if team_type = 'ship' and '/' not in team:
+                self.render('Ship teams must be composed of two or more character names.', css_class='error',
+                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                return
+            if team_type = 'sports' and '/' in team:
+                self.render('Sports teams cannot be made of one ship.', css_class='error',
+                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                return
+            if team_type = 'sports' and fandom != team:
+                self.render('Sports teams must be named the same as the anime or manga it is from.', css_class='error',
+                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                return
             team = saso.scrub_team(team)
         if fandom:
             if not saso.valid_fandom(fandom) and team_type != 'grandstand':

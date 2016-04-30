@@ -97,10 +97,10 @@ def activate_qualifying_teams(cursor):
             make_team_active(team, cursor)
     return
 
-def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, cursor):
+def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, minor, cursor):
     """Make a pending entry to be processed if the DW auth goes through."""
-    array = (dwname, email, team_type, team, fandom, captain, notes)
-    cursor.execute('INSERT into pending (dwname, email, team_type, team, fandom, cpn_willing, notes) values (?,?,?,?,?,?,?)', array)
+    array = (dwname, email, team_type, team, fandom, captain, notes, minor)
+    cursor.execute('INSERT into pending (dwname, email, team_type, team, fandom, cpn_willing, notes, minor) values (?,?,?,?,?,?,?,?)', array)
     return
 
 def retrieve_pending_entry(dwname, cursor):
@@ -305,11 +305,11 @@ def update_player(player, email, notes, cursor):
     #dbconn.commit()
     return
 
-def add_player_to_players(player, email, cpnwilling, notes, cursor):
+def add_player_to_players(player, email, cpnwilling, notes, cursor, minor):
     """Put the player in the player database at all.
        Team preference is not handled here."""
-    array=(player, -1, cpnwilling, email, notes)
-    cursor.execute('INSERT into players (dwname, team_id, cpn_willing, email, notes) values (?,?,?,?,?)', array)
+    array=(player, -1, cpnwilling, email, notes, minor)
+    cursor.execute('INSERT into players (dwname, team_id, cpn_willing, email, notes, minor) values (?,?,?,?,?,?)', array)
     #dbconn.commit()
     return
 
@@ -405,7 +405,7 @@ def get_team_display_line(team, cursor):
     return (csstype, count, teamname, captain, stringofallplayers)
 
 
-def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, notes, cursor):
+def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, notes, minor, cursor):
     """Adds a player to a team. If the team is full, errors out.
        If the player is already on the team, continue without changes.
        If the player is willing and there is no captain, Cpn them.

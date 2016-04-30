@@ -489,6 +489,8 @@ table {
 	This page will automatically update every 5 minutes.
 </p>
 
+<p class="tally"> An asterisk (*) indicates that a participant is a minor.</p>
+
 <table>''' % (teamcount,playercount))
         
         allteams = saso.get_list_of_teams(cursor)
@@ -564,7 +566,7 @@ table {
         contentnotes = self.query.get('contentnotes')
         
         if not openid_url:
-            self.render('Please enter your dreamwidth username.', css_class+'error',
+            self.render('Please enter your dreamwidth username.', css_class='error',
                         form_contents=(openid_url,minor, email, team_type, team, fandom, contentnotes))
         openid_url = re.sub('_','-',openid_url)
         if openid_url:

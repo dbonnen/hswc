@@ -309,9 +309,7 @@ def update_player(player, email, notes, cursor):
 def add_player_to_players(player, email, cpnwilling, notes, minor, cursor):
     """Put the player in the player database at all.
        Team preference is not handled here."""
-    print minor
     array=(player, -1, cpnwilling, email, notes, minor)
-    print array
     cursor.execute('INSERT into players (dwname, team_id, cpn_willing, email, notes, minor) values (?,?,?,?,?,?)', array)
     #dbconn.commit()
     return

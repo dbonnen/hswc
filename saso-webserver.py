@@ -479,7 +479,7 @@ table {
 <body>
 
 	<h1>
-	SASO 2015 Team Roster
+	SASO 2016 Team Roster
 	</h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
@@ -964,12 +964,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	SASO 2015 SIGNUPS
+	SASO 2016 SIGNUPS
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="50000" />
-	<meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+	<meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
 	<link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
 	<style type="text/css" media="all">
@@ -1073,8 +1073,7 @@ input, textarea {
 	SASO 2016 Sign Up Form
 	</h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
-''')
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>''')
     
     def pageFooter(self, form_contents):
         """Render the page footer"""
@@ -1172,12 +1171,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
     <title>
-    SASO 2015 VOTING
+    SASO 2016 VOTING
     </title>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="refresh" content="50000" />
-    <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
     <style type="text/css" media="all">
@@ -1278,10 +1277,10 @@ input, textarea {
 <body>
 
     <h1>
-    SASO 2015 VOTING FORM
+    SASO 2016 VOTING FORM
     </h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
 
 <form method="GET" accept-charset="UTF-8" action=/saso/voteverify>
 <p>
@@ -1461,7 +1460,7 @@ input, textarea {
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="refresh" content="50000" />
-    <meta name="dcterms.rights" content="Website Coding (C) 2015 SASO Mod Team, 2014 HSWC Mod Team" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
     
     <style type="text/css" media="all">
@@ -1565,7 +1564,7 @@ input, textarea {
     SASO 2016 VOTING FORM
     </h1>
 
-<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a> | <a href="http://sportsanimeolympics.tumblr.com/post/117652138974/official-saso-2015-chatroom">Chat</a></p>
+<p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
 
 
 <p> Voting is now closed for MR2. Thank you!.
@@ -1597,7 +1596,7 @@ input, textarea {
 <html>
 <head>
     <title>
-    SASO 2015 VOTING
+    SASO 2016 VOTING
     </title>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />

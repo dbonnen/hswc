@@ -1103,6 +1103,7 @@ switching teams).
 <p>
         <span class="field">Are you 18 or older?</span>
         <input name="minor" value="yes" type="radio"/>Yes <input name="minor" type="no" checked />No
+</p>
 
 <p>
     <span class="field">What type of team are you joining?</span><br />

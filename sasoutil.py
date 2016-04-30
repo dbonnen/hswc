@@ -258,13 +258,14 @@ def uncaptain(teamname, cursor):
     cursor.execute("UPDATE teams set captain='' where team_name=?", array)
     return
 
-def remove_player_from_grandstand(player, cursor):
+def remove_player_from_grandstand(player, deleting, cursor):
     """Remove a player from grandstand."""
     #FINISHED FOR SASO
     array = (player,)
     #cursor.execute('DELETE from grandstand where dwname=?', array)
     #dbconn.commit()
-    cursor.execute('UPDATE players set team_id=-1 where dwname=?', array)
+    if deleting:
+        cursor.execute('UPDATE players set team_id=-1 where dwname=?', array)
     cursor.execute('UPDATE teams set num_participants = (num_participants-1) where team_id=0')
     return
 
@@ -282,7 +283,7 @@ def remove_player_from_team(player, teamname, deleting, cursor):
     #FINISHED FOR SASO
     array = (teamname,)
     if teamname == 'grandstand':
-        remove_player_from_grandstand(player, cursor)
+        remove_player_from_grandstand(player, deleting, cursor)
         return
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
@@ -293,8 +294,8 @@ def remove_player_from_team(player, teamname, deleting, cursor):
         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', teamdatalist[0]))
         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
     if deleting:
-        cursor.execute('UPDATE teams set team_id = -1 where dwname=?', (player,))
-    cursor.execute('UPDATE players set num_participants = (num_participants - 1) where team_id=?' (teamdatalist[0],))
+        cursor.execute('UPDATE players set team_id = -1 where dwname=?', (player,))
+    cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?' (teamdatalist[0],))
     #dbconn.commit()
     return
 

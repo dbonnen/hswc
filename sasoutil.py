@@ -99,9 +99,7 @@ def activate_qualifying_teams(cursor):
 
 def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, minor, cursor):
     """Make a pending entry to be processed if the DW auth goes through."""
-    print minor
     array = (dwname, email, team_type, team, fandom, captain, notes, minor)
-    print array
     cursor.execute('INSERT into pending (dwname, email, team_type, team, fandom, cpn_willing, notes, minor) values (?,?,?,?,?,?,?,?)', array)
     return
 
@@ -110,7 +108,6 @@ def retrieve_pending_entry(dwname, cursor):
     array = (dwname,)
     cursor.execute('SELECT * from pending where dwname=?', array)
     pending_entry = cursor.fetchone()
-    print pending_entry
     return pending_entry
 
 def remove_pending_entry(dwname, cursor):
@@ -280,7 +277,7 @@ def add_player_to_grandstand(player, cursor):
     cursor.execute('UPDATE teams set num_participants = (num_participants + 1) where team_id=0')
     return
 
-def remove_player_from_team(player, teamname, cursor):
+def remove_player_from_team(player, teamname, deleting, cursor):
     """Remove a player from a team, presumably because they joined another."""
     #FINISHED FOR SASO
     array = (teamname,)
@@ -295,8 +292,9 @@ def remove_player_from_team(player, teamname, cursor):
     if teamdatalist[6] == player:
         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', teamdatalist[0]))
         cursor.execute('UPDATE players set vice_captain=0 where dwname=?', (player))
-    cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
-    cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player,))
+    if deleting:
+        cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
+        cursor.execute('UPDATE players set team_id= -1 where dwname=?', (player,))
     #dbconn.commit()
     return
 

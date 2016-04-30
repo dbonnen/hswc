@@ -844,7 +844,7 @@ table {
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
                 currentteamclean = re.sub('>', '&gt;', currentteamclean)
-                saso.remove_player_from_team(openid_url, currentteam, cursor)
+                saso.remove_player_from_team(openid_url, currentteam, 1, cursor)
                 saso.remove_player(openid_url, cursor)
                 dbconn.commit()
                 self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
@@ -896,7 +896,7 @@ table {
                 return
             if oldteam:
                 if oldteam != team:
-                    saso.remove_player_from_team(openid_url, oldteam, cursor)
+                    saso.remove_player_from_team(openid_url, oldteam, 0, cursor)
                     dbconn.commit()
                     oldteamclean = re.sub('<', '&lt;', oldteam)
                     oldteamclean = re.sub('>', '&gt;', oldteamclean)

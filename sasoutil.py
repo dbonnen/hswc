@@ -399,7 +399,7 @@ def get_team_display_line(team, cursor):
     stringofallplayers = ''
     for x in cursor.execute('SELECT * from players where team_id=?', (teamdatalist[0],)):
         stringofallplayers = stringofallplayers + ' ' + x[0]
-        if x[10] == 0:
+        if x[10] == '0':
             stringofallplayers = stringofallplayers + '*'
     stringofallplayers = stringofallplayers.strip()
     csstype = 'roster_teamslots'
@@ -492,7 +492,7 @@ def scrub_team(team):
         return 0
     elif re.search('/', string):
         namelist = string.split('/')
-        shipsymbol = '/'
+        shipsymbol = '/'pdd
     elif re.search('<3<', string):
         namelist = string.split('<3<')
         shipsymbol = '<3<'

@@ -579,7 +579,7 @@ table {
             convertedteam = unicode(asciiteam)
             if team_type == 'grandstand' and team != 'Grandstand':
                 self.render('Please enter "Grandstand" for the team name if you want to join the Grandstand.', css_class='error',
-                            form_content=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
                 return
             if not team == convertedteam:
                 self.render('Please do not use unicode characters in team names.', css_class='error',

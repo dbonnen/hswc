@@ -879,6 +879,16 @@ table {
             if saso.player_is_on_team(openid_url, team, cursor):
                 # this got stringified by putting it into the db and taking it out again
                 # THAT'S WHY NOTHING WAS WORKING
+                
+                #if they accidentally say they are a minor when they are not or vice versa
+                old_minor_status = saso.get_age_check(openid_url, cursor)
+                if old_minor_status == 0 or old_minor_status == 1:
+                    if old_minor_status != minor:
+                        saso.update_minor_status(minor, openid_url, cursor)
+                        self.render('Changed age status.', css_class='alert',
+                                    form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
+                        return
+                
                 if not cpn_willing:
                     # they don't want to be captain so nothing changes unless they already are
                     if saso.get_captain(team, cursor) == openid_url:
@@ -925,15 +935,6 @@ table {
                     oldteamclean = re.sub('<', '&lt;', oldteam)
                     oldteamclean = re.sub('>', '&gt;', oldteamclean)
                     self.render('%s added to %s and removed from %s!' % (openid_url, teamclean, oldteamclean), css_class='alert', 
-                                form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
-                    return
-            
-            #if they accidentally say they are a minor when they are not or vice versa
-            old_minor_status = saso.get_age_check(openid_url, cursor)
-            if old_minor_status == 0 or old_minor_status == 1:
-                if old_minor_status != minor:
-                    saso.update_minor_status(minor, openid_url, cursor)
-                    self.render('Changed age status.', css_class='alert',
                                 form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
             

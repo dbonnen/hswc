@@ -579,7 +579,7 @@ table {
             convertedteam = unicode(asciiteam)
             if team_type == 'grandstand' and team != 'Grandstand':
                 self.render('Please enter "Grandstand" for the team name if you want to join the Grandstand.', css_class='error',
-                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             if not team == convertedteam:
                 self.render('Please do not use unicode characters in team names.', css_class='error',
@@ -587,25 +587,25 @@ table {
                 return
             if team_type == 'ship' and '/' not in team:
                 self.render('Ship teams must be composed of two or more character names.', css_class='error',
-                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             if team_type == 'sports' and '/' in team:
                 self.render('Sports teams cannot be made of one ship.', css_class='error',
-                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             if team_type == 'sports' and fandom != team:
                 self.render('Sports teams must be named the same as the anime or manga it is from.', css_class='error',
-                            form_contents=(openid_url, minor, email, team_type, team, fandom, contentnotes))
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             team = saso.scrub_team(team)
         if fandom:
             if not saso.valid_fandom(fandom) and team_type != 'grandstand':
                 self.render('Please only enter pairings and teams from nominated fandoms. If your fandom is nominated, please spell it the same way it is spelled on the list of nominated fandoms.', css_class='error',
-                            form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
         elif team != 'grandstand':
             self.render('Please enter the anime/manga your team belongs to.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         if self.query.get('CPN') == 'yes':
             cpnwilling = 1
@@ -617,40 +617,40 @@ table {
         # You have to even enter the rules check.
         if not self.query.get('rules-check'):
             self.render('Please enter the rules check text.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         # You have to get the rules check right.
         if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2016 SASO.':
             self.render('Please enter the correct rules check text.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         # There has to be a team name.
         if not team:
             self.render('Please enter a team name.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         if re.search('team', team) or re.search('&', team) or re.search(';', team):
             self.render('Team formatted incorrectly, see <a href="http://sportsanime.dreamwidth.org/2696.html#formatting">How To Format Ship Names</a>.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         team = saso.scrub_team(team)
         if not team:
             self.render('Please enter a valid team name.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         # There also has to be an email address!
         if not email:
             self.render('Please enter an email address.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         if not re.match(r'[^@]+@[^@]+\.[^@]+',email):
             self.render('Please enter a valid email address.', css_class='error',
-                        form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         # There has to be a username.
         if not openid_url:
             self.render('Please enter a Dreamwidth username.',
-                        css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                        css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return 
         # If mode is switch, new players can only join grandstand,
         #                    players on qualifying teams can only drop,
@@ -659,18 +659,18 @@ table {
             if not saso.player_exists(openid_url, cursor):
                 if not team == 'grandstand':
                     self.render('Sorry, new players can only join Team Grandstand at this point.',
-                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                                css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
             currentteam = saso.get_current_team(openid_url, cursor)
             if saso.is_team_active(currentteam, cursor):
                 if not team == 'remove':
                     self.render('Sorry, players on qualifying teams can only drop.',
-                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                                css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
             if not saso.is_team_active(team, cursor):
                 if not team == 'remove':
                     self.render('Sorry, you can only join a qualifying team.',
-                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                                css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
         #New players can join grandstand if the mode is gs, and existing users can drop,
         #but no one else can switch
@@ -678,23 +678,23 @@ table {
             if not saso.player_exists(openid_url, cursor):
                 if not team_type == 'grandstand':
                     self.render('Sorry, new players can only join Team Grandstand at this point.',
-                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                                css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
             elif not team == 'remove':
                     self.render('Sorry, players on qualifying teams can only drop.',
-                                css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                                css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
         # If mode is drop, all you can do is drop. That's it.
         if mode == "drop":
             if team != 'remove':
                 self.render('Sorry, at this point in the event all you can do is drop.',
-                            css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                            css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
         
         # The team can't be full. 
         if saso.get_team_members_count(team, cursor) >= 8 and team_type != 'grandstand' and team_type != 'sports':
             if not saso.player_is_on_team(openid_url, team, cursor):
                 self.render('That team is full, sorry. Try signing up for another one!',
-                            css_class='error', form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                            css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
         
         if saso.get_team_members_count(team, cursor) >= 8 and team_type == 'sports':
@@ -864,7 +864,7 @@ table {
                 currentteam = saso.get_current_team(openid_url, cursor)
                 if not currentteam:
                     self.render('Cannot remove you from no team.', css_class='error',
-                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
+                                form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
                 currentteamclean = re.sub('>', '&gt;', currentteamclean)
@@ -872,7 +872,7 @@ table {
                 saso.remove_player(openid_url, cursor)
                 dbconn.commit()
                 self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
-                            form_contents=(openid_url, email, team_type,team,fandom, contentnotes, minor))
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             
             #If the player is already on the team, just update 
@@ -885,12 +885,12 @@ table {
                         saso.uncaptain(team, cursor)
                         dbconn.commit()
                         self.render('You are no longer the captain of %s.' % teamclean, css_class='alert',
-                                    form_contents=(openid_url, email, team_type,team,fandom, team_type, contentnotes, minor))
+                                    form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
                     saso.update_player(openid_url, email, contentnotes, cursor)
                     dbconn.commit()
                     self.render('No change to team, personal information updated.', css_class='alert',
-                                form_contents=(openid_url,email, team_type,team,fandom, team_type, contentnotes, minor))
+                                form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
                 else:
                     # they do want to be captain so if no one else is, they get the slot
@@ -899,13 +899,13 @@ table {
                         saso.update_player(openid_url, email, contentnotes, cursor)
                         dbconn.commit()
                         self.render('Became captain of %s.' % teamclean, css_class='alert',
-                                    form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
+                                    form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
                     else:
                         saso.update_player(openid_url, email, contentnotes, cursor)
                         dbconn.commit()
                         self.render('No change to team, personal information updated.', css_class='alert',
-                                    form_contents=(openid_url,email, team_type, team, fandom, contentnotes, minor))
+                                    form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
             
             # Try to add them to whatever team they want to be on.
@@ -916,7 +916,7 @@ table {
             teamclean = re.sub('>', '&gt;', teamclean)
             if errorstatus:
                 # some belunkus error got passed back, don't remove from old team
-                self.render(errorstatus, css_class='alert', form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
+                self.render(errorstatus, css_class='alert', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             if oldteam:
                 if oldteam != team:
@@ -925,10 +925,18 @@ table {
                     oldteamclean = re.sub('<', '&lt;', oldteam)
                     oldteamclean = re.sub('>', '&gt;', oldteamclean)
                     self.render('%s added to %s and removed from %s!' % (openid_url, teamclean, oldteamclean), css_class='alert', 
-                                form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
+                                form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
+            
+            #if they accidentally say they are a minor when they are not or vice versa
+            old_minor_status = saso.get_age_check(openid_url, cursor)
+            if old_minor_status != minor:
+                saso.update_minor_status(minor, openid_url, cursor)
+                self.render('Changed age status.', css_class='alert',
+                            form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
+            
             self.render('Added %s to %s!' % (openid_url, teamclean), css_class='alert',
-                        form_contents=(openid_url, email, team_type, team, fandom, contentnotes, minor))
+                        form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
             
         elif info.status == consumer.CANCEL:

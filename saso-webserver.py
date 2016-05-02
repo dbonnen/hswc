@@ -1146,7 +1146,7 @@ switching teams).
 
 <p>
 	<span class="field">Joining SASO Team:</span><br />
-	<span class="descrip">Format your team name <a href="http://sportsanime.dreamwidth.org/2696.html#formatting">like this</a>! Enter "Grandstand" if you're joining the Team Grandstand.</span><br />
+	<span class="descrip">Format your team name <a href="http://sportsanime.dreamwidth.org/11870.html#cutid1">like this</a>! Enter "Grandstand" if you're joining the Team Grandstand.</span><br />
 	<input name="team" type="text" />
 </p>
 

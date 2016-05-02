@@ -566,7 +566,7 @@ def get_age_check(dwname, cursor):
 
 def update_minor_status(minor, dwname, cursor):
     array = (minor, dwname,)
-    cursor.execute("UPDATE players SET minor=? WHERE dwname=?". array)
+    cursor.execute("UPDATE players SET minor=? WHERE dwname=?", array)
     return
 
 def check_pending_vote_entry(dwname,cursor):

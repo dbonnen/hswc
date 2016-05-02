@@ -562,8 +562,7 @@ def get_newest_sports_team(fandom, cursor):
 def get_age_check(dwname, cursor):
     cursor.execute("SELECT minor FROM players WHERE dwname=?", (dwname,))
     minor_level = cursor.fetchone()
-    print minor_level
-    return int(minor_level[10])
+    return int(minor_level[0])
 
 def update_minor_status(minor, dwname, cursor):
     array = (minor, dwname,)

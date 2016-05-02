@@ -930,7 +930,7 @@ table {
             
             #if they accidentally say they are a minor when they are not or vice versa
             old_minor_status = saso.get_age_check(openid_url, cursor)
-            if old_minor_status = 0 or old_minor_status = 1:
+            if old_minor_status == 0 or old_minor_status == 1:
                 if old_minor_status != minor:
                     saso.update_minor_status(minor, openid_url, cursor)
                     self.render('Changed age status.', css_class='alert',

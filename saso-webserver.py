@@ -576,8 +576,9 @@ table {
             # everything depends on unicode type strings BUT
             # if someone tries to paste in unicode ship symbols everything goes to hell
             team = team.lower()
+            lower_fandom = ''
             if fandom:
-                fandom = fandom.lower()
+                lower_fandom = fandom.lower()
             asciiteam = team.encode('ascii', 'ignore')
             convertedteam = unicode(asciiteam)
             if team_type == 'grandstand' and team != 'grandstand' and team != 'remove':

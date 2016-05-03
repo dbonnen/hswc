@@ -575,25 +575,28 @@ table {
         if team:
             # everything depends on unicode type strings BUT
             # if someone tries to paste in unicode ship symbols everything goes to hell
+            team = team.lower()
+            if fandom:
+                fandom = fandom.lower()
             asciiteam = team.encode('ascii', 'ignore')
             convertedteam = unicode(asciiteam)
-            if team_type == 'grandstand' and team != 'Grandstand':
+            if team_type == 'grandstand' and team != 'grandstand' and team != 'remove':
                 self.render('Please enter "Grandstand" for the team name if you want to join the Grandstand.', css_class='error',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             if not team == convertedteam:
                 self.render('Please do not use unicode characters in team names.', css_class='error',
-                            form_contents=(openid_url,email,team_type,team,fandom,contentnotes))
+                            form_contents=(openid_url,email,minor, team_type,team,fandom,contentnotes))
                 return
-            if team_type == 'ship' and '/' not in team:
+            if team_type == 'ship' and '/' not in team and team != 'remove':
                 self.render('Ship teams must be composed of two or more character names.', css_class='error',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
-            if team_type == 'sports' and '/' in team:
+            if team_type == 'sports' and '/' in team and team != 'remove':
                 self.render('Sports teams cannot be made of one ship.', css_class='error',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
-            if team_type == 'sports' and fandom != team:
+            if team_type == 'sports' and fandom != team and team != 'remove':
                 self.render('Sports teams must be named the same as the anime or manga it is from.', css_class='error',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return

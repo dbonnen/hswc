@@ -597,7 +597,7 @@ table {
                 self.render('Sports teams cannot be made of one ship.', css_class='error',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
-            if team_type == 'sports' and fandom != team and team != 'remove':
+            if team_type == 'sports' and lower_fandom != team and team != 'remove':
                 self.render('Sports teams must be named the same as the anime or manga it is from.', css_class='error',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return

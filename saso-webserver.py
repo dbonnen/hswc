@@ -1429,6 +1429,7 @@ input, textarea {
         if not display_identifier:
             self.render('Please enter a Dreamwidth username.',
                         css_class='error', form_contents=('','','',''))
+            dbconn.commit()
             return
         dwname = (display_identifier.split('.')[0]).split('//')[1]
         openid_url = dwname
@@ -1438,6 +1439,7 @@ input, textarea {
                         css_class='error', form_contents=('','','',''))
         
         if not saso.check_pending_vote_entry(dwname, cursor):
+            dbconn.commit()
             self.render('The software choked and lost your login name, sorry. Kick hurristat.',
                 css_class='error', form_contents=(dwname,'','',''))
             return

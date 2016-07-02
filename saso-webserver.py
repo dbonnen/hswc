@@ -22,7 +22,7 @@ cursor = dbconn.cursor()
 # MODES
 
 #The default mode lets any authed user sign up for anything.
-mode = 'default' 
+#mode = 'default' 
 
 # THIS CHANGE MADE BY RAX MAY 19 2015
 # YOU SHOULD RESTART THE SERVER NOT IN MY TERMINAL SOMETIME :P
@@ -35,7 +35,7 @@ mode = 'default'
 #mode = 'gs'
 
 #The drop mode only lets players drop.
-#mode = 'drop'
+mode = 'drop'
 
 main_round = 1
 #main_round = 2

@@ -1367,6 +1367,7 @@ input, textarea {
         except consumer.DiscoveryFailure, exc:
             fetch_error_string = 'Error in discovery: %s' % (
                 cgi.escape(str(exc[0])))
+            dbconn.commit()
             self.render(fetch_error_string,
                         css_class='error',
                         form_contents=openid_url)
@@ -1435,8 +1436,10 @@ input, textarea {
         openid_url = dwname
         
         if saso.get_player_email(dwname, cursor) == 'player does not exist':
+            dbconn.commit()
             self.render('Only partipants may vote.',
                         css_class='error', form_contents=('','','',''))
+            return
         
         if not saso.check_pending_vote_entry(dwname, cursor):
             dbconn.commit()
@@ -1467,7 +1470,7 @@ input, textarea {
                 vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
             vote_option_string = vote_option_string + '\n'
             
-            dbconn.commit()
+            self.actuallyVotingPage(None, vote_option_string, openid_url)
         elif info.status == consumer.CANCEL:
             # cancelled
             message = 'Verification cancelled'
@@ -1486,7 +1489,9 @@ input, textarea {
             # information in a log.
             message = 'Verification failed.'
         
-        self.actuallyVotingPage(None, vote_option_string, openid_url)
+        self.render(message, css_class, display_identifier, sreg_data=sreg_resp, pape_Date=pape_resp)
+                self.render(message, css_class, display_identifier,
+                    sreg_data=sreg_resp, pape_data=pape_resp)
     
     def actuallyVotingPage(self, form_contents, vote_option_string, openid_url):
         """Render the page header"""
@@ -1645,7 +1650,6 @@ input, textarea {
         else:
             response = 'your votes were received! thank you for voting!'
             saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
-        dbconn.commit()
         self.wfile.write('''\
 <html>
 <head>

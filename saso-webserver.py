@@ -1471,6 +1471,8 @@ input, textarea {
             vote_option_string = vote_option_string + '\n'
             
             self.actuallyVotingPage(None, vote_option_string, openid_url)
+	    dbconn.commit()
+	    return
         elif info.status == consumer.CANCEL:
             # cancelled
             message = 'Verification cancelled'

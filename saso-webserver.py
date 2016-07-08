@@ -1490,8 +1490,6 @@ input, textarea {
             message = 'Verification failed.'
         
         self.render(message, css_class, display_identifier, sreg_data=sreg_resp, pape_Date=pape_resp)
-                self.render(message, css_class, display_identifier,
-                    sreg_data=sreg_resp, pape_data=pape_resp)
     
     def actuallyVotingPage(self, form_contents, vote_option_string, openid_url):
         """Render the page header"""

@@ -652,6 +652,16 @@ def create_entry_for_player(dwname, cursor):
     cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
     return
 
+def player_vote_exists(player, cursor):
+    """See if a player exists in the database or not. If yes, return 1,
+       if not return 0."""
+    array = (player,)
+    cursor.execute('SELECT * from mr1_player_votes where dwname=?', array)
+    if cursor.fetchone():
+        return 1
+    else:
+        return 0
+
 if __name__ == "__main__":
     teamnames = ('rax<3<computers', 'modship<3players', 'h8rs<>h8rs')
     playernames = ('alice', 'bob', 'carol', 'dave', 'elsa', 'fiddlesticks')

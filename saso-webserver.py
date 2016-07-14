@@ -1676,6 +1676,7 @@ input, textarea {
             else:
                 response = 'your votes were received! thank you for voting!'
                 saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
+        dbconn.commit()
         self.wfile.write('''\
 <html>
 <head>

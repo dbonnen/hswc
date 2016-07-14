@@ -643,6 +643,14 @@ def enter_votes(dwname, vote1, vote2, vote3, cursor):
     cursor.execute("UPDATE mr1_player_votes SET vote_3 = ? WHERE dwname = ?", (vote3, dwname,))
     return 0
 
+def create_entry_for_player(dwname, cursor):
+    cursor.execute("SELECT * FROM players WHERE dwname = ?", (dwname,))
+    player = cursor.fetchone()
+    team_id = player[1]
+    array = (dwname, team_id, 0, '', '', '', '', '', '', '', '', '', '' ,'' ,'' ,'', '',)
+    cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
+    return
+
 if __name__ == "__main__":
     teamnames = ('rax<3<computers', 'modship<3players', 'h8rs<>h8rs')
     playernames = ('alice', 'bob', 'carol', 'dave', 'elsa', 'fiddlesticks')

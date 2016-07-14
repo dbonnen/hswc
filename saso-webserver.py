@@ -1660,7 +1660,7 @@ input, textarea {
                 response = 'your votes were received! thank you for voting!'
                 saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
         elif voting_round == 2:
-            valid teams = ['abe takaya/mihashi ren', 'aldini takumi/yukihira souma', 'azumane asahi/nishinoya yuu', 'bokuto koutarou/kuroo tetsurou', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kozume kenma/kuroo tetsurou', 'matsuoka rin/nanase haruka', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'nishinoya yuu/tanaka ryuunosuke', 'shimizu kiyoko/yachi hitoka', 'tachibana makoto/yamazaki sousuke']
+            valid_teams = ['abe takaya/mihashi ren', 'aldini takumi/yukihira souma', 'azumane asahi/nishinoya yuu', 'bokuto koutarou/kuroo tetsurou', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kozume kenma/kuroo tetsurou', 'matsuoka rin/nanase haruka', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'nishinoya yuu/tanaka ryuunosuke', 'shimizu kiyoko/yachi hitoka', 'tachibana makoto/yamazaki sousuke']
             if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
                 response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
             elif vote1 == player_team or vote2 == player_team or vote3 == player_team:

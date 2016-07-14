@@ -40,6 +40,9 @@ mode = 'drop'
 main_round = 1
 #main_round = 2
 
+#voting_round = 1
+voting_round = 2
+
 def quoteattr(s):
     qs = cgi.escape(s, 1)
     return '"%s"' % (qs,)
@@ -1457,18 +1460,22 @@ input, textarea {
             message = fmt % (cgi.escape(display_identifier),
                              info.message)
         elif info.status == consumer.SUCCESS:
-            if not saso.existing_voting_team_assignments(dwname, cursor):
-                saso.assign_voting_assignments(dwname, cursor)
-            
-            saso.remove_pending_voting_entry(dwname, cursor)
-            
-            vote_options = saso.get_vote_option_list(dwname, cursor)
-            
-            vote_option_string = str()
-            
-            for i in vote_options:
-                vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
-            vote_option_string = vote_option_string + '\n'
+            if voting_round == 1:
+                if not saso.existing_voting_team_assignments(dwname, cursor):
+                    saso.assign_voting_assignments(dwname, cursor)
+                
+                saso.remove_pending_voting_entry(dwname, cursor)
+                
+                vote_options = saso.get_vote_option_list(dwname, cursor)
+                
+                vote_option_string = str()
+                
+                for i in vote_options:
+                    vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
+                vote_option_string = vote_option_string + '\n'
+            elif voting_round == 2:
+                saso.remove_pending_voting_entry(dwname, cursor)
+                vote_option_string = '\n<p>abe takaya/mihashi ren</p>\n<p>aldini takumi/yukihira souma</p>\n<p>azumane asahi/nishinoya yuu</p>\n<p>bokuto koutarou/kuroo tetsurou</p>\n<p>furuya satoru/miyuki kazuya</p>\n<p>furuya satoru/sawamura eijun</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>kanzaki miki/tachibana aya</p>\n<p>kozume kenma/kuroo tetsurou</p>\n<p>matsuoka rin/nanase haruka</p>\n<p>miyuki kazuya/miyuki kazuya</p>\n<p>miyuki kazuya/sawamura eijun</p>\n<p>nishinoya yuu/tanaka ryuunosuke</p>\n<p>shimizu kiyoko/yachi hitoka</p>\n<p>tachibana makoto/yamazaki sousuke</p>\n'
             
             self.actuallyVotingPage(None, vote_option_string, openid_url)
 	    dbconn.commit()
@@ -1609,7 +1616,7 @@ input, textarea {
     SASO 2016 VOTING FORM
     </h1>
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
-<p>Please read <a href="http://saso2016-r1.dreamwidth.org/">here</a> and choose your favorite three of the following ten choices: </p>''' + vote_option_string + '''
+<p>Please read <a href="http://saso2016-r1.dreamwidth.org/">here</a> and choose your favorite three of the following choices. You are not allowed to vote for your own team's submission! </p>''' + vote_option_string + '''
 <form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>
     <span class="field">Vote 1:</span><br />
@@ -1641,15 +1648,28 @@ input, textarea {
         vote2 = self.query.get('vote2')
         vote3 = self.query.get('vote3')
         openid_url = self.query.get('username')
+        player_team = saso.get_current_team(openid_url, cursor)
         
-        valid_teams = saso.get_vote_option_list(openid_url, cursor)
-        if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
-            response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
-        elif vote1 == vote2 or vote1 == vote3 or vote2 == vote3:
-            response = 'all votes must be for different entries! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
-        else:
-            response = 'your votes were received! thank you for voting!'
-            saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
+        if voting_round == 1:
+            valid_teams = saso.get_vote_option_list(openid_url, cursor)
+            if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
+                response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+            elif vote1 == vote2 or vote1 == vote3 or vote2 == vote3:
+                response = 'all votes must be for different entries! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+            else:
+                response = 'your votes were received! thank you for voting!'
+                saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
+        elif voting_round == 2:
+            valid teams = ['abe takaya/mihashi ren', 'aldini takumi/yukihira souma', 'azumane asahi/nishinoya yuu', 'bokuto koutarou/kuroo tetsurou', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kozume kenma/kuroo tetsurou', 'matsuoka rin/nanase haruka', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'nishinoya yuu/tanaka ryuunosuke', 'shimizu kiyoko/yachi hitoka', 'tachibana makoto/yamazaki sousuke']
+            if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
+                response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+            elif vote1 == player_team or vote2 == player_team or vote3 == player_team:
+                response = 'you cannot vote for your own team! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+            elif vote1 == vote2 or vote1 == vote3 or vote2 == vote3:
+                response = 'all votes must be for different entries! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
+            else:
+                response = 'your votes were received! thank you for voting!'
+                saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
         self.wfile.write('''\
 <html>
 <head>

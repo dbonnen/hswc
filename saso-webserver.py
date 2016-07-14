@@ -1648,6 +1648,7 @@ input, textarea {
         vote1 = self.query.get('vote1')
         vote2 = self.query.get('vote2')
         vote3 = self.query.get('vote3')
+        print vote1 + ' ' + vote2 + ' ' + vote3
         openid_url = self.query.get('username')
         player_team = saso.get_current_team(openid_url, cursor)
         

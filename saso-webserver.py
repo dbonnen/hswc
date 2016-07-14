@@ -1475,7 +1475,8 @@ input, textarea {
                 vote_option_string = vote_option_string + '\n'
             elif voting_round == 2:
                 saso.remove_pending_voting_entry(dwname, cursor)
-                saso.create_entry_for_player(dwname, cursor)
+                if not saso.player_exists(dwname, cursor):
+                    saso.create_entry_for_player(dwname, cursor)
                 vote_option_string = '\n<p>abe takaya/mihashi ren</p>\n<p>aldini takumi/yukihira souma</p>\n<p>azumane asahi/nishinoya yuu</p>\n<p>bokuto koutarou/kuroo tetsurou</p>\n<p>furuya satoru/miyuki kazuya</p>\n<p>furuya satoru/sawamura eijun</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>kanzaki miki/tachibana aya</p>\n<p>kozume kenma/kuroo tetsurou</p>\n<p>matsuoka rin/nanase haruka</p>\n<p>miyuki kazuya/miyuki kazuya</p>\n<p>miyuki kazuya/sawamura eijun</p>\n<p>nishinoya yuu/tanaka ryuunosuke</p>\n<p>shimizu kiyoko/yachi hitoka</p>\n<p>tachibana makoto/yamazaki sousuke</p>\n'
             
             self.actuallyVotingPage(None, vote_option_string, openid_url)

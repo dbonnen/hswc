@@ -1646,9 +1646,9 @@ input, textarea {
     
     def acceptMessage(self):
         response = ''
-        vote1 = self.query.get('vote1')
-        vote2 = self.query.get('vote2')
-        vote3 = self.query.get('vote3')
+        vote1 = str(self.query.get('vote1'))
+        vote2 = str(self.query.get('vote2'))
+        vote3 = str(self.query.get('vote3'))
         vote1 = vote1.strip()
         vote2 = vote2.strip()
         vote3 = vote3.strip()

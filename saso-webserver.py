@@ -2,7 +2,7 @@
 """
 Cribbed off of python-openid's Simple example for an OpenID consumer.
 
-The SASO signup page for 2016.
+The SASO signup page for 2017.
 Almost all the code here was written for HSWC 2014 by the lovely raxraxraxraxrax@github
 All SASO additions by dbonnen@github
 """
@@ -22,10 +22,7 @@ cursor = dbconn.cursor()
 # MODES
 
 #The default mode lets any authed user sign up for anything.
-#mode = 'default' 
-
-# THIS CHANGE MADE BY RAX MAY 19 2015
-# YOU SHOULD RESTART THE SERVER NOT IN MY TERMINAL SOMETIME :P
+mode = 'default' 
 
 #The switch mode lets players switch off of sinking ships, join grandstand,
 # or drop.
@@ -35,7 +32,7 @@ cursor = dbconn.cursor()
 #mode = 'gs'
 
 #The drop mode only lets players drop.
-mode = 'drop'
+#mode = 'drop'
 
 #main_round = 1
 main_round = 2
@@ -201,13 +198,13 @@ written to the requesting browser.
 Content-type: text/html; charset=UTF-8
 <head>
         <title>
-        SASO 2016 GRANDSTAND ROSTER
+        SASO 2017 GRANDSTAND ROSTER
         </title>
  
 </head><body>
  
         <h1>
-        SASO 2016 Grandstand Roster
+        SASO 2017 Grandstand Roster
         </h1>
  
 </body>
@@ -226,12 +223,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
         <title>
-        SASO 2016 GRANDSTAND ROSTER
+        SASO 2017 GRANDSTAND ROSTER
         </title>
  
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta http-equiv="refresh" content="300" />
-        <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team, 2015-16 SASO Mod Team" />
+        <meta name="dcterms.rights" content="Website Coding (C) 2014 HSWC Mod Team, 2015-17 SASO Mod Team" />
         <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
  
         <style type="text/css" media="all">
@@ -372,12 +369,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	SASO 2016 TEAM ROSTER
+	SASO 2017 TEAM ROSTER
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="300" />
-	<meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
+	<meta name="dcterms.rights" content="Website Coding (C) 2015-17 SASO Mod Team, 2014 HSWC Mod Team" />
         <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
 	<style type="text/css" media="all">
@@ -482,7 +479,7 @@ table {
 <body>
 
 	<h1>
-	SASO 2016 Team Roster
+	SASO 2017 Team Roster
 	</h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
@@ -627,7 +624,7 @@ table {
                         form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
         # You have to get the rules check right.
-        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2016 SASO.':
+        if (self.query.get('rules-check')).strip() != 'I certify that I have read and will abide by the Rules and Regulations of the 2017 SASO.':
             self.render('Please enter the correct rules check text.', css_class='error',
                         form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
             return
@@ -1006,12 +1003,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
 	<title>
-	SASO 2016 SIGNUPS
+	SASO 2017 SIGNUPS
 	</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="refresh" content="50000" />
-	<meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
+	<meta name="dcterms.rights" content="Website Coding (C) 2015-17 SASO Mod Team, 2014 HSWC Mod Team" />
 	<link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
 	<style type="text/css" media="all">
@@ -1112,7 +1109,7 @@ input, textarea {
 <body>
 
 	<h1>
-	SASO 2016 Sign Up Form
+	SASO 2017 Sign Up Form
 	</h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>''')
@@ -1159,7 +1156,7 @@ switching teams).
 
 <p>
     <span class="field">What anime/manga is this ship/team from?</span><br />
-    <span class="descrip">Please leave this blank if you're joining Team Grandstand. If you have a cross-fandom ship, please list all shows, and separate them with commas. If the canon has multiple names or you are unsure of how to spell it, there is a list <a href="http://sportsanime.dreamwidth.org/11696.html">here</a>.</span><br />
+    <span class="descrip">Please leave this blank if you're joining Team Grandstand. If you have a cross-fandom ship, please list all shows, and separate them with commas. If the canon has multiple names or you are unsure of how to spell it, there is a list <a href="http://sportsanime.dreamwidth.org/19182.html#cutid1">here</a>.</span><br />
     <input name="fandom" type="text" />
 </p>
 
@@ -1173,7 +1170,7 @@ switching teams).
 	<span class="descrip">The major content tags are used to warn for 
 content that may be potentially upsetting and is not a place for 
 sarcastic comments or jokes. Misusing the tag request form may result in
- your removal from the SASO.</span><br />
+ your removal from SASO.</span><br />
 	<textarea name="contentnotes" rows="5" cols="70">&nbsp;</textarea>
 </p>
 
@@ -1213,12 +1210,12 @@ Content-type: text/html; charset=UTF-8
 
 <head>
     <title>
-    SASO 2016 VOTING
+    SASO 2017 VOTING
     </title>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="refresh" content="50000" />
-    <meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015-17 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
 
     <style type="text/css" media="all">
@@ -1319,7 +1316,7 @@ input, textarea {
 <body>
 
     <h1>
-    SASO 2016 VOTING FORM
+    SASO 2017 VOTING FORM
     </h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
@@ -1477,8 +1474,7 @@ input, textarea {
                 saso.remove_pending_voting_entry(dwname, cursor)
                 if not saso.player_vote_exists(dwname, cursor):
                     saso.create_entry_for_player(dwname, cursor)
-		vote_option_string = '\n<p>aldini takumi/yukihira souma</p>\n<p>azumane asahi/sawamura daichi/sugawara koushi</p>\n<p>chihayafuru</p>\n<p>furuya satoru/miyuki kazuya</p>\n<p>furuya satoru/sawamura eijun</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>kanzaki miki/tachibana aya</p>\n<p>kominato ryousuke/kuramochi youichi</p>\n<p>kozume kenma/kuroo tetsurou</p>\n<p>miyuki kazuya/miyuki kazuya</p>\n<p>miyuki kazuya/sawamura eijun</p>\n<p>ookiku furikabutte</p>\n<p>sawamura daichi/sugawara koushi</p>\n<p>shimizu kiyoko/yachi hitoka</p>\n<p>tennis no ouji-sama</p>\n'
-            
+                vote_option_string = '\n<p>abe takaya/mihashi ren</p>\n<p>aldini takumi/yukihira souma</p>\n<p>azumane asahi/nishinoya yuu</p>\n<p>bokuto koutarou/kuroo tetsurou</p>\n<p>furuya satoru/miyuki kazuya</p>\n<p>furuya satoru/sawamura eijun</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>kanzaki miki/tachibana aya</p>\n<p>kozume kenma/kuroo tetsurou</p>\n<p>matsuoka rin/nanase haruka</p>\n<p>miyuki kazuya/miyuki kazuya</p>\n<p>miyuki kazuya/sawamura eijun</p>\n<p>nishinoya yuu/tanaka ryuunosuke</p>\n<p>shimizu kiyoko/yachi hitoka</p>\n<p>tachibana makoto/yamazaki sousuke</p>\n' #this is the final round list, future me
             self.actuallyVotingPage(None, vote_option_string, openid_url)
 	    dbconn.commit()
 	    return
@@ -1510,12 +1506,12 @@ input, textarea {
 <html>
 <head>
     <title>
-    SASO 2016 VOTING
+    SASO 2017 VOTING
     </title>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="refresh" content="50000" />
-    <meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015-17 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
     
     <style type="text/css" media="all">
@@ -1615,7 +1611,7 @@ input, textarea {
 </head>
 <body>
     <h1>
-    SASO 2016 VOTING FORM
+    SASO 2017 VOTING FORM
     </h1>
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
 <p>Please read <a href="https://saso2016-r2.dreamwidth.org/8238.html">here</a> and choose your favorite three of the following choices. You are not allowed to vote for your own team's submission! </p>''' + vote_option_string + '''
@@ -1666,7 +1662,7 @@ input, textarea {
                 response = 'your votes were received! thank you for voting!'
                 saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
         elif voting_round == 2:
-            valid_teams = ['aldini takumi/yukihira souma', 'azumane asahi/sawamura daichi/sugawara koushi', 'chihayafuru', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kominato ryousuke/kuramochi youichi', 'kozume kenma/kuroo tetsurou', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'ookiku furikabutte', 'sawamura daichi/sugawara koushi', 'shimizu kiyoko/yachi hitoka', 'tennis no ouji-sama']
+            valid_teams = ['abe takaya/mihashi ren', 'aldini takumi/yukihira souma', 'azumane asahi/nishinoya yuu', 'bokuto koutarou/kuroo tetsurou', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kozume kenma/kuroo tetsurou', 'matsuoka rin/nanase haruka', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'nishinoya yuu/tanaka ryuunosuke', 'shimizu kiyoko/yachi hitoka', 'tachibana makoto/yamazaki sousuke'] #update this for the final round of voting
             if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
                 response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
             elif vote1 == player_team or vote2 == player_team or vote3 == player_team:
@@ -1681,12 +1677,12 @@ input, textarea {
 <html>
 <head>
     <title>
-    SASO 2016 VOTING
+    SASO 2017 VOTING
     </title>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="refresh" content="50000" />
-    <meta name="dcterms.rights" content="Website Coding (C) 2015-16 SASO Mod Team, 2014 HSWC Mod Team" />
+    <meta name="dcterms.rights" content="Website Coding (C) 2015-17 SASO Mod Team, 2014 HSWC Mod Team" />
     <link rel="shortcut icon" href="http://i.imgur.com/wBU1Jzp.png">
     
     <style type="text/css" media="all">
@@ -1787,7 +1783,7 @@ input, textarea {
 <body>
 
     <h1>
-    SASO 2016 VOTING FORM
+    SASO 2017 VOTING FORM
     </h1>
 
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/">Sign Up Form</a> | <a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org/">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> and <a href="http://sportsanime.dreamwidth.org/839.html">FAQ</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>

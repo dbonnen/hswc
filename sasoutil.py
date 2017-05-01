@@ -632,7 +632,7 @@ def enter_votes(dwname, vote1, vote2, vote3, cursor):
     cursor.execute("SELECT vote_1, vote_2, vote_3 FROM mr1_player_votes WHERE dwname = ?", (dwname,))
     print vote1 + ' ' + vote2 + ' ' + vote3
     current_vote = cursor.fetchone()
-    if current_vote[0] or current_vote[1] or current_vote[2]:
+    if current_vote and (current_vote[0] or current_vote[1] or current_vote[2]):
         cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[0],))
         cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[1],))
         cursor.execute("UPDATE mr1_team_votes SET votes = votes - 1 WHERE team_name = ?", (current_vote[2],))
@@ -651,6 +651,16 @@ def create_entry_for_player(dwname, cursor):
     array = (dwname, team_id, 0, '', '', '', '', '', '', '', '', '', '' ,'' ,'' ,'', '',)
     cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
     return
+
+def player_vote_exists(player, cursor):
+    """See if a player exists in the database or not. If yes, return 1,
+       if not return 0."""
+    array = (player,)
+    cursor.execute('SELECT * from mr1_player_votes where dwname=?', array)
+    if cursor.fetchone():
+        return 1
+    else:
+        return 0
 
 if __name__ == "__main__":
     teamnames = ('rax<3<computers', 'modship<3players', 'h8rs<>h8rs')

@@ -34,11 +34,11 @@ cursor = dbconn.cursor()
 #The drop mode only lets players drop.
 mode = 'drop'
 
-#main_round = 1
-main_round = 2
+main_round = 1
+#main_round = 2
 
-#voting_round = 1
-voting_round = 2
+voting_round = 1
+#voting_round = 2
 
 def quoteattr(s):
     qs = cgi.escape(s, 1)

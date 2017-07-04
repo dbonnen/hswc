@@ -16,8 +16,7 @@ import sasoutil as saso
 
 #dbstuff
 import sqlite3, sys
-dbconn = sqlite3.connect('saso.db')
-cursor = dbconn.cursor()
+
 
 # MODES
 
@@ -214,8 +213,8 @@ Content-type: text/html; charset=UTF-8
 
     def doGrandstand(self):
         """Show the grandstand list page."""
-        grandstandcount = str(saso.get_team_members_count('grandstand', cursor))
-        grandstandplayers = saso.get_team_members_list('grandstand', cursor)
+        grandstandcount = str(saso.get_team_members_count('grandstand'))
+        grandstandplayers = saso.get_team_members_list('grandstand')
         
         self.send_response(200)
         self.wfile.write('''\
@@ -332,7 +331,7 @@ table {
         # DO GRANDSTAND LOGIC
         # THIS CODE SUCKS I AM TIRED
         
-        grandstandlist = saso.get_team_members_list('grandstand', cursor)
+        grandstandlist = saso.get_team_members_list('grandstand')
         
         grandstanddict = {}
         for x in grandstandlist:
@@ -360,8 +359,8 @@ table {
 
     def doTeams(self):
         """Show the page with all of the teams on it."""
-        teamcount = str(saso.get_teamcount(cursor))
-        playercount = str(saso.get_playercount(cursor))
+        teamcount = str(saso.get_teamcount())
+        playercount = str(saso.get_playercount())
         
         self.send_response(200)
         self.wfile.write('''\
@@ -493,9 +492,9 @@ table {
 
 <table>''' % (teamcount,playercount))
         
-        allteams = saso.get_list_of_teams(cursor)
+        allteams = saso.get_list_of_teams()
         for team in allteams:
-            displayline = saso.get_team_display_line(team, cursor)
+            displayline = saso.get_team_display_line(team)
             if team != 'grandstand':
                 self.wfile.write('''\
 <tr>
@@ -660,18 +659,18 @@ table {
         #                    players on qualifying teams can only drop,
         #                    players on non-qualifying teams can switch to qualifying ones or drop
         if mode == "switch":
-            if not saso.player_exists(openid_url, cursor):
+            if not saso.player_exists(openid_url):
                 if not team == 'grandstand':
                     self.render('Sorry, new players can only join Team Grandstand at this point.',
                                 css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
-            currentteam = saso.get_current_team(openid_url, cursor)
-            if saso.is_team_active(currentteam, cursor):
+            currentteam = saso.get_current_team(openid_url)
+            if saso.is_team_active(currentteam):
                 if not team == 'remove':
                     self.render('Sorry, players on qualifying teams can only drop.',
                                 css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
-            if not saso.is_team_active(team, cursor):
+            if not saso.is_team_active(team):
                 if not team == 'remove':
                     self.render('Sorry, you can only join a qualifying team.',
                                 css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
@@ -679,7 +678,7 @@ table {
         #New players can join grandstand if the mode is gs, and existing users can drop,
         #but no one else can switch
         if mode == 'gs':
-            if not saso.player_exists(openid_url, cursor):
+            if not saso.player_exists(openid_url):
                 if not team_type == 'grandstand':
                     self.render('Sorry, new players can only join Team Grandstand at this point.',
                                 css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
@@ -695,17 +694,17 @@ table {
                 return
         
         # The team can't be full. 
-        if saso.get_team_members_count(team, cursor) >= 8 and team_type != 'grandstand' and team_type != 'sports':
-            if not saso.player_is_on_team(openid_url, team, cursor):
+        if saso.get_team_members_count(team) >= 8 and team_type != 'grandstand' and team_type != 'sports':
+            if not saso.player_is_on_team(openid_url, team):
                 self.render('That team is full, sorry. Try signing up for another one!',
                             css_class='error', form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
         
-        if saso.get_team_members_count(team, cursor) >= 8 and team_type == 'sports':
+        if saso.get_team_members_count(team) >= 8 and team_type == 'sports':
             #this code only works if you assume that there will be less than 80 people signing up for one fandom
             #this is in no way scalable and you shouldn't do this
-            newest_team = saso.get_newest_sports_team(fandom, cursor)
-            if saso.get_team_members_count(newest_team, cursor) >= 8:
+            newest_team = saso.get_newest_sports_team(fandom)
+            if saso.get_team_members_count(newest_team) >= 8:
                 if newest_team[-1].isdigit():
                     team_num = int(newest_team[-1])
                     team = team + " " + str(team_num + 1)
@@ -715,8 +714,7 @@ table {
                 team = newest_team
         
         # We want this to go through, so we make an entry in the pending table.
-        saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, minor, cursor)
-        dbconn.commit()
+        saso.make_pending_entry(openid_url, email, team, cpnwilling, contentnotes, team_type, fandom, minor)
         
         # Now add the DW part of the string --- we don't want other OpenID
         # providers because they are cubeless and shall surely be put to
@@ -814,7 +812,7 @@ table {
         dwname = (display_identifier.split('.')[0]).split('//')[1]
         openid_url = dwname
         
-        pending_entry = saso.retrieve_pending_entry(dwname, cursor)
+        pending_entry = saso.retrieve_pending_entry(dwname)
         if not pending_entry:
             self.render('The software choked and lost your preferences, sorry. Kick hurristat.',
                 css_class='error', form_contents=(dwname,'','',''))
@@ -827,8 +825,7 @@ table {
         cpn_willing = pending_entry[5]
         contentnotes = pending_entry[6]
         minor = pending_entry[8]
-        saso.remove_pending_entry(dwname, cursor)
-        dbconn.commit()
+        saso.remove_pending_entry(dwname)
         
         if info.status == consumer.FAILURE and display_identifier:
             # In the case of failure, if info is non-None, it is the
@@ -858,74 +855,66 @@ table {
             # This way they're logged even if their team falls through for some reason
             # and we can track them down. Plus we can now depend on them existing
             # for the rest of this code block.
-            if not saso.player_exists(openid_url, cursor):
-                saso.add_player_to_players(openid_url, email, cpn_willing, contentnotes, minor, cursor)
-                dbconn.commit()
+            if not saso.player_exists(openid_url):
+                saso.add_player_to_players(openid_url, email, cpn_willing, contentnotes, minor)
             
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
             if team == 'remove':
-                currentteam = saso.get_current_team(openid_url, cursor)
+                currentteam = saso.get_current_team(openid_url)
                 if not currentteam:
                     self.render('Cannot remove you from no team.', css_class='error',
                                 form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
                 currentteamclean = re.sub('<', '&lt;', currentteam)
                 currentteamclean = re.sub('>', '&gt;', currentteamclean)
-                saso.remove_player_from_team(openid_url, currentteam, 1, cursor)
-                saso.remove_player(openid_url, cursor)
-                dbconn.commit()
+                saso.remove_player_from_team(openid_url, currentteam, 1)
+                saso.remove_player(openid_url)
                 self.render('Removed you from team %s and the event.' % currentteamclean, css_class='alert',
                             form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                 return
             
             #If the player is already on the team, just update 
-            if saso.player_is_on_team(openid_url, team, cursor):
+            if saso.player_is_on_team(openid_url, team):
                 # this got stringified by putting it into the db and taking it out again
                 # THAT'S WHY NOTHING WAS WORKING
                 
                 #if they accidentally say they are a minor when they are not or vice versa
-                old_minor_status = saso.get_age_check(openid_url, cursor)
+                old_minor_status = saso.get_age_check(openid_url)
                 if old_minor_status == 0 or old_minor_status == 1:
                     if old_minor_status != minor:
-                        saso.update_minor_status(minor, openid_url, cursor)
+                        saso.update_minor_status(minor, openid_url)
                         self.render('Changed age status.', css_class='alert',
                                     form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
                 
                 if not cpn_willing:
                     # they don't want to be captain so nothing changes unless they already are
-                    if saso.get_captain(team, cursor) == openid_url:
-                        saso.uncaptain(team, cursor)
-                        dbconn.commit()
+                    if saso.get_captain(team) == openid_url:
+                        saso.uncaptain(team)
                         self.render('You are no longer the captain of %s.' % teamclean, css_class='alert',
                                     form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
-                    saso.update_player(openid_url, email, contentnotes, cursor)
-                    dbconn.commit()
+                    saso.update_player(openid_url, email, contentnotes)
                     self.render('No change to team, personal information updated.', css_class='alert',
                                 form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                     return
                 else:
                     # they do want to be captain so if no one else is, they get the slot
-                    if not saso.team_has_captain(team, cursor):
-                        saso.make_captain(openid_url, team, cursor)
-                        saso.update_player(openid_url, email, contentnotes, cursor)
-                        dbconn.commit()
+                    if not saso.team_has_captain(team):
+                        saso.make_captain(openid_url, team)
+                        saso.update_player(openid_url, email, contentnotes)
                         self.render('Became captain of %s.' % teamclean, css_class='alert',
                                     form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
                     else:
-                        saso.update_player(openid_url, email, contentnotes, cursor)
-                        dbconn.commit()
+                        saso.update_player(openid_url, email, contentnotes)
                         self.render('No change to team, personal information updated.', css_class='alert',
                                     form_contents=(openid_url, email, minor, team_type, team, fandom, contentnotes))
                         return
-            
             # Try to add them to whatever team they want to be on.
-            oldteam = saso.get_current_team(openid_url, cursor)
-            errorstatus = saso.add_player_to_team(openid_url, team, team_type, fandom, cpn_willing, email, contentnotes, minor, cursor)
-            dbconn.commit()
+            oldteam = saso.get_current_team(openid_url)
+            errorstatus = saso.add_player_to_team(openid_url, team, team_type, fandom, cpn_willing, email, contentnotes, minor)
             teamclean = re.sub('<', '&lt;', team)
             teamclean = re.sub('>', '&gt;', teamclean)
             if errorstatus:
@@ -934,8 +923,7 @@ table {
                 return
             if oldteam:
                 if oldteam != team:
-                    saso.remove_player_from_team(openid_url, oldteam, 0, cursor)
-                    dbconn.commit()
+                    saso.remove_player_from_team(openid_url, oldteam, 0)
                     oldteamclean = re.sub('<', '&lt;', oldteam)
                     oldteamclean = re.sub('>', '&gt;', oldteamclean)
                     self.render('%s added to %s and removed from %s!' % (openid_url, teamclean, oldteamclean), css_class='alert', 
@@ -1342,13 +1330,12 @@ input, textarea {
         if openid_url:
             openid_url = openid_url.lower()
         
-        if not saso.player_exists(openid_url, cursor):
+        if not saso.player_exists(openid_url):
             self.doVote('Only participants can vote for main round entries.', css_class='error', form_contents=(openid_url))
         
         openid_url = openid_url + '.dreamwidth.org'
         
-        saso.make_pending_vote_entry(openid_url, cursor)
-        dbconn.commit()
+        saso.make_pending_vote_entry(openid_url)
         
         # we're not using these parts of the example but I did not strip them
         # out on the theory that we might end up needing them for some reason
@@ -1367,7 +1354,6 @@ input, textarea {
         except consumer.DiscoveryFailure, exc:
             fetch_error_string = 'Error in discovery: %s' % (
                 cgi.escape(str(exc[0])))
-            dbconn.commit()
             self.render(fetch_error_string,
                         css_class='error',
                         form_contents=openid_url)
@@ -1430,19 +1416,16 @@ input, textarea {
         if not display_identifier:
             self.render('Please enter a Dreamwidth username.',
                         css_class='error', form_contents=('','','',''))
-            dbconn.commit()
             return
         dwname = (display_identifier.split('.')[0]).split('//')[1]
         openid_url = dwname
         
-        if saso.get_player_email(dwname, cursor) == 'player does not exist':
-            dbconn.commit()
+        if saso.get_player_email(dwname) == 'player does not exist':
             self.render('Only partipants may vote.',
                         css_class='error', form_contents=('','','',''))
             return
         
-        if not saso.check_pending_vote_entry(dwname, cursor):
-            dbconn.commit()
+        if not saso.check_pending_vote_entry(dwname):
             self.render('The software choked and lost your login name, sorry. Kick hurristat.',
                 css_class='error', form_contents=(dwname,'','',''))
             return
@@ -1458,12 +1441,12 @@ input, textarea {
                              info.message)
         elif info.status == consumer.SUCCESS:
             if voting_round == 1:
-                if not saso.existing_voting_team_assignments(dwname, cursor):
-                    saso.assign_voting_assignments(dwname, cursor)
+                if not saso.existing_voting_team_assignments(dwname):
+                    saso.assign_voting_assignments(dwname)
                 
-                saso.remove_pending_voting_entry(dwname, cursor)
+                saso.remove_pending_voting_entry(dwname)
                 
-                vote_options = saso.get_vote_option_list(dwname, cursor)
+                vote_options = saso.get_vote_option_list(dwname)
                 
                 vote_option_string = str()
                 
@@ -1471,12 +1454,11 @@ input, textarea {
                     vote_option_string = vote_option_string + '\n<p>' + i + '</p>'
                 vote_option_string = vote_option_string + '\n'
             elif voting_round == 2:
-                saso.remove_pending_voting_entry(dwname, cursor)
-                if not saso.player_vote_exists(dwname, cursor):
-                    saso.create_entry_for_player(dwname, cursor)
+                saso.remove_pending_voting_entry(dwname)
+                if not saso.player_vote_exists(dwname):
+                    saso.create_entry_for_player(dwname)
                 vote_option_string = '\n<p>abe takaya/mihashi ren</p>\n<p>aldini takumi/yukihira souma</p>\n<p>azumane asahi/nishinoya yuu</p>\n<p>bokuto koutarou/kuroo tetsurou</p>\n<p>furuya satoru/miyuki kazuya</p>\n<p>furuya satoru/sawamura eijun</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>kanzaki miki/tachibana aya</p>\n<p>kozume kenma/kuroo tetsurou</p>\n<p>matsuoka rin/nanase haruka</p>\n<p>miyuki kazuya/miyuki kazuya</p>\n<p>miyuki kazuya/sawamura eijun</p>\n<p>nishinoya yuu/tanaka ryuunosuke</p>\n<p>shimizu kiyoko/yachi hitoka</p>\n<p>tachibana makoto/yamazaki sousuke</p>\n' #this is the final round list, future me
             self.actuallyVotingPage(None, vote_option_string, openid_url)
-	    dbconn.commit()
 	    return
         elif info.status == consumer.CANCEL:
             # cancelled
@@ -1650,17 +1632,17 @@ input, textarea {
         vote3 = vote3.strip()
         print vote1 + ' ' + vote2 + ' ' + vote3
         openid_url = self.query.get('username')
-        player_team = saso.get_current_team(openid_url, cursor)
+        player_team = saso.get_current_team(openid_url)
         
         if voting_round == 1:
-            valid_teams = saso.get_vote_option_list(openid_url, cursor)
+            valid_teams = saso.get_vote_option_list(openid_url)
             if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
                 response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
             elif vote1 == vote2 or vote1 == vote3 or vote2 == vote3:
                 response = 'all votes must be for different entries! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
             else:
                 response = 'your votes were received! thank you for voting!'
-                saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
+                saso.enter_votes(openid_url, vote1, vote2, vote3)
         elif voting_round == 2:
             valid_teams = ['abe takaya/mihashi ren', 'aldini takumi/yukihira souma', 'azumane asahi/nishinoya yuu', 'bokuto koutarou/kuroo tetsurou', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kozume kenma/kuroo tetsurou', 'matsuoka rin/nanase haruka', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'nishinoya yuu/tanaka ryuunosuke', 'shimizu kiyoko/yachi hitoka', 'tachibana makoto/yamazaki sousuke'] #update this for the final round of voting
             if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
@@ -1671,8 +1653,7 @@ input, textarea {
                 response = 'all votes must be for different entries! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
             else:
                response = 'your votes were received! thank you for voting!'
-               saso.enter_votes(openid_url, vote1, vote2, vote3, cursor)
-        dbconn.commit()
+               saso.enter_votes(openid_url, vote1, vote2, vote3)
         self.wfile.write('''\
 <html>
 <head>

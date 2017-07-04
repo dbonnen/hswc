@@ -20,27 +20,27 @@ import sqlite3, sys, re, random
 ## only do when you are writing hackity nonsense for shipping competitions, 
 ## but that's what I'm doing so here we are
 
-#cursor = dbconn.cursor()
-
-def send_inactives_to_grandstand(cursor):
+def send_inactives_to_grandstand():
     """Take players on inactive teams and send them to grandstand."""
     ##UPDATE FOR SASO, TEAM SETUP IS A LITTLE DIFFERENT
     ##MAYBE MAKE A SWITCH TEAM FUNCTION?
-    allteams = get_list_of_teams(cursor)
+    allteams = get_list_of_teams()
     
     for team in allteams:
-        if not is_team_active(team, cursor):
-            players = get_team_members_list(team, cursor)
+        if not is_team_active(team):
+            players = get_team_members_list(team)
             for player in players:
-                add_player_to_grandstand(player, cursor)
-                remove_player_from_team(player, team, cursor)
+                add_player_to_grandstand(player)
+                remove_player_from_team(player, team)
     
-    #dbconn.commit()
     return
 
-def make_cpn_list(cursor):
+def make_cpn_list():
     """Make a list of all teams, their captains, and their email addresses."""
     #FINISHED FOR SASO
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where active=1')
     allteams = cursor.fetchall()
     bakedteams = []
@@ -50,241 +50,382 @@ def make_cpn_list(cursor):
             teamtuple = (team[1], 'none', 'none')
         else:
             cpn = team[5]
-            email = get_player_email(cpn, cursor)
+            email = get_player_email(cpn)
             teamtuple = (team[1], cpn, email)
         bakedteams.append(teamtuple)
     
+    dbconn.commit()
+    dbconn.close()
+    
     return bakedteams
 
-def get_player_email(player, cursor):
+def get_player_email(player):
     """Get a player's email address."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     cursor.execute('SELECT * from players where dwname=?', array)
     playerdata = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
+    
     if not playerdata:
         return "player does not exist"
     return playerdata[2]
 
-def make_team_active(team, cursor):
+def make_team_active(team):
     """Set the active bit on a team."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     string = """UPDATE teams set active=1 where name='%s'""" % team
     cursor.execute(string)
+    
+    dbconn.commit()
+    dbconn.close()
     # whatever calls this has to dbconn.commit()
     return
 
-def is_team_active(team, cursor):
+def is_team_active(team):
     """Return the active bit on a team."""
     if team == 'grandstand':
         return 1
     
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (team,)
     cursor.execute('SELECT * from teams where team_name=?', array)
     thing = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
+    
     if thing:
         activebit = thing[7]
         return activebit
     # team does not exist
     return
 
-def activate_qualifying_teams(cursor):
+def activate_qualifying_teams():
     """Set the active bit on all teams with 4 or more participants.
     And all teams that are abstrata."""
 
-    teamlist = get_list_of_teams(cursor)
+    teamlist = get_list_of_teams()
     for team in teamlist:
-        count = get_team_members_count(team, cursor)
+        count = get_team_members_count(team)
         if count >= 4:
-            make_team_active(team, cursor)
+            make_team_active(team)
     return
 
-def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, minor, cursor):
+def make_pending_entry(dwname, email, team, captain, notes, team_type, fandom, minor):
     """Make a pending entry to be processed if the DW auth goes through."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (dwname, email, team_type, team, fandom, captain, notes, minor)
     cursor.execute('INSERT into pending (dwname, email, team_type, team, fandom, cpn_willing, notes, minor) values (?,?,?,?,?,?,?,?)', array)
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def retrieve_pending_entry(dwname, cursor):
+def retrieve_pending_entry(dwname):
     """Get a pending entry out for a username."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (dwname,)
     cursor.execute('SELECT * from pending where dwname=?', array)
     pending_entry = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     return pending_entry
 
-def remove_pending_entry(dwname, cursor):
+def remove_pending_entry(dwname):
     """Remove a pending entry for a username."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (dwname,)
     cursor.execute('DELETE from pending where dwname=?', array)
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def make_pending_vote_entry(dwname, cursor):
+def make_pending_vote_entry(dwname):
     """make a pending vote entry to be processed if the DW auth goes through."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (dwname,)
     cursor.execute('INSERT into pending_vote (dwname) values (?)', array)
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def team_exists(teamname, cursor):
+def team_exists(teamname):
     """See if a team exists in the database or not. If yes, return 1,
       if not return 0."""
     array = (teamname,) # for sanitizing
     if teamname == 'grandstand':
         return 1
+    
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?', array)
     if cursor.fetchone():
+        dbconn.commit()
+        dbconn.close()
+        
         return 1 
     else:
+        dbconn.commit()
+        dbconn.close()
+        
         return 0 
 
-def team_has_captain(teamname, cursor):
+def team_has_captain(teamname):
     """If a team has a friendleader, return 0, otherwise return 1"""
     array = (teamname,)
-    if not team_exists(teamname, cursor):
+    if not team_exists(teamname):
         # there's not a friendleader if there's no team!
         return 0
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamlist = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     if teamlist[5]:
         return 1
     else:
         return 0
 
-def player_exists(player, cursor):
+def player_exists(player):
     """See if a player exists in the database or not. If yes, return 1,
        if not return 0."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     cursor.execute('SELECT * from players where dwname=?', array)
     if cursor.fetchone():
+        dbconn.commit()
+        dbconn.close()
+        
         return 1
     else:
+        dbconn.commit()
+        dbconn.close()
+        
         return 0
 
-def get_current_team(player, cursor):
+def get_current_team(player):
     """Get the team the player is currently on, if there is one."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     cursor.execute('SELECT * from players where dwname=?', array)
     currentteam = cursor.fetchone()
     if currentteam:
         cursor.execute('SELECT * from teams where team_id=?', (currentteam[1],))
         realteam = cursor.fetchone()
+        
+        dbconn.commit()
+        dbconn.close()
         if realteam:
             return realteam[1]
         else:
             return 0
     else:
+        dbconn.commit()
+        dbconn.close()
+        
         return 0
     
-def add_team(teamname, teamtype, fandom, cursor):
+def add_team(teamname, teamtype, fandom):
     """Add a team to the database."""
     #UPDATED, MAY NEED FURTHER UPDATING
-    id_no = get_newest_team(cursor) + 1
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
+    id_no = get_newest_team() + 1
     array = (id_no, teamname, teamtype, fandom, 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     cursor.execute('INSERT into teams (team_id, team_name, team_type, fandom, num_participants, captain, active, total_score, mr1, mr2, br0, br1, br2, br3, br4, br5, br6, penalty) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', array)
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def remove_team(teamname, cursor):
+def remove_team(teamname):
     """Delete a team."""
     #FINISHED FOR SASO
     array = (teamname,)
     if teamname == 'grandstand':
         # don't delete grandstand
         return
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('DELETE from teams where team_name=?', array)
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def remove_player(player, cursor):
+def remove_player(player):
     """Delete a player."""
     #FINISHED FOR SASO
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     cursor.execute('DELETE from players where dwname=?', array)
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def get_list_of_teams(cursor):
+def get_list_of_teams():
     """Get a list of all teams."""
     #FINISHED FOR SASO
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     teamlist = []
     cursor.execute('SELECT * from teams where team_id = 0')
     teamlist.append(cursor.fetchone()[1])
     for team in cursor.execute('SELECT * from teams WHERE team_id != 0 ORDER BY num_participants ASC'):
         teamlist.append(team[1]) # man isn't it cool that order matters
+    
+    dbconn.commit()
+    dbconn.close()
     # soni doesn't like it alphabetical
     # teamlist.sort()
     return teamlist
 
-def get_teamcount(cursor):
+def get_teamcount():
     """Get a count of teams."""
     #FINISHED FOR SASO
-    teamlist = get_list_of_teams(cursor)
+    teamlist = get_list_of_teams()
     return len(teamlist)
 
-def get_playercount(cursor):
+def get_playercount():
     """Get a count of players."""
     #FINISHED FOR SASO
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     playerlist = []
     for player in cursor.execute('SELECT * from players'):
         playerlist.append(player[0])
+    
+    dbconn.commit()
+    dbconn.close()
     return len(playerlist)
 
-def get_captain(team, cursor):
+def get_captain(team):
     """Get the captain of a team, if one exists."""
     #FINISHED FOR SASO
     array = (team, )
-    if not team_exists(team, cursor):
+    if not team_exists(team):
         return 0
     if team == 'grandstand':
         return 'saso mods'
+    
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamrow = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     return teamrow[5]
 
-def make_captain(player, teamname, cursor):
+def make_captain(player, teamname):
     """Make player captain of teamname."""
     #FINISHED FOR SASO
+    
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player, teamname,)
     cursor.execute('UPDATE teams set captain=? where team_name=?', array)
     cursor.execute('UPDATE players set cpn=? where dwname=?', (1, player))
     #cursor.execute('UPDATE players set captain=? where dwname=?', ('yes', player))
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def uncaptain(teamname, cursor):
+def uncaptain(teamname):
     '''kill the captain of the ship, stage a mutiny'''
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (teamname,)
     cursor.execute('SELECT * from teams where team_name=?', array)
     team_info = cursor.fetchone()
     cursor.execute('UPDATE players set cpn=0 where dwname=?', (team_info[5],))
     cursor.execute("UPDATE teams set captain='' where team_name=?", array)
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def remove_player_from_grandstand(player, deleting, cursor):
+def remove_player_from_grandstand(player, deleting):
     """Remove a player from grandstand."""
     #FINISHED FOR SASO
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     #cursor.execute('DELETE from grandstand where dwname=?', array)
     #dbconn.commit()
     if deleting:
         cursor.execute('UPDATE players set team_id=-1 where dwname=?', array)
     cursor.execute('UPDATE teams set num_participants = (num_participants-1) where team_id=0')
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def add_player_to_grandstand(player, cursor):
+def add_player_to_grandstand(player):
     """Add a player to grandstand."""
     #FINISHED FOR SASO
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     #cursor.execute('INSERT into grandstand (dwname) values (?)', array)
     cursor.execute('UPDATE players set team_id=? where dwname=?', (0, player))
     cursor.execute('UPDATE teams set num_participants = (num_participants + 1) where team_id=0')
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def remove_player_from_team(player, teamname, deleting, cursor):
+def remove_player_from_team(player, teamname, deleting):
     """Remove a player from a team, presumably because they joined another."""
     #FINISHED FOR SASO
     array = (teamname,)
     if teamname == 'grandstand':
-        remove_player_from_grandstand(player, deleting, cursor)
+        remove_player_from_grandstand(player, deleting)
         return
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
     if teamdatalist[5] == player:
@@ -296,39 +437,61 @@ def remove_player_from_team(player, teamname, deleting, cursor):
     if deleting:
         cursor.execute('UPDATE players set team_id = -1 where dwname=?', (player,))
     cursor.execute('UPDATE teams set num_participants = (num_participants - 1) where team_id=?', (teamdatalist[0],))
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def update_player(player, email, notes, cursor):
+def update_player(player, email, notes):
     """Update the player's information in the db after a new form submission."""
     #team does not change
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array=(email, notes, player)
     cursor.execute('UPDATE players set email=?, notes=? where dwname=?', array)
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def add_player_to_players(player, email, cpnwilling, notes, minor, cursor):
+def add_player_to_players(player, email, cpnwilling, notes, minor):
     """Put the player in the player database at all.
        Team preference is not handled here."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array=(player, -1, cpnwilling, email, notes, minor)
     cursor.execute('INSERT into players (dwname, team_id, cpn_willing, email, notes, minor) values (?,?,?,?,?,?)', array)
-    #dbconn.commit()
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def get_team_members_count(team, cursor):
+def get_team_members_count(team):
     """How many players on the team?"""
     array=(team,)
-    if not team_exists(team, cursor):
+    if not team_exists(team):
         return 0
+    
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?',array)
     team_info = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     return team_info[4]
 
-def get_team_members_list(team, cursor):
+def get_team_members_list(team):
     """Who are the players on the team?"""
     array = (team,)
-    if not team_exists(team, cursor):
+    if not team_exists(team):
         return 0
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
     team_id = teamdatalist[0]
@@ -338,6 +501,9 @@ def get_team_members_list(team, cursor):
             teamplayers.append(x[0] + '*')
         else:
             teamplayers.append(x[0])
+    
+    dbconn.commit()
+    dbconn.close()
     return teamplayers
 
 #def get_grandstand_members_count(cursor):
@@ -361,23 +527,29 @@ def get_team_members_list(team, cursor):
 
 #the schema of our database renders these functions unnecessary
 
-def player_is_on_team(player, team, cursor):
+def player_is_on_team(player, team):
     """Is the player on the team?"""
     array=(team,)
-    if not team_exists(team, cursor):
+    if not team_exists(team):
         return 0
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?',array)
     teamdatalist = cursor.fetchone()
     team_team_id = teamdatalist[0]
     cursor.execute('SELECT * from players where dwname=?', (player,))
     playerlist = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     if playerlist:
         player_team_id = playerlist[1]
         if team_team_id == player_team_id:
             return 1
     return 0
 
-def get_team_display_line(team, cursor):
+def get_team_display_line(team):
     """Make the display line that goes into the teams table.
     Format is csstype, count, teamname, fl, stringofallplayers."""
     array=(team,)
@@ -386,9 +558,12 @@ def get_team_display_line(team, cursor):
     if teamname == 'grandstand':
         stringofallplayers = 'Please see the grandstand page at <a href="http://autumnfox.akrasiac.org/saso/grandstand">this link</a>.'
         csstype= 'roster_teamslots'
-        count = get_team_members_count(teamname, cursor)
+        count = get_team_members_count(teamname)
         captain = 'referees'
         return (csstype, count, teamname, captain, stringofallplayers)
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute('SELECT * from teams where team_name=?', array)
     teamdatalist = cursor.fetchone()
     teamname = re.sub('<', '&lt;', teamdatalist[1])
@@ -409,22 +584,28 @@ def get_team_display_line(team, cursor):
         csstype = 'roster_teamslots_small'
     if count > 7:
         csstype = 'roster_teamslots_full'
+    
+    dbconn.commit()
+    dbconn.close()
     return (csstype, count, teamname, captain, stringofallplayers)
 
 
-def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, notes, minor, cursor):
+def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, notes, minor):
     """Adds a player to a team. If the team is full, errors out.
        If the player is already on the team, continue without changes.
        If the player is willing and there is no captain, Cpn them.
        If the team has at least 4 members, make it active."""
     if teamname == 'grandstand':
-        add_player_to_grandstand(player, cursor)
+        add_player_to_grandstand(player)
         return
     
-    if not team_exists(teamname, cursor):
-        add_team(teamname, teamtype, fandom, cursor)
+    if not team_exists(teamname):
+        add_team(teamname, teamtype, fandom)
     
-    if team_exists(teamname, cursor):
+    if team_exists(teamname):
+        dbconn = sqlite3.connect('saso.db')
+        cursor = dbconn.cursor()
+        
         array = (teamname,)
         cursor.execute('SELECT * from teams where team_name=?', array)
         teamdatalist = cursor.fetchone()
@@ -453,7 +634,7 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                         cursor.execute("UPDATE players set cpn=0 where dwname=?", (player,))
                         for x in cursor.execute("SELECT * from players where team_id=?", (player_info[1],)):
                             if x[6]:
-                                make_captain(x[0], old_team[1], cursor)
+                                make_captain(x[0], old_team[1])
                                 break
                     if old_team[6] == player:
                         cursor.execute('UPDATE teams set vice_captain=? where team_id=?', ('', old_team[0]))
@@ -462,14 +643,18 @@ def add_player_to_team(player, teamname, teamtype, fandom, cpnwilling, email, no
                         cursor.execute("UPDATE teams set active=0 where team_id=?", (player_info[1],))
                 if not teamdatalist[5]:
                     if cpnwilling:
-                        make_captain(player, teamname, cursor)
+                        make_captain(player, teamname)
                 if teamdatalist[4] == 3:
                     cursor.execute('UPDATE teams set active = 1 where team_id=?', (teamdatalist[0],))
             else:
+                dbconn.commit()
+                dbconn.close()
                 return 'This team is already full! Sorry!'
         if not teamdatalist[5]:
             if cpnwilling:
-                make_captain(player, teamname, cursor)
+                make_captain(player, teamname)
+        dbconn.commit()
+        dbconn.close()
         return
     else:
         return "Team doesn't exist after creating it, contact hurristat."
@@ -552,52 +737,99 @@ def valid_fandom(fandom):
             return False
     return True
 
-def get_newest_sports_team(fandom, cursor):
+def get_newest_sports_team(fandom):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT MAX(team_id) FROM teams WHERE fandom=? AND team_type='sports'", (fandom))
     newest_team = cursor.fetchone()
     cursor.execute("SELECT * FROM teams WHERE team_id=?", (newest_team[0]))
     newest_team_name = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     return newest_team_name[1]
 
-def get_age_check(dwname, cursor):
+def get_age_check(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT minor FROM players WHERE dwname=?", (dwname,))
     minor_level = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     return int(minor_level[0])
 
-def update_minor_status(minor, dwname, cursor):
+def update_minor_status(minor, dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (minor, dwname,)
     cursor.execute("UPDATE players SET minor=? WHERE dwname=?", array)
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def check_pending_vote_entry(dwname,cursor):
+def check_pending_vote_entry(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT * FROM pending_vote")# WHERE dwname=?",(dwname,))
     cursor.fetchone()
     if cursor.fetchone():
+        dbconn.commit()
+        dbconn.close()
         return True
     else:
+        dbconn.commit()
+        dbconn.close()
         return False
 
-def remove_pending_voting_entry(dwname, cursor):
+def remove_pending_voting_entry(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("DELETE FROM pending_vote WHERE dwname=?", (dwname,))
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def get_newest_team(cursor):
+def get_newest_team():
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT MAX(team_id) FROM teams;")
     team_num = cursor.fetchone()
+    
+    dbconn.commit()
+    dbconn.close()
     return team_num[0]
 
-def existing_voting_team_assignments(dwname, cursor):
+def existing_voting_team_assignments(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
     if cursor.fetchone():
+        dbconn.commit()
+        dbconn.close()
         return 1
     else:
+        dbconn.commit()
+        dbconn.close()
         return 0
 
-def assign_voting_assignments(dwname, cursor):
-    current_team = get_current_team(dwname, cursor)
+def assign_voting_assignments(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
+    current_team = get_current_team(dwname)
     cursor.execute("SELECT team_id FROM players WHERE dwname = ?", (dwname,))
     team_no = int(cursor.fetchone()[0])
-    minor = get_age_check(dwname, cursor)
+    minor = get_age_check(dwname)
     current_teams = 10
     assigned_teams = []
     while len(assigned_teams) < 10:
@@ -619,16 +851,28 @@ def assign_voting_assignments(dwname, cursor):
                 cont_empty = True
     array = (dwname, team_no, 0, '', '', '', assigned_teams[0], assigned_teams[1], assigned_teams[2], assigned_teams[3], assigned_teams[4], assigned_teams[5], assigned_teams[6], assigned_teams[7], assigned_teams[8], assigned_teams[9],'',)
     cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def get_vote_option_list(dwname, cursor):
+def get_vote_option_list(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     agg_list = []
     cursor.execute("SELECT * FROM mr1_player_votes WHERE dwname = ?", (dwname,))
     player_vote_list = cursor.fetchone()
     agg_list = [player_vote_list[6], player_vote_list[7], player_vote_list[8], player_vote_list[9], player_vote_list[10], player_vote_list[11], player_vote_list[12], player_vote_list[13], player_vote_list[14], player_vote_list[15]]
+    
+    dbconn.commit()
+    dbconn.close()
     return agg_list
 
-def enter_votes(dwname, vote1, vote2, vote3, cursor):
+def enter_votes(dwname, vote1, vote2, vote3):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT vote_1, vote_2, vote_3 FROM mr1_player_votes WHERE dwname = ?", (dwname,))
     print vote1 + ' ' + vote2 + ' ' + vote3
     current_vote = cursor.fetchone()
@@ -642,24 +886,40 @@ def enter_votes(dwname, vote1, vote2, vote3, cursor):
     cursor.execute("UPDATE mr1_player_votes SET vote_1 = ? WHERE dwname = ?", (vote1, dwname,))
     cursor.execute("UPDATE mr1_player_votes SET vote_2 = ? WHERE dwname = ?", (vote2, dwname,))
     cursor.execute("UPDATE mr1_player_votes SET vote_3 = ? WHERE dwname = ?", (vote3, dwname,))
+    
+    dbconn.commit()
+    dbconn.close()
     return 0
 
-def create_entry_for_player(dwname, cursor):
+def create_entry_for_player(dwname):
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     cursor.execute("SELECT * FROM players WHERE dwname = ?", (dwname,))
     player = cursor.fetchone()
     team_id = player[1]
     array = (dwname, team_id, 0, '', '', '', '', '', '', '', '', '', '' ,'' ,'' ,'', '',)
     cursor.execute("INSERT INTO mr1_player_votes VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", array)
+    
+    dbconn.commit()
+    dbconn.close()
     return
 
-def player_vote_exists(player, cursor):
+def player_vote_exists(player):
     """See if a player exists in the database or not. If yes, return 1,
        if not return 0."""
+    dbconn = sqlite3.connect('saso.db')
+    cursor = dbconn.cursor()
+    
     array = (player,)
     cursor.execute('SELECT * from mr1_player_votes where dwname=?', array)
     if cursor.fetchone():
+        dbconn.commit()
+        dbconn.close()
         return 1
     else:
+        dbconn.commit()
+        dbconn.close()
         return 0
 
 if __name__ == "__main__":

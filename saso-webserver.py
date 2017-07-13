@@ -36,8 +36,8 @@ mode = 'drop'
 main_round = 1
 #main_round = 2
 
-voting_round = 1
-#voting_round = 2
+#voting_round = 1
+voting_round = 2
 
 def quoteattr(s):
     qs = cgi.escape(s, 1)
@@ -1457,7 +1457,7 @@ input, textarea {
                 saso.remove_pending_voting_entry(dwname)
                 if not saso.player_vote_exists(dwname):
                     saso.create_entry_for_player(dwname)
-                vote_option_string = '\n<p>abe takaya/mihashi ren</p>\n<p>aldini takumi/yukihira souma</p>\n<p>azumane asahi/nishinoya yuu</p>\n<p>bokuto koutarou/kuroo tetsurou</p>\n<p>furuya satoru/miyuki kazuya</p>\n<p>furuya satoru/sawamura eijun</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>kanzaki miki/tachibana aya</p>\n<p>kozume kenma/kuroo tetsurou</p>\n<p>matsuoka rin/nanase haruka</p>\n<p>miyuki kazuya/miyuki kazuya</p>\n<p>miyuki kazuya/sawamura eijun</p>\n<p>nishinoya yuu/tanaka ryuunosuke</p>\n<p>shimizu kiyoko/yachi hitoka</p>\n<p>tachibana makoto/yamazaki sousuke</p>\n' #this is the final round list, future me
+                vote_option_string = '\n<p>akaashi keiji/bokuto koutarou</p>\n<p>bokuto koutarou/kuroo tetsurou</p>\n<p>daiya no ace</p>\n<p>imaizumi shunsuke/kinjou shingo</p>\n<p>imaizumi shunsuke/naruko shoukichi</p>\n<p>imaizumi shunsuke/sugimoto terufumi</p>\n<p>kageyama tobio/oikawa tooru</p>\n<p>kanzaki miki/miyahara</p>\n<p>kominato ryousuke/kuramochi youichi</p>\n<p>kuramochi youichi/miyuki kazuya</p>\n<p>kuroo tetsurou/sawamura daichi</p>\n<p>miyuki kazuya/oikawa tooru</p>\n<p>oikawa tooru/ushijima wakatoshi</p>\n<p>sawamura daichi/sugawara koushi</p>\n<p>the prince of tennis</p>\n' #this is the final round list, future me
             self.actuallyVotingPage(None, vote_option_string, openid_url)
 	    return
         elif info.status == consumer.CANCEL:
@@ -1644,7 +1644,7 @@ input, textarea {
                 response = 'your votes were received! thank you for voting!'
                 saso.enter_votes(openid_url, vote1, vote2, vote3)
         elif voting_round == 2:
-            valid_teams = ['abe takaya/mihashi ren', 'aldini takumi/yukihira souma', 'azumane asahi/nishinoya yuu', 'bokuto koutarou/kuroo tetsurou', 'furuya satoru/miyuki kazuya', 'furuya satoru/sawamura eijun', 'imaizumi shunsuke/naruko shoukichi', 'kanzaki miki/tachibana aya', 'kozume kenma/kuroo tetsurou', 'matsuoka rin/nanase haruka', 'miyuki kazuya/miyuki kazuya', 'miyuki kazuya/sawamura eijun', 'nishinoya yuu/tanaka ryuunosuke', 'shimizu kiyoko/yachi hitoka', 'tachibana makoto/yamazaki sousuke'] #update this for the final round of voting
+            valid_teams = ['akaashi keiji/bokuto koutarou', 'bokuto koutarou/kuroo tetsurou', 'daiya no ace', 'imaizumi shunsuke/kinjou shingo', 'imaizumi shunsuke/naruko shoukichi', 'imaizumi shunsuke/sugimoto terufumi', 'kageyama tobio/oikawa tooru', 'kanzaki miki/miyahara', 'kominato ryousuke/kuramochi youichi', 'kuramochi youichi/miyuki kazuya', 'kuroo tetsurou/sawamura daichi', 'miyuki kazuya/oikawa tooru', 'oikawa tooru/ushijima wakatoshi', 'sawamura daichi/sugawara koushi', 'the prince of tennis'] #update this for the final round of voting
             if not vote1 in valid_teams or not vote2 in valid_teams or not vote3 in valid_teams:
                 response = 'not all fields have been entered correctly! <a href="http://autumnfox.akrasiac.org/saso/vote">please try again here</a>'
             elif vote1 == player_team or vote2 == player_team or vote3 == player_team:

@@ -33,11 +33,11 @@ import sqlite3, sys
 #The drop mode only lets players drop.
 mode = 'drop'
 
-main_round = 1
-#main_round = 2
+#main_round = 1
+main_round = 2
 
-#voting_round = 1
-voting_round = 2
+voting_round = 1
+#voting_round = 2
 
 def quoteattr(s):
     qs = cgi.escape(s, 1)
@@ -1596,7 +1596,7 @@ input, textarea {
     SASO 2017 VOTING FORM
     </h1>
 <p class="navigation"><a href="http://autumnfox.akrasiac.org/saso/teams">Team Roster</a> | <a href="http://referees.dreamwidth.org/487.html">Mod Contact</a> | <a href="http://sportsanime.dreamwidth.org">Dreamwidth</a> | <a href="http://sportsanime.dreamwidth.org/750.html">Rules</a> | <a href="http://sportsanimeolympics.tumblr.com">Tumblr</a></p>
-<p>Please read <a href="http://saso2017-r1.dreamwidth.org/7991.html">here</a> and choose your favorite three of the following choices. You are not allowed to vote for your own team's submission! </p>''' + vote_option_string + '''
+<p>Please read <a href="http://saso2017-r2.dreamwidth.org/7602.html">here</a> and choose your favorite three of the following choices. You are not allowed to vote for your own team's submission! </p>''' + vote_option_string + '''
 <form method="GET" accept-charset="UTF-8" action=/saso/voteaccept>
 <p>
     <span class="field">Vote 1:</span><br />
